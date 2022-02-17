@@ -10,6 +10,7 @@ from enums.Market import Market
 from enums.TimeFrame import TimeFrame
 from models.CandlesExtractor.CSVCandlesExtractor import CSVCandlesExtractor
 from models.Config.Config import Config
+from models.CandlesExtractor.CCXTCandlesExtractor import CCXTCandlesExtractor
 
 
 class TestCandlesExtractor(unittest.TestCase):
@@ -26,6 +27,12 @@ class TestCandlesExtractor(unittest.TestCase):
     def test_csv_candles_extractor(self):
         csv_candles_extractor = CSVCandlesExtractor(self.feed_options)
         candles = csv_candles_extractor.extract_candles()
+
+        self.assertTrue(candles.equals(self.test_candles))
+
+    def test_ccxt_candles_extractor(self):
+        ccxt_candles_extractor = CCXTCandlesExtractor(self.feed_options)
+        candles = ccxt_candles_extractor.extract_candles()
 
         self.assertTrue(candles.equals(self.test_candles))
 
