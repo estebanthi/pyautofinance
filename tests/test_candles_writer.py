@@ -11,7 +11,7 @@ from feeds.FeedTitle import FeedTitle
 import os
 
 
-class TestTimeOptions(unittest.TestCase):
+class TestWriting(unittest.TestCase):
 
     writer = CandlesWriter()
     extractor = CSVCandlesExtractor()
