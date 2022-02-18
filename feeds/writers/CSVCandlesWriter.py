@@ -1,7 +1,3 @@
-from feeds.writers.CandlesWriter import CandlesWriter
-
-
-class CSVCandlesWriter(CandlesWriter):
-
+class CSVCandlesWriter:
     def write(self, feed, destination):
         feed.to_csv(destination)

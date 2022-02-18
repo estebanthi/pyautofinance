@@ -1,5 +1,5 @@
 import unittest
-from feeds.writers.CSVCandlesWriter import CSVCandlesWriter
+from feeds.writers.CandlesWriter import CandlesWriter
 from feeds.extractors.CSVCandlesExtractor import CSVCandlesExtractor
 import datetime as dt
 from feeds.options.FeedOptions import FeedOptions
@@ -13,7 +13,7 @@ import os
 
 class TestTimeOptions(unittest.TestCase):
 
-    writer = CSVCandlesWriter()
+    writer = CandlesWriter()
     extractor = CSVCandlesExtractor()
 
     market_options = MarketOptions(Market.CRYPTO, "BNB-BTC")
