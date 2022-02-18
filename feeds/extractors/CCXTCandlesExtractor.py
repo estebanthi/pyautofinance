@@ -10,7 +10,7 @@ class CCXTCandlesExtractor(CandlesExtractor):
         market_options = self.feed_options.market_options
         time_options = self.feed_options.time_options
 
-        exchange = self.get_exchange(market_options)
+        exchange = self.get_exchange_from_market_options(market_options)
         symbol = self.get_symbol_from_market_options(market_options)
         timeframe = self.get_timeframe_from_time_options(time_options)
         since = self.get_since_from_time_options(time_options)
@@ -30,10 +30,17 @@ class CCXTCandlesExtractor(CandlesExtractor):
         while source_candles[-1][0] < dt.datetime.timestamp(
                 self.feed_options.time_options.end_date) * 1000:  # If more than 10 000 candles
 
+            market_options = self.feed_options.market_options
+            time_options = self.feed_options.time_options
+
+            exchange = self.get_exchange_from_market_options(market_options)
+            symbol = self.get_symbol_from_market_options(market_options)
+            timeframe = self.get_timeframe_from_time_options(time_options)
+
             # Extraction of the 10 000 next candles
             candles_to_add = exchange.fetch_ohlcv(
-                symbol=self.format_symbol(),
-                timeframe=self.format_timeframe(),
+                symbol=symbol,
+                timeframe=timeframe,
                 since=source_candles[-1][0],
                 limit=10000
             )

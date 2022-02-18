@@ -6,7 +6,7 @@ from feeds.options.MarketOptions import MarketOptions
 from feeds.options.TimeOptions import TimeOptions
 from enums.Market import Market
 from enums.TimeFrame import TimeFrame
-from test_config.Config import Config
+from config.Config import Config
 
 
 class TestFeedTitle(unittest.TestCase):
