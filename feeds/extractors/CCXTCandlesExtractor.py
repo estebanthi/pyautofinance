@@ -6,9 +6,9 @@ import pandas as pd
 
 class CCXTCandlesExtractor(CandlesExtractor):
 
-    def extract_candles(self):
-        market_options = self.feed_options.market_options
-        time_options = self.feed_options.time_options
+    def extract_candles(self, feed_options):
+        market_options = feed_options.market_options
+        time_options = feed_options.time_options
 
         exchange = self.get_exchange_from_market_options(market_options)
         symbol = self.get_symbol_from_market_options(market_options)
@@ -22,16 +22,16 @@ class CCXTCandlesExtractor(CandlesExtractor):
             limit=10000
         )
 
-        all_candles = self.bypass_candles_limit(limit_candles, exchange)
+        all_candles = self.bypass_candles_limit(limit_candles, feed_options)
         formatted_candles = format_candles(all_candles)
         return formatted_candles
 
-    def bypass_candles_limit(self, source_candles, exchange):
+    def bypass_candles_limit(self, source_candles, feed_options):
         while source_candles[-1][0] < dt.datetime.timestamp(
-                self.feed_options.time_options.end_date) * 1000:  # If more than 10 000 candles
+                feed_options.time_options.end_date) * 1000:  # If more than 10 000 candles
 
-            market_options = self.feed_options.market_options
-            time_options = self.feed_options.time_options
+            market_options = feed_options.market_options
+            time_options = feed_options.time_options
 
             exchange = self.get_exchange_from_market_options(market_options)
             symbol = self.get_symbol_from_market_options(market_options)

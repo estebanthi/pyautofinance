@@ -23,14 +23,14 @@ class TestCandlesExtractor(unittest.TestCase):
     feed_options = FeedOptions(market_options, time_options)
 
     def test_csv_candles_extractor(self):
-        csv_candles_extractor = CSVCandlesExtractor(self.feed_options)
-        candles = csv_candles_extractor.extract_candles()
+        csv_candles_extractor = CSVCandlesExtractor()
+        candles = csv_candles_extractor.extract_candles(self.feed_options)
 
         self.assertTrue(candles.equals(self.test_candles))
 
     def test_ccxt_candles_extractor(self):
-        ccxt_candles_extractor = CCXTCandlesExtractor(self.feed_options)
-        candles = ccxt_candles_extractor.extract_candles()
+        ccxt_candles_extractor = CCXTCandlesExtractor()
+        candles = ccxt_candles_extractor.extract_candles(self.feed_options)
         print(candles)
 
 
