@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import pandas as pd
-from models.Options import FeedOptions
+from feeds.options import FeedOptions
 
 
 class CandlesExtractor(ABC):

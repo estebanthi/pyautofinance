@@ -1,6 +1,6 @@
 import pandas as pd
-from models.CandlesExtractor.CandlesExtractor import CandlesExtractor
-from models.FeedTitle import FeedTitle
+from feeds.extractors.CandlesExtractor import CandlesExtractor
+from feeds.FeedTitle import FeedTitle
 
 
 class CSVCandlesExtractor(CandlesExtractor):

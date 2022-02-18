@@ -1,6 +1,6 @@
 from dataclasses import dataclass
-from models.Options.MarketOptions import MarketOptions
-from models.Options.TimeOptions import TimeOptions
+from feeds.options.MarketOptions import MarketOptions
+from feeds.options.TimeOptions import TimeOptions
 
 
 @dataclass

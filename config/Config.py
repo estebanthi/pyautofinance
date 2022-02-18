@@ -1,15 +1,15 @@
-from models.Config.ConfigLoader import ConfigLoader
-from models.Exceptions.ConfigFieldMissing import ConfigFieldMissing
+from config.ConfigLoader import ConfigLoader
+from exceptions.config.ConfigFieldMissing import ConfigFieldMissing
 
 
 class Config:
 
     def __init__(self):
         config_loader = ConfigLoader("config.yml")
-        self.config = config_loader.get_config()
+        self._config = config_loader.get_config()
 
     def get_field(self, field):
-        field_value = self.config.get(field)
+        field_value = self._config.get(field)
         if not field_value:
             raise ConfigFieldMissing(field)
         return field_value

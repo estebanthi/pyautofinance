@@ -1,16 +1,14 @@
 import datetime as dt
 import unittest
-from yaml import safe_load
 import pandas as pd
-import sys
-from models.Options.FeedOptions import FeedOptions
-from models.Options.MarketOptions import MarketOptions
-from models.Options.TimeOptions import TimeOptions
+from feeds.options.FeedOptions import FeedOptions
+from feeds.options.MarketOptions import MarketOptions
+from feeds.options.TimeOptions import TimeOptions
 from enums.Market import Market
 from enums.TimeFrame import TimeFrame
-from models.CandlesExtractor.CSVCandlesExtractor import CSVCandlesExtractor
-from models.Config.Config import Config
-from models.CandlesExtractor.CCXTCandlesExtractor import CCXTCandlesExtractor
+from feeds.extractors.CSVCandlesExtractor import CSVCandlesExtractor
+from test_config.Config import Config
+from feeds.extractors.CCXTCandlesExtractor import CCXTCandlesExtractor
 
 
 class TestCandlesExtractor(unittest.TestCase):

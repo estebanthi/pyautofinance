@@ -1,12 +1,12 @@
 import datetime as dt
 import unittest
-from models.FeedTitle import FeedTitle
-from models.Options.FeedOptions import FeedOptions
-from models.Options.MarketOptions import MarketOptions
-from models.Options.TimeOptions import TimeOptions
+from feeds.FeedTitle import FeedTitle
+from feeds.options.FeedOptions import FeedOptions
+from feeds.options.MarketOptions import MarketOptions
+from feeds.options.TimeOptions import TimeOptions
 from enums.Market import Market
 from enums.TimeFrame import TimeFrame
-from models.Config.Config import Config
+from test_config.Config import Config
 
 
 class TestFeedTitle(unittest.TestCase):
