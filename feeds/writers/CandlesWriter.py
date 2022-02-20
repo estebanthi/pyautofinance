@@ -6,5 +6,5 @@ class CandlesWriter(ABC):
     factory = CandlesWriterFactory()
 
     def write(self, feed, destination):
-        writer = self.factory.get_writer(feed, destination)
-        writer.write(feed, destination)
+        writer = self.factory._get_writer(feed, destination)
+        writer._write(feed, destination)

@@ -1,5 +1,5 @@
-from feeds.filterers.CandlesFilterer import CandlesFilterer
 import pandas as pd
+from feeds.filterers.CandlesFilterer import CandlesFilterer
 
 
 class SimpleCandlesFilterer(CandlesFilterer):

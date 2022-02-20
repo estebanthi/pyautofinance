@@ -13,3 +13,4 @@ class SimpleCandlesFormatter(CandlesFormatter):
     @staticmethod
     def _format_date_column(candles, feed_options):
         candles["Date"] = pd.to_datetime(candles["Date"])
+        return candles

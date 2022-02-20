@@ -36,7 +36,7 @@ class TestCandlesExtractor(unittest.TestCase):
 
         self.assertTrue(candles.equals(self.formatted_and_filtered_test_candles))
 
-    """ TOO LONG
+    """ TOO LONG TO TEST
     def test_ccxt_candles_extractor(self):
         ccxt_candles_extractor = CCXTCandlesExtractor()
         candles = ccxt_candles_extractor.get_formatted_and_filtered_candles(self.feed_options)

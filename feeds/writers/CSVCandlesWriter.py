@@ -1,3 +1,5 @@
 class CSVCandlesWriter:
-    def write(self, feed, destination):
+
+    @staticmethod
+    def _write(feed, destination):
         feed.to_csv(destination)
