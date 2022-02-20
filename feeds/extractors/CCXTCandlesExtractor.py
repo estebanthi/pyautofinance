@@ -6,7 +6,7 @@ import pandas as pd
 
 class CCXTCandlesExtractor(CandlesExtractor):
 
-    def extract_candles(self, feed_options):
+    def _extract_candles(self, feed_options):
         market_options = feed_options.market_options
         time_options = feed_options.time_options
 

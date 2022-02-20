@@ -27,7 +27,7 @@ class TestWriting(unittest.TestCase):
 
         os.remove(feed_pathname)
 
-        candles = self.extractor.extract_candles(self.feed_options)
+        candles = self.extractor.get_formatted_and_filtered_candles(self.feed_options)
         self.writer.write(candles, feed_pathname)
 
         self.assertTrue(os.path.isfile(feed_pathname))

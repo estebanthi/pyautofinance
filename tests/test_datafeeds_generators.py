@@ -18,11 +18,10 @@ class TestDatafeedsGenerators(unittest.TestCase):
 
     def test_backtesting_datafeed(self):
         csv_candles_extractor = CSVCandlesExtractor()
-        candles = csv_candles_extractor.extract_candles(self.feed_options)
+        candles = csv_candles_extractor.get_formatted_and_filtered_candles(self.feed_options)
 
         backtesting_datafeed_generator = BacktestingDatafeedGenerator()
-        datafeed = backtesting_datafeed_generator.generate_backtesting_datafeed(candles, self.feed_options)
-        print(datafeed)
+        datafeed = backtesting_datafeed_generator.generate_datafeed(candles, self.feed_options)
 
 
 
