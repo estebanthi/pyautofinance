@@ -16,9 +16,10 @@ class SimpleCandlesFilterer(CandlesFilterer):
         start_date = time_options.start_date
         end_date = time_options.end_date
 
-        after = candles[candles["Date"] >= start_date]
-        before = candles[candles["Date"] <= end_date]
-        between = after.merge(before)
+        before_start_date = candles["Date"] < start_date
+        candles.drop(candles.loc[before_start_date].index, inplace=True)
 
-        return between
+        after_end_date = candles["Date"] > end_date
+        candles.drop(candles.loc[after_end_date].index, inplace=True)
 
+        return candles.copy()
