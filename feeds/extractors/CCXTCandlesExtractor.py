@@ -23,7 +23,7 @@ class CCXTCandlesExtractor(CandlesExtractor):
         )
 
         all_candles = self._bypass_candles_limit(first_10_000_candles, feed_options)
-        df_candles = self._put_candles_in_dohlcv_df(all_candles)
+        df_candles = self._get_dohlcv_df_from_candles(all_candles)
         return df_candles
 
     def _bypass_candles_limit(self, source_candles, feed_options):
@@ -68,7 +68,7 @@ class CCXTCandlesExtractor(CandlesExtractor):
         since = int(dt.datetime.timestamp(start_date) * 1000)
         return since
 
-    def _put_candles_in_dohlcv_df(self, candles):
+    def _get_dohlcv_df_from_candles(self, candles):
         columns = 'Date Open High Low Close Volume'.split(
             ' ')
 
@@ -84,6 +84,7 @@ class CCXTCandlesExtractor(CandlesExtractor):
         for i in range(len(candles_to_add)):
             if i != 0:
                 source_candles.append(candles_to_add[i])
+        return source_candles.copy()
 
     @staticmethod
     def _epoch_to_datetime(epoch):
