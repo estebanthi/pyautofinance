@@ -3,7 +3,6 @@ import datetime as dt
 
 from abc import abstractmethod
 from dataclasses import dataclass
-from termcolor import colored
 
 from pyautofinance.common.strategies.strat_loggers import DefaultStratLogger
 
