@@ -97,9 +97,6 @@ class Strategy(bt.Strategy):
     def next(self):
         self.logger.log(f"Close : {self.datas[0].close[0]}", self._get_logging_data())
 
-        if self.orders_ref:
-            return
-
         if not self.position:
             self._not_yet_in_market()
         else:
@@ -159,3 +156,9 @@ class Strategy(bt.Strategy):
         else:
             orders = [self.sell()]
         return orders
+
+    def _in_market(self):
+        if self._close_long_condition() and self.position.size > 0:
+            self.close()
+        if self._close_short_condition() and self.position.size < 0:
+            self.close()

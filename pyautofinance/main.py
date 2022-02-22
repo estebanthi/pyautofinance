@@ -31,5 +31,5 @@ strategy = TestStrategy
 cerebro = bt.Cerebro()
 cerebro.broker.set_cash(1000000)
 cerebro.adddata(datafeed)
-cerebro.addstrategy(strategy, logging=True, stop_loss=0.5, risk_reward=2)
+cerebro.addstrategy(strategy, logging=True, stop_loss=10, risk_reward=2)
 cerebro.run()
