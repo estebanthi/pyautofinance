@@ -13,10 +13,10 @@ class TestFeedTitle(unittest.TestCase):
     config = Config()
     datasets_pathname = config.get_datasets_pathname()
 
-    test_feed_filename = "CRYPTO_BNB-BTC_01-01-2020_00-00-00_01-01-2021_00-00-00_m5.csv"
+    test_feed_filename = "CRYPTO_BTC-EUR_2020-01-01_00-00-00_2020-03-01_00-00-00_d1.csv"
 
-    market_options = MarketOptions(Market.CRYPTO, "BNB-BTC")
-    time_options = TimeOptions(dt.datetime(2020, 1, 1, 0, 0, 0), dt.datetime(2021, 1, 1, 0, 0, 0), TimeFrame.m5)
+    market_options = MarketOptions(Market.CRYPTO, "BTC-EUR")
+    time_options = TimeOptions(dt.datetime(2020, 1, 1, 0, 0, 0), dt.datetime(2020, 3, 1, 0, 0, 0), TimeFrame.d1)
     feed_options = FeedOptions(market_options, time_options)
 
     def test_feed_name(self):

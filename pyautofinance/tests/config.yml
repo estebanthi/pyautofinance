@@ -1,1 +1,4 @@
 datasets_pathname: "test_data"
+
+binance_api_key: "OI2ByAhznxxrob9fUsHvi6fQqnL8CQagYQ8rdEwdcg89ER1tKUB3POnpEqYxGqVE"
+binance_api_secret: "ZRsypZaVgy1X8EMVYJgCXpAFqx1FPET0drsFA2t7gLcuLMWdBWVkyOc0SRV2BDQ1"

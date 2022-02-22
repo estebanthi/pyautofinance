@@ -1,5 +1,6 @@
 import backtrader as bt
 import datetime as dt
+import ccxt
 
 from dataclasses import dataclass
 from enum import Enum
@@ -75,4 +76,10 @@ class FeedOptions:
 class BrokerOptions:
     cash: int
     commission: float
+    currency: str
+
+
+@dataclass
+class ExchangeOptions:
+    exchange: ccxt.Exchange
     currency: str

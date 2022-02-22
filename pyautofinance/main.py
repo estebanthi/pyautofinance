@@ -1,10 +1,11 @@
 import datetime as dt
 import backtrader as bt
+import ccxt
 
-from pyautofinance.common.options import FeedOptions, TimeOptions, MarketOptions, TimeFrame, Market
+from pyautofinance.common.options import FeedOptions, TimeOptions, MarketOptions, ExchangeOptions, TimeFrame, Market
 
 from pyautofinance.common.feeds.extractors import CSVCandlesExtractor, CCXTCandlesExtractor
-from pyautofinance.common.feeds.datafeeds_generators import BacktestingDatafeedGenerator
+from pyautofinance.common.feeds.datafeeds_generators import BacktestingDatafeedGenerator, CryptoLiveDatafeedGenerator
 
 from pyautofinance.common.feeds.writers import CandlesWriter
 from pyautofinance.common.feeds.FeedTitle import FeedTitle
@@ -33,6 +34,18 @@ strategy = strategies_factory.make_strategy(TestStrategy, logging=True, stop_los
 
 cerebro = bt.Cerebro()
 cerebro.broker.set_cash(1000000)
+cerebro.adddata(datafeed)
+cerebro.addstrategy(strategy[0], **strategy[1])
+cerebro.run()
+
+live_time_options = TimeOptions(dt.datetime(2022, 2, 22), dt.datetime(2023, 1, 1), TimeFrame.m1)
+exchange_options = ExchangeOptions(ccxt.binance(), "EUR")
+live_feed_options = FeedOptions(market_options, live_time_options)
+
+datafeed_generator = CryptoLiveDatafeedGenerator()
+datafeed = datafeed_generator.generate_datafeed(live_feed_options, exchange_options)
+
+cerebro = bt.Cerebro()
 cerebro.adddata(datafeed)
 cerebro.addstrategy(strategy[0], **strategy[1])
 cerebro.run()

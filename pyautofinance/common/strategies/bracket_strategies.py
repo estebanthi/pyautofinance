@@ -2,10 +2,10 @@ from backtrader.indicators import MACD as MACD
 from backtrader.indicators import CrossOver as CrossOver
 from backtrader.indicators import ExponentialMovingAverage as EMA
 
-from pyautofinance.common.strategies.SimpleBracketStrategy import SimpleBracketStrategy
+from pyautofinance.common.strategies._SimpleBracketStrategy import _SimpleBracketStrategy
 
 
-class TestStrategy(SimpleBracketStrategy):
+class TestStrategy(_SimpleBracketStrategy):
 
     params = (
         ('period_me1', 12),
