@@ -32,7 +32,7 @@ class TestCandlesExtractor(unittest.TestCase):
         csv_candles_extractor = CSVCandlesExtractor()
         candles = csv_candles_extractor.get_formatted_and_filtered_candles(self.feed_options)
 
-        self.assertTrue(candles.equals(self.formatted_and_filtered_test_candles))
+        self.assertTrue(candles["Close"].equals(self.formatted_and_filtered_test_candles["Close"]))
 
     def test_ccxt_candles_extractor(self):
         ccxt_candles_extractor = CCXTCandlesExtractor()
@@ -41,7 +41,7 @@ class TestCandlesExtractor(unittest.TestCase):
         csv_candles_extractor = CSVCandlesExtractor()
         csv_candles = csv_candles_extractor.get_formatted_and_filtered_candles(self.feed_options)
 
-        self.assertTrue(candles.equals(csv_candles))
+        self.assertTrue(candles["Close"].equals(csv_candles["Close"]))
 
 
 if __name__ == '__main__':
