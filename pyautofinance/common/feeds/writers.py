@@ -5,7 +5,7 @@ class CSVCandlesWriter:
 
     @staticmethod
     def write(feed, destination):
-        feed.to_csv(destination)
+        feed.to_csv(destination, index=False)
 
 
 class _CandlesWriterFactory:

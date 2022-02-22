@@ -8,7 +8,7 @@ from pyautofinance.common.exceptions.feeds import EndDateBeforeStartDate
 
 
 class DateFormat(Enum):
-    FEED_FILENAME = "%m-%d-%Y_%H-%M-%S"
+    FEED_FILENAME = "%Y-%m-%d_%H-%M-%S"
 
 
 class Market(Enum):
@@ -69,3 +69,10 @@ class TimeOptions:
 class FeedOptions:
     market_options: MarketOptions
     time_options: TimeOptions
+
+
+@dataclass
+class BrokerOptions:
+    cash: int
+    commission: float
+    currency: str
