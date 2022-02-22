@@ -3,7 +3,7 @@ import datetime as dt
 
 from ccxt import binance
 
-from pyautofinance.common.options import FeedOptions, MarketOptions, ExchangeOptions, TimeOptions, Market, TimeFrame
+from pyautofinance.common.options import FeedOptions, MarketOptions, BrokerOptions, TimeOptions, Market, TimeFrame
 
 from pyautofinance.common.feeds.extractors import CSVCandlesExtractor
 
@@ -13,12 +13,12 @@ from pyautofinance.common.feeds.datafeeds_generators import BacktestingDatafeedG
 class TestDatafeedsGenerators(unittest.TestCase):
 
     market_options = MarketOptions(Market.CRYPTO, "BTC-EUR")
-    time_options = TimeOptions(dt.datetime(2020, 1, 1, 0, 0, 0), dt.datetime(2020, 3, 1, 0, 0, 0), TimeFrame.d1)
+    time_options = TimeOptions(dt.datetime(2020, 1, 1, 0, 0, 0), end_date=dt.datetime(2020, 3, 1, 0, 0, 0), timeframe=TimeFrame.d1)
     feed_options = FeedOptions(market_options, time_options)
 
-    live_time_options = TimeOptions(dt.datetime(2022, 1, 1), dt.datetime(2022, 2, 1), TimeFrame.d1)
+    live_time_options = TimeOptions(dt.datetime(2022, 1, 1), end_date=dt.datetime(2022, 2, 1), timeframe=TimeFrame.d1)
     live_feed_options = FeedOptions(market_options, time_options)
-    live_exchange_options = ExchangeOptions(binance(), "EUR")
+    live_exchange_options = BrokerOptions(exchange=binance(), currency="EUR")
 
     def test_backtesting_datafeed(self):
         csv_candles_extractor = CSVCandlesExtractor()

@@ -9,6 +9,8 @@ from pyautofinance.common.feeds.formatters import SimpleCandlesFormatter
 from pyautofinance.common.feeds.filterers import SimpleCandlesFilterer
 from pyautofinance.common.feeds.FeedTitle import FeedTitle
 
+from pyautofinance.common.feeds.ccxt_utils import format_timeframe_for_ccxt, format_symbol_for_ccxt
+
 
 class CandlesExtractor(ABC):
 
@@ -77,21 +79,25 @@ class CCXTCandlesExtractor(CandlesExtractor):
 
         return source_candles
 
-    def _get_exchange_from_market_options(self, market_options):
+    @staticmethod
+    def _get_exchange_from_market_options(market_options):
         symbol = market_options.symbol
         return binance() if "BNB" in symbol else bitfinex()
 
-    def _get_symbol_from_market_options(self, market_options):
+    @staticmethod
+    def _get_symbol_from_market_options(market_options):
         symbol = market_options.symbol
-        formatted_symbol = self._format_symbol_for_ccxt(symbol)
+        formatted_symbol = format_symbol_for_ccxt(symbol)
         return formatted_symbol
 
-    def _get_timeframe_from_time_options(self, time_options):
+    @staticmethod
+    def _get_timeframe_from_time_options(time_options):
         timeframe = time_options.timeframe
-        formatted_timeframe = self._format_timeframe_for_ccxt(timeframe)
+        formatted_timeframe = format_timeframe_for_ccxt(timeframe)
         return formatted_timeframe
 
-    def _get_since_from_time_options(self, time_options):
+    @staticmethod
+    def _get_since_from_time_options(time_options):
         start_date = time_options.start_date
         since = int(dt.datetime.timestamp(start_date) * 1000)
         return since
@@ -118,16 +124,6 @@ class CCXTCandlesExtractor(CandlesExtractor):
     def _epoch_to_datetime(epoch):
         epoch /= 1000
         return dt.datetime.fromtimestamp(epoch)
-
-    @staticmethod
-    def _format_symbol_for_ccxt(symbol):
-        return symbol.replace("-", "/")
-
-    @staticmethod
-    def _format_timeframe_for_ccxt(timeframe):
-        # We need to invert compression and unit to have a formatted timeframe
-        formatted_timeframe = timeframe.value[::-1]
-        return formatted_timeframe
 
 
 class CSVCandlesExtractor(CandlesExtractor):

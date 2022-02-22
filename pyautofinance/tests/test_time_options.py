@@ -14,11 +14,11 @@ class TestTimeOptions(unittest.TestCase):
     timeframe = TimeFrame.d1
 
     def test_dates_ok(self):
-        time_options = TimeOptions(self.start_date, self.end_date_ok, self.timeframe)
+        time_options = TimeOptions(self.start_date, end_date=self.end_date_ok, timeframe=self.timeframe)
 
     def test_dates_nok(self):
         with self.assertRaises(EndDateBeforeStartDate):
-            time_options = TimeOptions(self.start_date, self.end_date_nok, self.timeframe)
+            time_options = TimeOptions(self.start_date, end_date=self.end_date_nok, timeframe=self.timeframe)
 
 
 if __name__ == '__main__':

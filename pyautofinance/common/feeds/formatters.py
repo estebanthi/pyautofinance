@@ -1,4 +1,5 @@
 import pandas as pd
+import math
 
 from abc import ABC, abstractmethod
 
@@ -33,3 +34,7 @@ class SimpleCandlesFormatter(CandlesFormatter):
     def _format_date_column(candles, feed_options):
         candles["Date"] = pd.to_datetime(candles["Date"])
         return candles.copy()
+
+    @staticmethod
+    def _format_volume_column(candles, feed_options):
+        candles["Volume"] = candles["Volume"].apply(lambda x: math.trunc(x*100)/100)

@@ -16,7 +16,7 @@ class TestWriting(unittest.TestCase):
     extractor = CSVCandlesExtractor()
 
     market_options = MarketOptions(Market.CRYPTO, "BTC-EUR")
-    time_options = TimeOptions(dt.datetime(2020, 1, 1, 0, 0, 0), dt.datetime(2020, 3, 1, 0, 0, 0), TimeFrame.d1)
+    time_options = TimeOptions(dt.datetime(2020, 1, 1, 0, 0, 0), end_date=dt.datetime(2020, 3, 1, 0, 0, 0), timeframe=TimeFrame.d1)
     feed_options = FeedOptions(market_options, time_options)
 
     def test_writing(self):

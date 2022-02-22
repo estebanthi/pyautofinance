@@ -16,7 +16,7 @@ class TestFeedTitle(unittest.TestCase):
     test_feed_filename = "CRYPTO_BTC-EUR_2020-01-01_00-00-00_2020-03-01_00-00-00_d1.csv"
 
     market_options = MarketOptions(Market.CRYPTO, "BTC-EUR")
-    time_options = TimeOptions(dt.datetime(2020, 1, 1, 0, 0, 0), dt.datetime(2020, 3, 1, 0, 0, 0), TimeFrame.d1)
+    time_options = TimeOptions(dt.datetime(2020, 1, 1, 0, 0, 0), end_date=dt.datetime(2020, 3, 1, 0, 0, 0), timeframe=TimeFrame.d1)
     feed_options = FeedOptions(market_options, time_options)
 
     def test_feed_name(self):

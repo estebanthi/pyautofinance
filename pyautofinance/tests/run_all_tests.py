@@ -6,6 +6,7 @@ from pyautofinance.tests.test_time_options import TestTimeOptions
 from pyautofinance.tests.test_candles_writer import TestWriting
 from pyautofinance.tests.test_datafeeds_generators import TestDatafeedsGenerators
 from pyautofinance.tests.test_candles_extractor import TestCandlesExtractor
+from pyautofinance.tests.test_broker import TestBroker
 
 
 def run_some_tests():
@@ -18,6 +19,7 @@ def run_some_tests():
         TestCandlesExtractor,
         TestDatafeedsGenerators,
         TestTimeOptions,
+        TestBroker
     ]
 
     loader = unittest.TestLoader()

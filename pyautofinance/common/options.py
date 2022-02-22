@@ -58,8 +58,8 @@ class MarketOptions:
 @dataclass
 class TimeOptions:
     start_date: dt.datetime
-    end_date: dt.datetime
     timeframe: TimeFrame
+    end_date: dt.datetime = None  # Not useful for live datafeed
 
     def __post_init__(self):
         if self.end_date < self.start_date:
@@ -74,12 +74,7 @@ class FeedOptions:
 
 @dataclass
 class BrokerOptions:
-    cash: int
-    commission: float
-    currency: str
-
-
-@dataclass
-class ExchangeOptions:
-    exchange: ccxt.Exchange
-    currency: str
+    cash: int = None  # Parameters may vary for live or backtesting config
+    commission: float = None
+    currency: str = None
+    exchange: ccxt.Exchange = None

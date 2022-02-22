@@ -6,7 +6,7 @@ from pyautofinance.common.options import FeedOptions, MarketOptions, TimeOptions
 
 from pyautofinance.common.config import Config
 
-from pyautofinance.common.feeds.extractors import CSVCandlesExtractor
+from pyautofinance.common.feeds.extractors import CSVCandlesExtractor, CCXTCandlesExtractor
 from pyautofinance.common.feeds.formatters import SimpleCandlesFormatter
 from pyautofinance.common.feeds.filterers import SimpleCandlesFilterer
 
@@ -19,7 +19,7 @@ class TestCandlesExtractor(unittest.TestCase):
     test_candles = pd.read_csv(datasets_pathname + "/" + test_feed_filename)
 
     market_options = MarketOptions(Market.CRYPTO, "BTC-EUR")
-    time_options = TimeOptions(dt.datetime(2020, 1, 1, 0, 0, 0), dt.datetime(2020, 3, 1, 0, 0, 0), TimeFrame.d1)
+    time_options = TimeOptions(dt.datetime(2020, 1, 1, 0, 0, 0), end_date=dt.datetime(2020, 3, 1, 0, 0, 0), timeframe=TimeFrame.d1)
     feed_options = FeedOptions(market_options, time_options)
 
     formatter = SimpleCandlesFormatter()
@@ -34,12 +34,14 @@ class TestCandlesExtractor(unittest.TestCase):
 
         self.assertTrue(candles.equals(self.formatted_and_filtered_test_candles))
 
-    """ TOO LONG TO TEST
     def test_ccxt_candles_extractor(self):
         ccxt_candles_extractor = CCXTCandlesExtractor()
         candles = ccxt_candles_extractor.get_formatted_and_filtered_candles(self.feed_options)
-        print(candles)
-    """
+
+        csv_candles_extractor = CSVCandlesExtractor()
+        csv_candles = csv_candles_extractor.get_formatted_and_filtered_candles(self.feed_options)
+
+        self.assertTrue(candles.equals(csv_candles))
 
 
 if __name__ == '__main__':
