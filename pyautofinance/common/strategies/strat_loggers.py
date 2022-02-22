@@ -6,8 +6,11 @@ from termcolor import colored
 
 class _StratLogger(ABC):
 
-    def __init__(self, logging):
-        self.logging = logging
+    def __init__(self):
+        self.logging = True
+
+    def disable(self):
+        self.logging = False
 
     def log(self, txt, logging_data):
         if self.logging:

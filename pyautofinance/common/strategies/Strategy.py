@@ -14,13 +14,16 @@ class Strategy(bt.Strategy):
         ('shorts_enabled', True),
         ('stop_loss', 0),
         ('risk_reward', 0),
-        ('logger', DefaultStratLogger)
+        ('logger', DefaultStratLogger()),
     )
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.orders_ref = list()
         self.total_profit = 0
-        self.logger = self.p.logger(self.p.logging)
+
+        self.logger = self.p.logger
+        if not self.p.logging:
+            self.logger.disable()
 
     # Strategy constructor, use it instead of __init__
     def _init_strat(self) -> None:

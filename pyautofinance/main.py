@@ -9,7 +9,8 @@ from pyautofinance.common.feeds.datafeeds_generators import BacktestingDatafeedG
 from pyautofinance.common.feeds.writers import CandlesWriter
 from pyautofinance.common.feeds.FeedTitle import FeedTitle
 
-from pyautofinance.common.strategies.TestStrategy import TestStrategy
+from pyautofinance.common.strategies.bracket_strategies import TestStrategy
+from pyautofinance.common.strategies.StrategiesFactory import StrategiesFactory
 
 
 time_options = TimeOptions(dt.datetime(2020, 1, 1), dt.datetime(2022, 1, 1), TimeFrame.d1)
@@ -26,10 +27,12 @@ writer = CandlesWriter()
 datafeed_generator = BacktestingDatafeedGenerator()
 datafeed = datafeed_generator.generate_datafeed(candles, feed_options)
 
-strategy = TestStrategy
+strategies_factory = StrategiesFactory
+
+strategy = strategies_factory.make_strategy(TestStrategy, logging=True, stop_loss=10, risk_reward=2)
 
 cerebro = bt.Cerebro()
 cerebro.broker.set_cash(1000000)
 cerebro.adddata(datafeed)
-cerebro.addstrategy(strategy, logging=True, stop_loss=10, risk_reward=2)
+cerebro.addstrategy(strategy[0], **strategy[1])
 cerebro.run()
