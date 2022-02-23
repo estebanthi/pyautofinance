@@ -3,8 +3,9 @@ import backtrader as bt
 import datetime as dt
 
 from unittest.mock import patch
+from collections import namedtuple
 
-from pyautofinance.common.strategies.StrategiesFactory import StrategiesFactory
+from pyautofinance.common.strategies.StrategiesFactory import StrategiesFactory, StrategyType, Strategy
 from pyautofinance.common.strategies.TestBracketStrategy import TestBracketStrategy
 from pyautofinance.common.strategies.strat_loggers import DefaultStratLogger
 from pyautofinance.common.feeds.extractors import CSVCandlesExtractor
@@ -14,12 +15,20 @@ from pyautofinance.common.feeds.datafeeds_generators import BacktestingDatafeedG
 
 class TestStrategies(unittest.TestCase):
 
-    def test_srategies_factory(self):
+    def test_simple_strategy(self):
         factory = StrategiesFactory()
         strategy = TestBracketStrategy
 
         strategy_logging = factory.make_strategy(strategy, logging=True)
-        self.assertEqual(strategy_logging, (TestBracketStrategy, {'logging': True}))
+        self.assertEqual(strategy_logging, Strategy(TestBracketStrategy, {'logging': True}, StrategyType.SIMPLE))
+
+    def test_optimized_strategy(self):
+        factory = StrategiesFactory()
+        strategy = TestBracketStrategy
+
+        strategy_logging = factory.make_strategy(strategy, logging=True, period=range(10))
+        self.assertEqual(strategy_logging,
+                         Strategy(TestBracketStrategy, {'logging': True, 'period': range(10)}, StrategyType.OPTIMIZED))
 
     @patch('builtins.print')
     def test_default_strat_logger(self, mock_print):

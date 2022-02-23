@@ -6,6 +6,9 @@ from dataclasses import dataclass
 from enum import Enum
 
 from pyautofinance.common.exceptions.feeds import EndDateBeforeStartDate
+from pyautofinance.common.feeds.writers import CandlesWriter
+from pyautofinance.common.feeds.formatters import CandlesFormatter
+from pyautofinance.common.feeds.filterers import CandlesFilterer
 
 
 class DateFormat(Enum):
@@ -62,8 +65,9 @@ class TimeOptions:
     end_date: dt.datetime = None  # Not useful for live datafeed
 
     def __post_init__(self):
-        if self.end_date < self.start_date:
-            raise EndDateBeforeStartDate
+        if self.end_date:
+            if self.end_date < self.start_date:
+                raise EndDateBeforeStartDate
 
 
 @dataclass
@@ -78,3 +82,28 @@ class BrokerOptions:
     commission: float = None
     currency: str = None
     exchange: ccxt.Exchange = None
+
+
+@dataclass
+class WritingOptions:
+    candles_destination: any = None
+
+
+@dataclass
+class FormattingOptions:
+    formatter: CandlesFormatter
+
+
+@dataclass
+class FilteringOptions:
+    filterer: CandlesFilterer
+
+
+@dataclass
+class EngineOptions:
+    broker_options: BrokerOptions
+    feed_options: FeedOptions
+    strategies: list
+    writing_options: WritingOptions = None
+    formatting_options: FormattingOptions = None
+    filtering_options: FilteringOptions = None

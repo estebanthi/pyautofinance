@@ -3,13 +3,11 @@ import math
 
 from abc import ABC, abstractmethod
 
-from pyautofinance.common.options import FeedOptions
-
 
 class CandlesFormatter(ABC):
 
     @abstractmethod
-    def format_candles(self, candles: pd.DataFrame, feed_options: FeedOptions) -> pd.DataFrame:
+    def format_candles(self, candles: pd.DataFrame, feed_options) -> pd.DataFrame:
         pass
 
     def _format_date_column(self, candles, feed_options):

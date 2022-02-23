@@ -5,10 +5,25 @@ from backtrader.feeds import PandasData
 from abc import ABC, abstractmethod
 from ccxtbt import CCXTStore
 
-from pyautofinance.common.options import TimeFrame
+from pyautofinance.common.options import TimeFrame, Market
 from pyautofinance.common.feeds.extractors import CCXTCandlesExtractor
 from pyautofinance.common.feeds.ccxt_utils import format_symbol_for_ccxt
 from pyautofinance.common.broker.BrokerConfig import BrokerConfig
+
+
+class DatafeedGeneratorsFactory:
+
+    @staticmethod
+    def generate_datafeed(candles, feed_options, broker_options):
+        time_options = feed_options.time_options
+        market_options = feed_options.market_options
+
+        if not time_options.end_date:  # Means we're looking for a live datafeed
+
+            if market_options.market == Market.CRYPTO:
+                return CryptoLiveDatafeedGenerator().generate_datafeed(feed_options, broker_options)
+
+        return BacktestingDatafeedGenerator().generate_datafeed(candles, feed_options)
 
 
 class DatafeedGenerator(ABC):

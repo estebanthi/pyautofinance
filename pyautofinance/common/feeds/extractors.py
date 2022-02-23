@@ -1,10 +1,11 @@
 import pandas as pd
 import datetime as dt
+import os
 
 from abc import ABC, abstractmethod
 from ccxt import binance, bitfinex
 
-from pyautofinance.common.options import FeedOptions
+from pyautofinance.common.options import FeedOptions, Market
 from pyautofinance.common.feeds.formatters import SimpleCandlesFormatter
 from pyautofinance.common.feeds.filterers import SimpleCandlesFilterer
 from pyautofinance.common.feeds.FeedTitle import FeedTitle
@@ -12,6 +13,25 @@ from pyautofinance.common.feeds.FeedTitle import FeedTitle
 from pyautofinance.common.feeds.ccxt_utils import format_timeframe_for_ccxt, format_symbol_for_ccxt
 
 from pyautofinance.common.exceptions.feeds import NoCSVFileFoundWithThoseOptions
+
+
+class CandlesExtractorsFactory:
+
+    @staticmethod
+    def get_candles(feed_options, formatting_options=None, filtering_options=None):
+        if not feed_options.time_options.end_date:
+            return None
+        feed_title = FeedTitle(feed_options)
+        feed_pathname = feed_title.get_pathname()
+
+        formatter = SimpleCandlesFormatter() or formatting_options.formatter
+        filterer = SimpleCandlesFilterer() or filtering_options.filterer
+
+        if os.path.isfile(feed_pathname):
+            return CSVCandlesExtractor().get_formatted_and_filtered_candles(feed_options, formatter, filterer)
+
+        if feed_options.market_options.market == Market.CRYPTO:
+            return CCXTCandlesExtractor().get_formatted_and_filtered_candles(feed_options, formatter, filterer)
 
 
 class CandlesExtractor(ABC):
