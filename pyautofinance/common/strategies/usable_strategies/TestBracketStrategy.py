@@ -5,7 +5,6 @@ from backtrader.indicators import ExponentialMovingAverage as EMA
 from pyautofinance.common.strategies._SimpleBracketStrategy import _SimpleBracketStrategy
 
 
-
 class TestBracketStrategy(_SimpleBracketStrategy):
 
     params = (
