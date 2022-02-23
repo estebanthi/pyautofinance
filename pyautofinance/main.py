@@ -1,6 +1,5 @@
 import backtrader as bt
 import datetime as dt
-import numpy as np
 
 from pyautofinance.common.engine.Engine import Engine
 from pyautofinance.common.options import EngineOptions, MarketOptions, TimeOptions, FeedOptions, BrokerOptions,\
@@ -31,7 +30,7 @@ engine_options = EngineOptions(broker_options, feed_options, [strategy], sizer, 
                                writing_options=writing_options)
 
 engine = Engine(engine_options)
-results = engine.multirun(['BTC-EUR', 'ETH-EUR'])
+results = engine.run()
 
 results_analyzer = ResultsAnalyzer(results)
 

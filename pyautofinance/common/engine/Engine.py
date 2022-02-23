@@ -8,6 +8,7 @@ from pyautofinance.common.feeds.extractors import CandlesExtractorsFactory
 from pyautofinance.common.feeds.datafeeds_generators import DatafeedGeneratorsFactory
 from pyautofinance.common.feeds.writers import CandlesWriter
 from pyautofinance.common.options import TimeFrame, WritingOptions
+from pyautofinance.common.engine.EngineCerebro import EngineCerebro
 
 
 class RunningMode(Enum):
@@ -19,7 +20,7 @@ class Engine:
 
     def __init__(self, engine_options):
         self.engine_options = engine_options
-        self.cerebro = bt.Cerebro()
+        self.cerebro = EngineCerebro()
 
     def multirun(self, symbols, candles_destinations=None):
         engine_options = self.engine_options
@@ -62,7 +63,7 @@ class Engine:
         return {self.engine_options.feed_options.market_options.symbol: self._run(self.engine_options)}
 
     def _run(self, engine_options):
-        cerebro = bt.Cerebro()
+        cerebro = EngineCerebro()
 
         strategies = engine_options.strategies
         running_mode = self._choose_running_mode(strategies)
