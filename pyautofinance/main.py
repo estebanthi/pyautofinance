@@ -1,51 +1,35 @@
-import datetime as dt
 import backtrader as bt
-import ccxt
+import datetime as dt
+import numpy as np
 
-from pyautofinance.common.options import FeedOptions, TimeOptions, MarketOptions, BrokerOptions, TimeFrame, Market
-
-from pyautofinance.common.feeds.extractors import CSVCandlesExtractor, CCXTCandlesExtractor
-from pyautofinance.common.feeds.datafeeds_generators import BacktestingDatafeedGenerator, CryptoLiveDatafeedGenerator
-
-from pyautofinance.common.feeds.writers import CandlesWriter
-from pyautofinance.common.feeds.FeedTitle import FeedTitle
-
-from pyautofinance.common.strategies.bracket_strategies import TestStrategy
+from pyautofinance.common.engine.Engine import Engine
+from pyautofinance.common.options import EngineOptions, MarketOptions, TimeOptions, FeedOptions, BrokerOptions,\
+    TimeFrame, Market, WritingOptions
 from pyautofinance.common.strategies.StrategiesFactory import StrategiesFactory
+from pyautofinance.common.strategies.usable_strategies.TestBracketStrategy import TestBracketStrategy
+from pyautofinance.common.sizers.SizersFactory import SizersFactory
+from pyautofinance.common.feeds.FeedTitle import FeedTitle
+from pyautofinance.common.analyzers.AnalyzersFactory import AnalyzersFactory
+from pyautofinance.common.ResultsAnalyzer import ResultsAnalyzer
 
-
-time_options = TimeOptions(dt.datetime(2020, 1, 1), end_date=dt.datetime(2022, 1, 1), timeframe=TimeFrame.d1)
-market_options = MarketOptions(Market.CRYPTO, "BTC-EUR")
+market_options = MarketOptions(Market.CRYPTO, 'BTC-EUR')
+time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.h4, dt.datetime(2022, 1, 1))
 feed_options = FeedOptions(market_options, time_options)
 
-csv_extractor = CSVCandlesExtractor()
-ccxt_extractor = CCXTCandlesExtractor()
-candles = ccxt_extractor.get_formatted_and_filtered_candles(feed_options)
+broker_options = BrokerOptions(100_000, 0.2)
 
-writer = CandlesWriter()
-writer.write(candles, FeedTitle(feed_options).get_pathname())
+strategy = StrategiesFactory().make_strategy(TestBracketStrategy, logging=False, stop_loss=2, risk_reward=range(2, 5))
+sizer = SizersFactory().make_sizer(bt.sizers.PercentSizer, percents=10)
+analyzer = AnalyzersFactory().make_analyzer(bt.analyzers.TradeAnalyzer)
 
-datafeed_generator = BacktestingDatafeedGenerator()
-datafeed = datafeed_generator.generate_datafeed(candles, feed_options)
+writing_options = WritingOptions(candles_destination=FeedTitle(feed_options).get_pathname())
 
-strategies_factory = StrategiesFactory
+engine_options = EngineOptions(broker_options, feed_options, [strategy], sizer, analyzers=[analyzer],
+                               writing_options=writing_options)
 
-strategy = strategies_factory.make_strategy(TestStrategy, logging=False, stop_loss=10, risk_reward=2)
+engine = Engine(engine_options)
+results = engine.run()
 
-cerebro = bt.Cerebro()
-cerebro.broker.set_cash(1000000)
-cerebro.adddata(datafeed)
-cerebro.addstrategy(strategy[0], **strategy[1])
-cerebro.run()
+results_analyzer = ResultsAnalyzer(results)
 
-live_time_options = TimeOptions(dt.datetime(2022, 2, 22), end_date=dt.datetime(2023, 1, 1), timeframe=TimeFrame.m1)
-broker_options = BrokerOptions(exchange=ccxt.binance(), currency="EUR")
-live_feed_options = FeedOptions(market_options, live_time_options)
-
-datafeed_generator = CryptoLiveDatafeedGenerator()
-datafeed = datafeed_generator.generate_datafeed(live_feed_options, broker_options)
-print(type(datafeed))
-cerebro = bt.Cerebro()
-cerebro.adddata(datafeed)
-cerebro.addstrategy(strategy[0], **strategy[1])
-cerebro.run()
+print(results_analyzer.pretty_pnls())

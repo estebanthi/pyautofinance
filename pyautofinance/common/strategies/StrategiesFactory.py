@@ -1,5 +1,5 @@
 from enum import Enum
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pyautofinance.common.strategies._Strategy import _Strategy
 
 
@@ -10,10 +10,10 @@ class StrategyType(Enum):
 
 @dataclass
 class Strategy:
-    classname: _Strategy
+    strategy: _Strategy
     type: StrategyType
-    parameters: dict = None
-    timeframes: list = None
+    parameters: dict = field(default_factory=dict)
+    timeframes: list = field(default_factory=list)
 
 
 class StrategiesFactory:

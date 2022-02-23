@@ -10,6 +10,8 @@ from pyautofinance.common.strategies.StrategiesFactory import StrategiesFactory
 from pyautofinance.common.strategies.usable_strategies.TestBracketStrategy import TestBracketStrategy
 from pyautofinance.common.engine.Engine import Engine, RunningMode
 from pyautofinance.common.feeds.FeedTitle import FeedTitle
+from pyautofinance.common.sizers.SizersFactory import SizersFactory
+from pyautofinance.common.analyzers.AnalyzersFactory import AnalyzersFactory
 
 
 class TestEngine(unittest.TestCase):
@@ -23,7 +25,8 @@ class TestEngine(unittest.TestCase):
 
         strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, logging=True)]
 
-        engine_options = EngineOptions(broker_options, feed_options, strategies)
+        sizer = SizersFactory().make_sizer(bt.sizers.AllInSizer)
+        engine_options = EngineOptions(broker_options, feed_options, strategies, sizer)
 
         engine = Engine(engine_options)
 
@@ -38,7 +41,8 @@ class TestEngine(unittest.TestCase):
 
         strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, logging=True, period=range(10))]
 
-        engine_options = EngineOptions(broker_options, feed_options, strategies)
+        sizer = SizersFactory().make_sizer(bt.sizers.AllInSizer)
+        engine_options = EngineOptions(broker_options, feed_options, strategies, sizer)
 
         engine = Engine(engine_options)
 
@@ -53,7 +57,8 @@ class TestEngine(unittest.TestCase):
 
         strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, logging=True, period=range(10))]
 
-        engine_options = EngineOptions(broker_options, feed_options, strategies)
+        sizer = SizersFactory().make_sizer(bt.sizers.AllInSizer)
+        engine_options = EngineOptions(broker_options, feed_options, strategies, sizer)
 
         engine = Engine(engine_options)
 
@@ -71,7 +76,8 @@ class TestEngine(unittest.TestCase):
 
         strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, logging=True, period=range(10))]
 
-        engine_options = EngineOptions(broker_options, feed_options, strategies)
+        sizer = SizersFactory().make_sizer(bt.sizers.AllInSizer)
+        engine_options = EngineOptions(broker_options, feed_options, strategies, sizer)
 
         engine = Engine(engine_options)
 
@@ -91,7 +97,8 @@ class TestEngine(unittest.TestCase):
 
         strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, logging=True, period=range(10))]
 
-        engine_options = EngineOptions(broker_options, feed_options, strategies, writing_options=writing_options)
+        sizer = SizersFactory().make_sizer(bt.sizers.AllInSizer)
+        engine_options = EngineOptions(broker_options, feed_options, strategies, sizer, writing_options=writing_options)
 
         engine = Engine(engine_options)
 
@@ -109,7 +116,8 @@ class TestEngine(unittest.TestCase):
 
         strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, timeframes=[TimeFrame.M1], longs_enabled=[True, False])]
 
-        engine_options = EngineOptions(broker_options, feed_options, strategies)
+        sizer = SizersFactory().make_sizer(bt.sizers.AllInSizer)
+        engine_options = EngineOptions(broker_options, feed_options, strategies, sizer)
 
         engine = Engine(engine_options)
 
@@ -125,7 +133,8 @@ class TestEngine(unittest.TestCase):
 
         strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, longs_enabled=True)]
 
-        engine_options = EngineOptions(broker_options, feed_options, strategies)
+        sizer = SizersFactory().make_sizer(bt.sizers.AllInSizer)
+        engine_options = EngineOptions(broker_options, feed_options, strategies, sizer)
 
         engine = Engine(engine_options)
 
@@ -142,7 +151,8 @@ class TestEngine(unittest.TestCase):
 
         strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, longs_enabled=True)]
 
-        engine_options = EngineOptions(broker_options, feed_options, strategies)
+        sizer = SizersFactory().make_sizer(bt.sizers.AllInSizer)
+        engine_options = EngineOptions(broker_options, feed_options, strategies, sizer)
 
         engine = Engine(engine_options)
 
@@ -154,6 +164,49 @@ class TestEngine(unittest.TestCase):
         result = engine.multirun(symbols, destinations)
 
         self.assertEqual(type(result['BTC-EUR'][0]), TestBracketStrategy)
+
+    def test_analyzers(self):
+        broker_options = BrokerOptions(100_000, 0.2)
+
+        market_options = MarketOptions(Market.CRYPTO, 'BTC-EUR')
+        time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.d1, dt.datetime(2021, 1, 1))
+        feed_options = FeedOptions(market_options, time_options)
+
+        strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, longs_enabled=True)]
+
+        sizer = SizersFactory().make_sizer(bt.sizers.AllInSizer)
+        analyzer = AnalyzersFactory().make_analyzer(bt.analyzers.TradeAnalyzer)
+
+        engine_options = EngineOptions(broker_options, feed_options, strategies, sizer, analyzers=[analyzer])
+
+        engine = Engine(engine_options)
+
+        result = engine.run()
+
+        self.assertEqual(type(result['BTC-EUR'][0].analyzers.tradeanalyzer), bt.analyzers.TradeAnalyzer)
+
+    def test_results_saving(self):
+        broker_options = BrokerOptions(100_000, 0.2)
+
+        market_options = MarketOptions(Market.CRYPTO, 'BTC-EUR')
+        time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.d1, dt.datetime(2021, 1, 1))
+        feed_options = FeedOptions(market_options, time_options)
+
+        strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, longs_enabled=True)]
+
+        sizer = SizersFactory().make_sizer(bt.sizers.AllInSizer)
+        analyzer = AnalyzersFactory().make_analyzer(bt.analyzers.TradeAnalyzer)
+
+        writing_options = WritingOptions(results_destination='results/strat1')
+
+        engine_options = EngineOptions(broker_options, feed_options, strategies, sizer, analyzers=[analyzer],
+                                       writing_options=writing_options)
+
+        engine = Engine(engine_options)
+
+        result = engine.run()
+
+        self.assertEqual(type(result['BTC-EUR'][0].analyzers.tradeanalyzer), bt.analyzers.TradeAnalyzer)
 
 
 

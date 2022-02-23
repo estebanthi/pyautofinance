@@ -68,7 +68,6 @@ class Engine:
         running_mode = self._choose_running_mode(strategies)
         self._add_strategies_to_cerebro(cerebro, strategies, running_mode)
 
-        """ TODO
         analyzers = engine_options.analyzers
         self._add_analyzers_to_cerebro(cerebro, analyzers)
 
@@ -76,20 +75,18 @@ class Engine:
         self._add_observers_to_cerebro(cerebro, observers)
 
         sizer = engine_options.sizer
-        self._add_sizer_to_cerebro(sizer)
+        self._add_sizer_to_cerebro(cerebro, sizer)
 
         timers = engine_options.timers
-        self._add_timers_to_cerebro(timers)
+        self._add_timers_to_cerebro(cerebro, timers)
 
-        results_destination = engine_options.writing_options.results_destination
-        self._add_writer_to_cerebro(results_destination)"""
+        self._add_writer_to_cerebro(cerebro, engine_options)
 
         broker = self._get_broker(engine_options)
         self._add_broker_to_cerebro(cerebro, broker)
 
         self._add_datafeed_to_cerebro_and_resample_if_needed(cerebro, engine_options)
-
-        result = cerebro.run(optreturn=True, tradehistory=True)
+        result = cerebro.run(optreturn=True, tradehistory=True, maxcpus=1)
         self.cerebro = cerebro  # We need to keep it in memory for plotting
 
         return result
@@ -124,11 +121,11 @@ class Engine:
 
     @staticmethod
     def _add_simple_strategy_to_cerebro(cerebro, strategy):
-        cerebro.addstrategy(strategy.classname, **strategy.parameters)
+        cerebro.addstrategy(strategy.strategy, **strategy.parameters)
 
     @staticmethod
     def _add_optimized_strategy_to_cerebro(cerebro, strategy):
-        cerebro.optstrategy(strategy.classname, **strategy.parameters)
+        cerebro.optstrategy(strategy.strategy, **strategy.parameters)
 
     def _add_datafeed_to_cerebro_and_resample_if_needed(self, cerebro, engine_options):
         datafeed = self._add_and_return_datafeed_to_cerebro(cerebro, engine_options)
@@ -180,6 +177,35 @@ class Engine:
         for timeframe in timeframes:
             bt_timeframe, bt_compression = TimeFrame.get_bt_timeframe_and_compression_from_timeframe(timeframe)
             cerebro.resampledata(datafeed, timeframe=bt_timeframe, compression=bt_compression)
+
+    @staticmethod
+    def _add_analyzers_to_cerebro(cerebro, analyzers):
+        if analyzers:
+            for analyzer in analyzers:
+                cerebro.addanalyzer(analyzer.analyzer, **analyzer.parameters)
+
+    @staticmethod
+    def _add_observers_to_cerebro(cerebro, observers):
+        if observers:
+            for observer in observers:
+                cerebro.addanalyzer(observer.observer, **observer.parameters)
+
+    @staticmethod
+    def _add_sizer_to_cerebro(cerebro, sizer):
+        cerebro.addsizer(sizer.sizer, **sizer.parameters)
+
+    @staticmethod
+    def _add_timers_to_cerebro(cerebro, timers):
+        if timers:
+            for timer in timers:
+                cerebro.add_timer(timername=timer.name, function=timer.get_function(), **timer.parameters)
+
+    @staticmethod
+    def _add_writer_to_cerebro(cerebro, engine_options):
+        if engine_options.writing_options:
+            results_destination = engine_options.writing_options.results_destination
+            if results_destination:
+                cerebro.addwriter(bt.WriterFile, out=results_destination)
 
     def plot(self, scheme={"style": 'candlestick', "barup": "green"}):
         self.cerebro.plot(**scheme)
