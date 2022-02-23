@@ -43,6 +43,19 @@ class TestCandlesExtractor(unittest.TestCase):
 
         self.assertTrue(candles["Close"].equals(csv_candles["Close"]))
 
+# TOO LONG TO EXECUTE
+    def test_ccxt_limit_bypass(self):
+        ccxt_candles_extractor = CCXTCandlesExtractor()
+        time_options = TimeOptions(dt.datetime(2020, 1, 1, 0, 0, 0), end_date=dt.datetime(2021, 6, 1, 0, 0, 0),
+                                   timeframe=TimeFrame.h1)
+        feed_options = FeedOptions(self.market_options, time_options)
+        candles = ccxt_candles_extractor.get_formatted_and_filtered_candles(feed_options)
+
+        csv_candles_extractor = CSVCandlesExtractor()
+        csv_candles = csv_candles_extractor.get_formatted_and_filtered_candles(feed_options)
+
+        self.assertTrue(candles["Close"].equals(csv_candles["Close"]))
+
 
 if __name__ == '__main__':
     unittest.main()

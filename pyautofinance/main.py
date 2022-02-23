@@ -20,10 +20,10 @@ feed_options = FeedOptions(market_options, time_options)
 
 csv_extractor = CSVCandlesExtractor()
 ccxt_extractor = CCXTCandlesExtractor()
-candles = csv_extractor.get_formatted_and_filtered_candles(feed_options)
+candles = ccxt_extractor.get_formatted_and_filtered_candles(feed_options)
 
 writer = CandlesWriter()
-# writer.write(candles, FeedTitle(feed_options).get_pathname())
+writer.write(candles, FeedTitle(feed_options).get_pathname())
 
 datafeed_generator = BacktestingDatafeedGenerator()
 datafeed = datafeed_generator.generate_datafeed(candles, feed_options)
