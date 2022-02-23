@@ -64,7 +64,8 @@ class Engine:
             if strategy.type == StrategyType.OPTIMIZED:
                 return True
 
-    def _add_broker_to_cerebro(self, cerebro, broker):
+    @staticmethod
+    def _add_broker_to_cerebro(cerebro, broker):
         cerebro.setbroker(broker)
 
     @staticmethod

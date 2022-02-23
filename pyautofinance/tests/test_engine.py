@@ -7,7 +7,7 @@ from ccxtbt import CCXTFeed
 
 from pyautofinance.common.options import BrokerOptions, EngineOptions, MarketOptions, TimeOptions, FeedOptions, TimeFrame, Market, WritingOptions
 from pyautofinance.common.strategies.StrategiesFactory import StrategiesFactory
-from pyautofinance.common.strategies.TestBracketStrategy import TestBracketStrategy
+from pyautofinance.common.strategies.usable_strategies.TestBracketStrategy import TestBracketStrategy
 from pyautofinance.common.engine.Engine import Engine, RunningMode
 from pyautofinance.common.feeds.FeedTitle import FeedTitle
 
@@ -132,7 +132,6 @@ class TestEngine(unittest.TestCase):
         result = engine.run()
 
         self.assertEqual(type(result[0]), TestBracketStrategy)
-
 
 
 if __name__ == '__main__':
