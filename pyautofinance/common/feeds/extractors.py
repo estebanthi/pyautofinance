@@ -11,6 +11,8 @@ from pyautofinance.common.feeds.FeedTitle import FeedTitle
 
 from pyautofinance.common.feeds.ccxt_utils import format_timeframe_for_ccxt, format_symbol_for_ccxt
 
+from pyautofinance.common.exceptions.feeds import NoCSVFileFoundWithThoseOptions
+
 
 class CandlesExtractor(ABC):
 
@@ -130,7 +132,12 @@ class CSVCandlesExtractor(CandlesExtractor):
 
     def _extract_candles(self, feed_options):
         feed_pathname = self._get_feed_pathname(feed_options)
-        candles = pd.read_csv(feed_pathname)
+
+        try:
+            candles = pd.read_csv(feed_pathname)
+        except FileNotFoundError:
+            raise NoCSVFileFoundWithThoseOptions
+
         return candles
 
     @staticmethod

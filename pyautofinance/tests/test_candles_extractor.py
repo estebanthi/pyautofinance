@@ -10,6 +10,8 @@ from pyautofinance.common.feeds.extractors import CSVCandlesExtractor, CCXTCandl
 from pyautofinance.common.feeds.formatters import SimpleCandlesFormatter
 from pyautofinance.common.feeds.filterers import SimpleCandlesFilterer
 
+from pyautofinance.common.exceptions.feeds import NoCSVFileFoundWithThoseOptions
+
 
 class TestCandlesExtractor(unittest.TestCase):
     config = Config()
@@ -44,7 +46,7 @@ class TestCandlesExtractor(unittest.TestCase):
         self.assertTrue(candles["Close"].equals(csv_candles["Close"]))
 
 # TOO LONG TO EXECUTE
-    def test_ccxt_limit_bypass(self):
+    """def test_ccxt_limit_bypass(self):
         ccxt_candles_extractor = CCXTCandlesExtractor()
         time_options = TimeOptions(dt.datetime(2020, 1, 1, 0, 0, 0), end_date=dt.datetime(2021, 6, 1, 0, 0, 0),
                                    timeframe=TimeFrame.h1)
@@ -54,7 +56,14 @@ class TestCandlesExtractor(unittest.TestCase):
         csv_candles_extractor = CSVCandlesExtractor()
         csv_candles = csv_candles_extractor.get_formatted_and_filtered_candles(feed_options)
 
-        self.assertTrue(candles["Close"].equals(csv_candles["Close"]))
+        self.assertTrue(candles["Close"].equals(csv_candles["Close"]))"""
+
+    def test_csv_not_found(self):
+        time_options = TimeOptions(dt.datetime(2019, 1, 1), TimeFrame.d1, dt.datetime(2020, 1, 1))
+        feed_options = FeedOptions(self.market_options, time_options)
+        csv_extractor = CSVCandlesExtractor()
+        with self.assertRaises(NoCSVFileFoundWithThoseOptions):
+            csv_extractor.get_formatted_and_filtered_candles(feed_options)
 
 
 if __name__ == '__main__':
