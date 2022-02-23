@@ -1,15 +1,26 @@
 from enum import Enum
-from collections import namedtuple
+from dataclasses import dataclass
+from pyautofinance.common.strategies._Strategy import _Strategy
 
 
-Strategy = namedtuple('Strategy', ['classname', 'parameters', 'type'])
+class StrategyType(Enum):
+    SIMPLE = 'SIMPLE'
+    OPTIMIZED = 'OPTIMIZED'
+
+
+@dataclass
+class Strategy:
+    classname: _Strategy
+    type: StrategyType
+    parameters: dict = None
+    timeframes: list = None
 
 
 class StrategiesFactory:
 
-    def make_strategy(self, strategy, **kwargs):
+    def make_strategy(self, strategy, timeframes=[], **kwargs):
         strat_type = self._get_strategy_type(kwargs)
-        return Strategy(strategy, kwargs, strat_type)
+        return Strategy(strategy, strat_type, kwargs, timeframes)
 
     def _get_strategy_type(self, kwargs):
         strat_type = StrategyType.SIMPLE if not self._check_for_iterables_in_parameters(kwargs) else StrategyType.OPTIMIZED
@@ -20,8 +31,3 @@ class StrategiesFactory:
         for v in kwargs.values():
             if hasattr(v, '__iter__') and type(v) != str:
                 return True
-
-
-class StrategyType(Enum):
-    SIMPLE = 'SIMPLE'
-    OPTIMIZED = 'OPTIMIZED'

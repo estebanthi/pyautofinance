@@ -6,9 +6,8 @@ from pyautofinance.common.broker.BrokersFactory import BrokersFactory
 from pyautofinance.common.strategies.StrategiesFactory import StrategyType
 from pyautofinance.common.feeds.extractors import CandlesExtractorsFactory
 from pyautofinance.common.feeds.datafeeds_generators import DatafeedGeneratorsFactory
-from pyautofinance.common.feeds.filterers import SimpleCandlesFilterer
-from pyautofinance.common.feeds.formatters import SimpleCandlesFormatter
 from pyautofinance.common.feeds.writers import CandlesWriter
+from pyautofinance.common.options import TimeFrame
 
 
 class RunningMode(Enum):
@@ -31,9 +30,11 @@ class Engine:
         cerebro.setbroker(broker)
 
         self._add_strategies_to_cerebro(cerebro, strategies, running_mode)
-        self._add_datafeed_to_cerebro(cerebro, self.engine_options)
 
-        result = cerebro.run(optreturn=False, tradehistory=True)
+        datafeed = self._add_and_return_datafeed_to_cerebro(cerebro, self.engine_options)
+        self._resample_datafeed_if_needed(cerebro, datafeed, self.engine_options)
+
+        result = cerebro.run(optreturn=True, tradehistory=True)
         return result
 
     def _choose_running_mode(self, strategies):
@@ -68,11 +69,12 @@ class Engine:
     def _add_optimized_strategy_to_cerebro(cerebro, strategy):
         cerebro.optstrategy(strategy.classname, **strategy.parameters)
 
-    def _add_datafeed_to_cerebro(self, cerebro, engine_options):
+    def _add_and_return_datafeed_to_cerebro(self, cerebro, engine_options):
         candles = self._get_candles(engine_options)
         self._write_candles_if_requested(candles, engine_options)
         datafeed = self._get_datafeed(candles, engine_options)
         cerebro.adddata(datafeed)
+        return datafeed
 
     @staticmethod
     def _get_candles(engine_options):
@@ -94,3 +96,22 @@ class Engine:
 
         datafeed = DatafeedGeneratorsFactory.generate_datafeed(candles, feed_options, broker_options)
         return datafeed
+
+    def _resample_datafeed_if_needed(self, cerebro, datafeed, engine_options):
+        timeframes = self._collect_timeframes_from_strategies(engine_options.strategies)
+        self._resample_datafeed_from_timeframes(cerebro, datafeed, timeframes)
+
+    @staticmethod
+    def _collect_timeframes_from_strategies(strategies):
+        timeframes = []
+        for strategy in strategies:
+            if strategy.timeframes:
+                for timeframe in strategy.timeframes:
+                    timeframes.append(timeframe)
+        return set(timeframes)
+
+    @staticmethod
+    def _resample_datafeed_from_timeframes(cerebro, datafeed, timeframes):
+        for timeframe in timeframes:
+            bt_timeframe, bt_compression = TimeFrame.get_bt_timeframe_and_compression_from_timeframe(timeframe)
+            cerebro.resampledata(datafeed, timeframe=bt_timeframe, compression=bt_compression)

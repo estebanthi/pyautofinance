@@ -5,6 +5,7 @@ from abc import abstractmethod
 from dataclasses import dataclass
 
 from pyautofinance.common.strategies.strat_loggers import DefaultStratLogger
+from pyautofinance.common.options import TimeFrame
 
 
 class _Strategy(bt.Strategy):

@@ -107,14 +107,14 @@ class TestEngine(unittest.TestCase):
         time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.d1, dt.datetime(2021, 1, 1))
         feed_options = FeedOptions(market_options, time_options)
 
-        strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, longs_enabled=[True, False])]
+        strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, timeframes=[TimeFrame.M1], longs_enabled=[True, False])]
 
         engine_options = EngineOptions(broker_options, feed_options, strategies)
 
         engine = Engine(engine_options)
 
         result = engine.run()
-        self.assertEqual(type(result[0][0]), TestBracketStrategy)
+        self.assertEqual(type(result[0][0]), bt.cerebro.OptReturn)
 
     def test_run_engine_simple(self):
         broker_options = BrokerOptions(100_000, 0.2)
