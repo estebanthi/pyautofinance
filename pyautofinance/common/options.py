@@ -105,7 +105,7 @@ class EngineOptions:
     broker_options: BrokerOptions
     feed_options: FeedOptions
     strategies: list
-
+    sizer: bt.Sizer
     analyzers: list = None
     observers: list = None
     timers: list = None

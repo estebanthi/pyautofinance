@@ -7,7 +7,7 @@ from pyautofinance.common.strategies.StrategiesFactory import StrategyType
 from pyautofinance.common.feeds.extractors import CandlesExtractorsFactory
 from pyautofinance.common.feeds.datafeeds_generators import DatafeedGeneratorsFactory
 from pyautofinance.common.feeds.writers import CandlesWriter
-from pyautofinance.common.options import TimeFrame
+from pyautofinance.common.options import TimeFrame, WritingOptions
 
 
 class RunningMode(Enum):
@@ -21,33 +21,73 @@ class Engine:
         self.engine_options = engine_options
         self.cerebro = bt.Cerebro()
 
+    def multirun(self, symbols, candles_destinations=None):
+        engine_options = self.engine_options
+
+        results = self._multirun_and_write_candles(symbols, candles_destinations, engine_options) if candles_destinations \
+            else self._multirun_without_writing_candles(symbols, engine_options)
+
+        return results
+
+    def _multirun_and_write_candles(self, symbols, candles_destinations, engine_options):
+        results = {}
+        for symbol, candles_destination in zip(symbols, candles_destinations):
+            engine_options.feed_options.market_options.symbol = symbol
+            engine_options.writing_options = self._get_writing_options(engine_options, candles_destination)
+
+            results[symbol] = self._run(engine_options)
+        return results
+
+    @staticmethod
+    def _get_writing_options(engine_options, candles_destination):
+        results_destination = None
+
+        if engine_options.writing_options:
+            results_destination = engine_options.writing_options.results_destination
+
+        if results_destination:
+            return WritingOptions(candles_destination, results_destination)
+        else:
+            return WritingOptions(candles_destination)
+
+    def _multirun_without_writing_candles(self, symbols, engine_options):
+        results = {}
+        for symbol in symbols:
+            engine_options.feed_options.market_options.symbol = symbol
+
+            results[symbol] = self._run(engine_options)
+        return results
+
     def run(self):
+        return {self.engine_options.feed_options.market_options.symbol: self._run(self.engine_options)}
+
+    def _run(self, engine_options):
         cerebro = bt.Cerebro()
 
-        strategies = self.engine_options.strategies
+        strategies = engine_options.strategies
         running_mode = self._choose_running_mode(strategies)
         self._add_strategies_to_cerebro(cerebro, strategies, running_mode)
 
         """ TODO
-        analyzers = self.engine_options.analyzers
+        analyzers = engine_options.analyzers
         self._add_analyzers_to_cerebro(cerebro, analyzers)
 
-        observers = self.engine_options.observers
+        observers = engine_options.observers
         self._add_observers_to_cerebro(cerebro, observers)
 
-        sizer = self.engine_options.sizer
+        sizer = engine_options.sizer
         self._add_sizer_to_cerebro(sizer)
-        
-        timers = self.engine_options.timers
+
+        timers = engine_options.timers
         self._add_timers_to_cerebro(timers)
-        
-        results_destination = self.engine_options.writing_options.results_destination
+
+        results_destination = engine_options.writing_options.results_destination
         self._add_writer_to_cerebro(results_destination)"""
 
-        broker = self._get_broker(self.engine_options)
+        broker = self._get_broker(engine_options)
         self._add_broker_to_cerebro(cerebro, broker)
 
-        self._add_datafeed_to_cerebro_and_resample_if_needed(cerebro, self.engine_options)
+        self._add_datafeed_to_cerebro_and_resample_if_needed(cerebro, engine_options)
 
         result = cerebro.run(optreturn=True, tradehistory=True)
         self.cerebro = cerebro  # We need to keep it in memory for plotting
@@ -91,8 +131,8 @@ class Engine:
         cerebro.optstrategy(strategy.classname, **strategy.parameters)
 
     def _add_datafeed_to_cerebro_and_resample_if_needed(self, cerebro, engine_options):
-        datafeed = self._add_and_return_datafeed_to_cerebro(cerebro, self.engine_options)
-        self._resample_datafeed_if_needed(cerebro, datafeed, self.engine_options)
+        datafeed = self._add_and_return_datafeed_to_cerebro(cerebro, engine_options)
+        self._resample_datafeed_if_needed(cerebro, datafeed, engine_options)
 
     def _add_and_return_datafeed_to_cerebro(self, cerebro, engine_options):
         candles = self._get_candles(engine_options)

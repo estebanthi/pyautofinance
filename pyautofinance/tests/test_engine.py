@@ -114,7 +114,7 @@ class TestEngine(unittest.TestCase):
         engine = Engine(engine_options)
 
         result = engine.run()
-        self.assertEqual(type(result[0][0]), bt.cerebro.OptReturn)
+        self.assertEqual(type(result['BTC-EUR'][0][0]), bt.cerebro.OptReturn)
 
     def test_run_engine_simple(self):
         broker_options = BrokerOptions(100_000, 0.2)
@@ -131,7 +131,30 @@ class TestEngine(unittest.TestCase):
 
         result = engine.run()
 
-        self.assertEqual(type(result[0]), TestBracketStrategy)
+        self.assertEqual(type(result['BTC-EUR'][0]), TestBracketStrategy)
+
+    def test_multirun_engine(self):
+        broker_options = BrokerOptions(100_000, 0.2)
+
+        market_options = MarketOptions(Market.CRYPTO, 'BTC-EUR')
+        time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.d1, dt.datetime(2021, 1, 1))
+        feed_options = FeedOptions(market_options, time_options)
+
+        strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, longs_enabled=True)]
+
+        engine_options = EngineOptions(broker_options, feed_options, strategies)
+
+        engine = Engine(engine_options)
+
+        symbols = ['BTC-EUR', 'ETH-EUR', 'BNB-EUR', 'ETH-BTC']
+        destinations = []
+        for symbol in symbols:
+            feed_options.market_options.symbol = symbol
+            destinations.append(FeedTitle(feed_options).get_pathname())
+        result = engine.multirun(symbols, destinations)
+
+        self.assertEqual(type(result['BTC-EUR'][0]), TestBracketStrategy)
+
 
 
 if __name__ == '__main__':
