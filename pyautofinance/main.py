@@ -10,6 +10,7 @@ from pyautofinance.common.strategies.usable_strategies.TestBracketStrategy impor
 from pyautofinance.common.sizers.SizersFactory import SizersFactory
 from pyautofinance.common.feeds.FeedTitle import FeedTitle
 from pyautofinance.common.analyzers.AnalyzersFactory import AnalyzersFactory
+from pyautofinance.common.analyzers.FullMetrics import FullMetrics
 from pyautofinance.common.ResultsAnalyzer import ResultsAnalyzer
 
 market_options = MarketOptions(Market.CRYPTO, 'BTC-EUR')
@@ -20,16 +21,18 @@ broker_options = BrokerOptions(100_000, 0.2)
 
 strategy = StrategiesFactory().make_strategy(TestBracketStrategy, logging=False, stop_loss=2, risk_reward=range(2, 5))
 sizer = SizersFactory().make_sizer(bt.sizers.PercentSizer, percents=10)
-analyzer = AnalyzersFactory().make_analyzer(bt.analyzers.TradeAnalyzer)
+
+tradeanalyzer = AnalyzersFactory().make_analyzer(bt.analyzers.TradeAnalyzer)
+fullmetrics = AnalyzersFactory().make_analyzer(FullMetrics, _name='full_metrics')
 
 writing_options = WritingOptions(candles_destination=FeedTitle(feed_options).get_pathname())
 
-engine_options = EngineOptions(broker_options, feed_options, [strategy], sizer, analyzers=[analyzer],
+engine_options = EngineOptions(broker_options, feed_options, [strategy], sizer, analyzers=[tradeanalyzer, fullmetrics],
                                writing_options=writing_options)
 
 engine = Engine(engine_options)
-results = engine.run()
+results = engine.multirun(['BTC-EUR', 'ETH-EUR'])
 
 results_analyzer = ResultsAnalyzer(results)
 
-print(results_analyzer.pretty_pnls())
+print(results_analyzer.print_metrics())
