@@ -19,22 +19,39 @@ class Engine:
 
     def __init__(self, engine_options):
         self.engine_options = engine_options
+        self.cerebro = bt.Cerebro()
 
     def run(self):
         cerebro = bt.Cerebro()
 
         strategies = self.engine_options.strategies
         running_mode = self._choose_running_mode(strategies)
-
-        broker = self._get_broker(self.engine_options)
-        cerebro.setbroker(broker)
-
         self._add_strategies_to_cerebro(cerebro, strategies, running_mode)
 
-        datafeed = self._add_and_return_datafeed_to_cerebro(cerebro, self.engine_options)
-        self._resample_datafeed_if_needed(cerebro, datafeed, self.engine_options)
+        """ TODO
+        analyzers = self.engine_options.analyzers
+        self._add_analyzers_to_cerebro(cerebro, analyzers)
+
+        observers = self.engine_options.observers
+        self._add_observers_to_cerebro(cerebro, observers)
+
+        sizer = self.engine_options.sizer
+        self._add_sizer_to_cerebro(sizer)
+        
+        timers = self.engine_options.timers
+        self._add_timers_to_cerebro(timers)
+        
+        results_destination = self.engine_options.writing_options.results_destination
+        self._add_writer_to_cerebro(results_destination)"""
+
+        broker = self._get_broker(self.engine_options)
+        self._add_broker_to_cerebro(cerebro, broker)
+
+        self._add_datafeed_to_cerebro_and_resample_if_needed(cerebro, self.engine_options)
 
         result = cerebro.run(optreturn=True, tradehistory=True)
+        self.cerebro = cerebro  # We need to keep it in memory for plotting
+
         return result
 
     def _choose_running_mode(self, strategies):
@@ -46,6 +63,9 @@ class Engine:
         for strategy in strategies:
             if strategy.type == StrategyType.OPTIMIZED:
                 return True
+
+    def _add_broker_to_cerebro(self, cerebro, broker):
+        cerebro.setbroker(broker)
 
     @staticmethod
     def _get_broker(engine_options):
@@ -68,6 +88,10 @@ class Engine:
     @staticmethod
     def _add_optimized_strategy_to_cerebro(cerebro, strategy):
         cerebro.optstrategy(strategy.classname, **strategy.parameters)
+
+    def _add_datafeed_to_cerebro_and_resample_if_needed(self, cerebro, engine_options):
+        datafeed = self._add_and_return_datafeed_to_cerebro(cerebro, self.engine_options)
+        self._resample_datafeed_if_needed(cerebro, datafeed, self.engine_options)
 
     def _add_and_return_datafeed_to_cerebro(self, cerebro, engine_options):
         candles = self._get_candles(engine_options)
@@ -115,3 +139,6 @@ class Engine:
         for timeframe in timeframes:
             bt_timeframe, bt_compression = TimeFrame.get_bt_timeframe_and_compression_from_timeframe(timeframe)
             cerebro.resampledata(datafeed, timeframe=bt_timeframe, compression=bt_compression)
+
+    def plot(self, scheme={"style": 'candlestick', "barup": "green"}):
+        self.cerebro.plot(**scheme)

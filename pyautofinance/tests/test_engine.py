@@ -130,6 +130,7 @@ class TestEngine(unittest.TestCase):
         engine = Engine(engine_options)
 
         result = engine.run()
+
         self.assertEqual(type(result[0]), TestBracketStrategy)
 
 

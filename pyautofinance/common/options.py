@@ -87,6 +87,7 @@ class BrokerOptions:
 @dataclass
 class WritingOptions:
     candles_destination: any = None
+    results_destination: any = None
 
 
 @dataclass
@@ -104,6 +105,10 @@ class EngineOptions:
     broker_options: BrokerOptions
     feed_options: FeedOptions
     strategies: list
+    sizer: bt.Sizer
+    analyzers: list = None
+    observers: list = None
+    timers: list = None
     writing_options: WritingOptions = None
     formatting_options: FormattingOptions = None
     filtering_options: FilteringOptions = None
