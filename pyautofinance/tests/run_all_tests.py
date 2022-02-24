@@ -9,6 +9,7 @@ from pyautofinance.tests.test_candles_extractor import TestCandlesExtractor
 from pyautofinance.tests.test_broker import TestBroker
 from pyautofinance.tests.test_strategies import TestStrategies
 from pyautofinance.tests.test_engine import TestEngine
+from pyautofinance.tests.test_telegram_logger import TestTelegramLogger
 
 
 def run_some_tests():
@@ -23,7 +24,8 @@ def run_some_tests():
         TestTimeOptions,
         TestBroker,
         TestStrategies,
-        TestEngine
+        TestEngine,
+        TestTelegramLogger
     ]
 
     loader = unittest.TestLoader()

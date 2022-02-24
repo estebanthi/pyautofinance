@@ -111,3 +111,13 @@ class EngineOptions:
     writing_options: WritingOptions = None
     formatting_options: FormattingOptions = None
     filtering_options: FilteringOptions = None
+
+
+@dataclass
+class LoggingOptions:
+    every_iter: bool = True
+    trades: bool = True
+    orders: bool = True
+    total_profit: bool = True
+    start: bool = True
+    stop: bool = True

@@ -16,11 +16,13 @@ class _Strategy(bt.Strategy):
         ('stop_loss', 0),
         ('risk_reward', 0),
         ('logger', DefaultStratLogger()),
+        ('log_closes', True)
     )
 
     def __init__(self, **kwargs):
         self.orders_ref = list()
         self.total_profit = 0
+        self.initial_cash = self.broker.cash
 
         self.logger = self.p.logger
         if not self.p.logging:
@@ -36,6 +38,8 @@ class _Strategy(bt.Strategy):
         class LoggingData:
             actual_datetime: dt.datetime = self.datas[0].datetime.datetime(0)
             actual_price: float = self.datas[0].close[0]
+            cash: float = self.broker.cash
+            initial_cash: float = self.initial_cash
 
             long_stop_price: float = self._get_long_stop_loss_price()
             short_stop_price: float = self._get_short_stop_loss_price()
@@ -98,7 +102,7 @@ class _Strategy(bt.Strategy):
             self.orders_ref.remove(order.ref)
 
     def next(self):
-        self.logger.log(f"Close : {self.datas[0].close[0]}", self._get_logging_data())
+        self.logger.log_every_iter(self._get_logging_data())
 
         if not self.position:
             self._not_yet_in_market()
@@ -163,3 +167,9 @@ class _Strategy(bt.Strategy):
             self.close()
         if self._close_short_condition() and self.position.size < 0:
             self.close()
+
+    def start(self):
+        self.logger.log_start(self._get_logging_data())
+
+    def stop(self):
+        self.logger.log_stop(self._get_logging_data())

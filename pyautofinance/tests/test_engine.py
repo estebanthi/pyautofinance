@@ -194,7 +194,7 @@ class TestEngine(unittest.TestCase):
 
         strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, longs_enabled=True)]
 
-        sizer = SizersFactory().make_sizer(bt.sizers.AllInSizer)
+        sizer = SizersFactory().make_sizer(bt.sizers.PercentSizer, percents=20)
         analyzer = AnalyzersFactory().make_analyzer(bt.analyzers.TradeAnalyzer)
 
         writing_options = WritingOptions(results_destination='results/strat1')
