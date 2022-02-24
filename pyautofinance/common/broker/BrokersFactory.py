@@ -18,7 +18,7 @@ class BrokersFactory:
                               debug=False)
             broker = store.getbroker()
 
-        if broker_options.cash:
+        if broker_options.cash:  # Means we're looking for a backtesting broker
             broker = bt.brokers.BackBroker()
             broker.set_cash(broker_options.cash)
             broker.setcommission(broker_options.commission/100)

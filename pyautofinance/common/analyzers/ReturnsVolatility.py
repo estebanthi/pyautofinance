@@ -13,9 +13,9 @@ class ReturnsVolatility(bt.Analyzer):
             brokervalue = self.strategy.broker.getvalue()
 
             pnl = trade.history[len(trade.history) - 1].status.pnlcomm
-            pnlpcnt = 100 * pnl / brokervalue
+            pnl_percent = 100 * pnl / brokervalue
 
-            self.returns.append(pnlpcnt)
+            self.returns.append(pnl_percent)
 
     def get_analysis(self):
         return {"volatility": math.sqrt(statistics.variance(self.returns))}

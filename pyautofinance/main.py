@@ -34,4 +34,4 @@ results = engine.run()
 
 results_analyzer = ResultsAnalyzer(results)
 
-print(results_analyzer.print_metrics())
+results_analyzer.print_metrics()

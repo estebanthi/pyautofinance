@@ -19,8 +19,10 @@ class CandlesExtractorsFactory:
 
     @staticmethod
     def get_candles(feed_options, formatting_options=None, filtering_options=None):
-        if not feed_options.time_options.end_date:
+
+        if not feed_options.time_options.end_date:  # If we use a live options, we don't need to extract candles
             return None
+
         feed_title = FeedTitle(feed_options)
         feed_pathname = feed_title.get_pathname()
 

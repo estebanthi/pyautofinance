@@ -6,7 +6,6 @@ from dataclasses import dataclass
 from enum import Enum
 
 from pyautofinance.common.exceptions.feeds import EndDateBeforeStartDate
-from pyautofinance.common.feeds.writers import CandlesWriter
 from pyautofinance.common.feeds.formatters import CandlesFormatter
 from pyautofinance.common.feeds.filterers import CandlesFilterer
 

@@ -6,7 +6,7 @@ from unittest.mock import patch
 from collections import namedtuple
 
 from pyautofinance.common.strategies.StrategiesFactory import StrategiesFactory, StrategyType, Strategy
-from pyautofinance.common.strategies.TestBracketStrategy import TestBracketStrategy
+from pyautofinance.common.strategies._BracketStrategy import _BracketStrategy
 from pyautofinance.common.strategies.strat_loggers import DefaultStratLogger
 from pyautofinance.common.feeds.extractors import CSVCandlesExtractor
 from pyautofinance.common.options import FeedOptions, MarketOptions, TimeOptions, TimeFrame, Market
@@ -17,18 +17,18 @@ class TestStrategies(unittest.TestCase):
 
     def test_simple_strategy(self):
         factory = StrategiesFactory()
-        strategy = TestBracketStrategy
+        strategy = _BracketStrategy
 
         strategy_logging = factory.make_strategy(strategy, logging=True)
-        self.assertEqual(strategy_logging, Strategy(TestBracketStrategy, {'logging': True}, StrategyType.SIMPLE))
+        self.assertEqual(strategy_logging, Strategy(_BracketStrategy, {'logging': True}, StrategyType.SIMPLE))
 
     def test_optimized_strategy(self):
         factory = StrategiesFactory()
-        strategy = TestBracketStrategy
+        strategy = _BracketStrategy
 
         strategy_logging = factory.make_strategy(strategy, logging=True, period=range(10))
         self.assertEqual(strategy_logging,
-                         Strategy(TestBracketStrategy, {'logging': True, 'period': range(10)}, StrategyType.OPTIMIZED))
+                         Strategy(_BracketStrategy, {'logging': True, 'period': range(10)}, StrategyType.OPTIMIZED))
 
     @patch('builtins.print')
     def test_default_strat_logger(self, mock_print):
@@ -43,7 +43,7 @@ class TestStrategies(unittest.TestCase):
         datafeed = datafeed_generator.generate_datafeed(candles, feed_options)
 
         strat_logger = DefaultStratLogger()
-        strategy = TestBracketStrategy
+        strategy = _BracketStrategy
 
         cerebro = bt.Cerebro()
         cerebro.adddata(datafeed)

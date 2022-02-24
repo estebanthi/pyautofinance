@@ -3,7 +3,7 @@ import backtrader as bt
 
 from pyautofinance.common.analyzers.CustomReturns import CustomReturns
 from pyautofinance.common.analyzers.ReturnsVolatility import ReturnsVolatility
-from pyautofinance.common.analyzers.TradesInfo import TradesInfo
+from pyautofinance.common.analyzers.TradesAverageReturns import TradesAverageReturns
 from pyautofinance.common.analyzers.CalmarRatio import CalmarRatio
 from backtrader.analyzers import SharpeRatio_A
 from backtrader.analyzers import TradeAnalyzer
@@ -13,36 +13,36 @@ from backtrader.analyzers import DrawDown
 class FullMetrics(bt.Analyzer):
 
     def __init__(self):
-        self.custom_returns_analyzer = CustomReturns()
-        self.ret_vol_analyzer = ReturnsVolatility()
-        self.sharpe_ratio_analyzer = SharpeRatio_A()
+        self.custom_returns = CustomReturns()
+        self.returns_volatility = ReturnsVolatility()
+        self.sharpe_ratio = SharpeRatio_A()
         self.trade_analyzer = TradeAnalyzer()
-        self.dd_analyzer = DrawDown()
-        self.trades_info_analyzer = TradesInfo()
-        self.calmar_analyzer = CalmarRatio()
+        self.drawdown = DrawDown()
+        self.trades_average_returns = TradesAverageReturns()
+        self.calmar_ratio = CalmarRatio()
 
     def get_analysis(self):
-        ann_ret = self.custom_returns_analyzer.get_analysis()["ann_ret"]
+        annual_returns = self.custom_returns.get_analysis()["annual_returns"]
 
-        ret_vol = self.ret_vol_analyzer.get_analysis()["volatility"]
+        returns_volatility = self.returns_volatility.get_analysis()["volatility"]
 
-        sharpe_ratio = self.sharpe_ratio_analyzer.get_analysis()["sharperatio"]
-        calmar_ratio = self.calmar_analyzer.get_analysis()["calmar_ratio"]
+        sharpe_ratio = self.sharpe_ratio.get_analysis()["sharperatio"]
+        calmar_ratio = self.calmar_ratio.get_analysis()["calmar_ratio"]
 
         trade_analysis = self.trade_analyzer.get_analysis()
 
-        pnlcomm = trade_analysis["pnl"]["net"]["total"]
-        pnl = trade_analysis["pnl"]["gross"]["total"]
-        fees = pnl - pnlcomm
+        pnl_net_total = trade_analysis["pnl"]["net"]["total"]
+        pnl_gross_total = trade_analysis["pnl"]["gross"]["total"]
+        fees = pnl_gross_total - pnl_net_total
 
         open_trades_nb = trade_analysis.total.open
         close_trades_nb = trade_analysis.total.closed
         close_shorts_nb = trade_analysis.short.total
         close_longs_nb = trade_analysis.long.total
 
-        avg_return = self.trades_info_analyzer.get_analysis()["avg_return"]
-        avg_return_short = self.trades_info_analyzer.get_analysis()["avg_return_short"]
-        avg_return_long = self.trades_info_analyzer.get_analysis()["avg_return_long"]
+        average_returns = self.trades_average_returns.get_analysis()["average_returns"]
+        average_returns_short = self.trades_average_returns.get_analysis()["average_returns_short"]
+        average_returns_long = self.trades_average_returns.get_analysis()["average_returns_long"]
 
         winrate = trade_analysis.won.total / close_trades_nb
 
@@ -52,24 +52,24 @@ class FullMetrics(bt.Analyzer):
         average_won_len = trade_analysis.len.won.average
         average_lost_len = trade_analysis.len.lost.average
 
-        drawdown_analysis = self.dd_analyzer.get_analysis()
-        average_drawdown = drawdown_analysis["drawdown"]
-        average_drawdown_length = drawdown_analysis["len"]
-        max_drawdown = drawdown_analysis["max"]["drawdown"]
-        max_drawdown_length = drawdown_analysis["max"]["len"]
+        drawdown = self.drawdown.get_analysis()
+        average_drawdown = drawdown["drawdown"]
+        average_drawdown_length = drawdown["len"]
+        max_drawdown = drawdown["max"]["drawdown"]
+        max_drawdown_length = drawdown["max"]["len"]
 
         return {
-            "Annual returns": ann_ret,
-            "PNL net": pnlcomm,
+            "Annual returns": annual_returns,
+            "PNL net": pnl_net_total,
             "Fees": fees,
             "Winrate": winrate,
             "Total trades": close_trades_nb,
             "Total long": close_longs_nb,
             "Total short": close_shorts_nb,
             "Open trades": open_trades_nb,
-            "Average return per trade": avg_return,
-            "Average return per long": avg_return_long,
-            "Average return per short": avg_return_short,
+            "Average return per trade": average_returns,
+            "Average return per long": average_returns_long,
+            "Average return per short": average_returns_short,
             "Time in market": len_in_market,
             "Average trade len": average_trade_len,
             "Max trade len": longest_trade_len,
@@ -81,5 +81,5 @@ class FullMetrics(bt.Analyzer):
             "Max drawdown length": max_drawdown_length,
             "Annualized Sharpe ratio": sharpe_ratio,
             "Calmar ratio": calmar_ratio,
-            "Returns volatility": ret_vol,
+            "Returns volatility": returns_volatility,
         }

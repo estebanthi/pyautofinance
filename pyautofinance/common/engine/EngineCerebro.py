@@ -17,24 +17,16 @@ from backtrader import observers
 from backtrader.utils.py3 import integer_types
 from backtrader.cerebro import OptReturn
 
+
 class EngineCerebro(bt.Cerebro):
 
+    # I modified the default bt.Cerebro class to add a progress bar feature when backtesting
+
+    def __init__(self):
+        super().__init__()
+        self.counter = 1
 
     def run(self, **kwargs):
-        """The core method to perform backtesting. Any ``kwargs`` passed to it
-        will affect the value of the standard parameters ``Cerebro`` was
-        instantiated with.
-
-        If ``cerebro`` has not datas the method will immediately bail out.
-
-        It has different return values:
-
-          - For No Optimization: a list contanining instances of the Strategy
-            classes added with ``addstrategy``
-
-          - For Optimization: a list of lists which contain instances of the
-            Strategy classes added with ``addstrategy``
-        """
         self._event_stop = False  # Stop is requested
 
         if not self.datas:
@@ -169,10 +161,6 @@ class EngineCerebro(bt.Cerebro):
             for strat in iter:
                 counter += 1
         self.counter = counter
-
-    def __init__(self):
-        super().__init__()
-        self.counter = 1
 
     def runstrategies(self, iterstrat, pbar, predata=False):
         '''

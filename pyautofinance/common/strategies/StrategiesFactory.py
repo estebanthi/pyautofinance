@@ -23,11 +23,11 @@ class StrategiesFactory:
         return Strategy(strategy, strat_type, kwargs, timeframes)
 
     def _get_strategy_type(self, kwargs):
-        strat_type = StrategyType.SIMPLE if not self._check_for_iterables_in_parameters(kwargs) else StrategyType.OPTIMIZED
+        strat_type = StrategyType.OPTIMIZED if self._iterables_in_parameters(kwargs) else StrategyType.SIMPLE
         return strat_type
 
     @staticmethod
-    def _check_for_iterables_in_parameters(kwargs):
+    def _iterables_in_parameters(kwargs):
         for v in kwargs.values():
             if hasattr(v, '__iter__') and type(v) != str:
                 return True

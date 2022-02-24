@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from pyautofinance.common.strategies._Strategy import _Strategy
 
 
-class _SimpleBracketStrategy(_Strategy):
+class _BracketStrategy(_Strategy):
 
     # Calling super().__init__() is used to initialize default strategy parameters
     def __init__(self):
@@ -32,7 +32,7 @@ class _SimpleBracketStrategy(_Strategy):
     def _get_short_stop_loss_price(self):
         return self.datas[0].close[0] * (1 + self.params.stop_loss / 100)
 
-    # For take profit, we use a risk reward parameter, and it's a classic calculation
+    # For take profit, we use a risk reward parameter, and it's a trivial calculation
     def _get_long_take_profit_price(self):
         stop_price = self._get_long_stop_loss_price()
         return self.datas[0].close[0] + (self.datas[0].close[0] - stop_price) * self.params.risk_reward

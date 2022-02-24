@@ -21,14 +21,6 @@ class _StratLogger(ABC):
         pass
 
     @abstractmethod
-    def log_data_live(self, logging_data):
-        pass
-
-    @abstractmethod
-    def log_data_not_live(self, status, logging_data):
-        pass
-
-    @abstractmethod
     def log_order(self, order, logging_data):
         pass
 
@@ -54,12 +46,6 @@ class DefaultStratLogger(_StratLogger):
     def _log(self, txt, logging_data):
         actual_datetime = logging_data.actual_datetime
         print(f"{actual_datetime} : {txt}")
-
-    def log_data_live(self, logging_data):
-        self.log("LIVE DATA - Ready to trade", logging_data)
-
-    def log_data_not_live(self, status, logging_data):
-        self.log("NOT LIVE - %s" % status, logging_data)
 
     def log_order(self, order, logging_data):
         self.log('Order ref: {} / Type {} / Status {}'.format(

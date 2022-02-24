@@ -25,8 +25,8 @@ class Engine:
     def multirun(self, symbols, candles_destinations=None):
         engine_options = self.engine_options
 
-        results = self._multirun_and_write_candles(symbols, candles_destinations, engine_options) if candles_destinations \
-            else self._multirun_without_writing_candles(symbols, engine_options)
+        results = self._multirun_and_write_candles(symbols, candles_destinations, engine_options)\
+            if candles_destinations else self._multirun_without_writing_candles(symbols, engine_options)
 
         return results
 
@@ -35,7 +35,6 @@ class Engine:
         for symbol, candles_destination in zip(symbols, candles_destinations):
             engine_options.feed_options.market_options.symbol = symbol
             engine_options.writing_options = self._get_writing_options(engine_options, candles_destination)
-
             results[symbol] = self._run(engine_options)
         return results
 
@@ -55,7 +54,6 @@ class Engine:
         results = {}
         for symbol in symbols:
             engine_options.feed_options.market_options.symbol = symbol
-
             results[symbol] = self._run(engine_options)
         return results
 
@@ -88,7 +86,7 @@ class Engine:
 
         self._add_datafeed_to_cerebro_and_resample_if_needed(cerebro, engine_options)
         result = cerebro.run(optreturn=True, tradehistory=True, maxcpus=1)
-        self.cerebro = cerebro  # We need to keep it in memory for plotting
+        self.cerebro = cerebro  # We need to update it for plotting
 
         return result
 

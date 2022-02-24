@@ -18,7 +18,7 @@ class DatafeedGeneratorsFactory:
         time_options = feed_options.time_options
         market_options = feed_options.market_options
 
-        if not time_options.end_date:  # Means we're looking for a live datafeed
+        if not time_options.end_date:  # No end date means we're looking for a live datafeed
 
             if market_options.market == Market.CRYPTO:
                 return CryptoLiveDatafeedGenerator().generate_datafeed(feed_options, broker_options)

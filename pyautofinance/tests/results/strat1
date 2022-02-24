@@ -18,7 +18,7 @@ Cerebro:
         - shorts_enabled: True
         - stop_loss: 0
         - risk_reward: 0
-        - logger: <pyautofinance.common.strategies.strat_loggers.DefaultStratLogger object at 0x000001EC86DA0790>
+        - logger: <pyautofinance.common.strategies.strat_loggers.DefaultStratLogger object at 0x000002136E8A54C0>
         - period_me1: 12
         - period_me2: 26
         - period_signal: 9

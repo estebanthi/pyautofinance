@@ -26,10 +26,11 @@ class _Strategy(bt.Strategy):
         if not self.p.logging:
             self.logger.disable()
 
-    # Strategy constructor, use it instead of __init__
+    # Strategy constructor, use it instead of __init__ when building strategies
     def _init_strat(self) -> None:
         pass
 
+    # Put here everything you need when you want to use loggers
     def _get_logging_data(self):
         @dataclass
         class LoggingData:
@@ -82,6 +83,7 @@ class _Strategy(bt.Strategy):
     def notify_trade(self, trade):
         if not trade.isclosed:
             return
+
         self.logger.log_trade(trade, self._get_logging_data())
 
         self.total_profit += trade.pnlcomm
@@ -129,7 +131,6 @@ class _Strategy(bt.Strategy):
         self.orders_ref = [order.ref for order in orders]
 
     def _get_long_orders_from_stop_and_take_profit(self, stop_price, take_profit_price):
-        orders = []
         ACTUAL_PRICE = self.datas[0].close[0]
         if stop_price != ACTUAL_PRICE and take_profit_price != ACTUAL_PRICE:
             orders = self.buy_bracket(price=ACTUAL_PRICE, stopprice=stop_price, limitprice=take_profit_price)
@@ -146,7 +147,6 @@ class _Strategy(bt.Strategy):
         self.orders_ref = [order.ref for order in orders]
 
     def _get_short_orders_from_stop_and_take_profit(self, stop_price, take_profit_price):
-        orders = []
         ACTUAL_PRICE = self.datas[0].close[0]
         if stop_price != ACTUAL_PRICE and take_profit_price != ACTUAL_PRICE:
             orders = self.sell_bracket(price=ACTUAL_PRICE, stopprice=stop_price, limitprice=take_profit_price)
