@@ -1,5 +1,4 @@
 backtrader==1.9.76.123
-bt_ccxt_store==1.0
 ccxt==1.73.25
 pandas==1.4.1
 python_telegram_bot==13.11

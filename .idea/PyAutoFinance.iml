@@ -7,4 +7,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
+  <component name="PackageRequirementsSettings">
+    <option name="requirementsPath" value="C:\Users\Esteban\Desktop\Code\PyAutoFinance\pyautofinance\requirements.txt" />
+  </component>
 </module>

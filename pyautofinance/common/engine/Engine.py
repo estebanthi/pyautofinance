@@ -88,7 +88,13 @@ class Engine:
         result = cerebro.run(optreturn=True, tradehistory=True, maxcpus=1)
         self.cerebro = cerebro  # We need to update it for plotting
 
+        result = self._format_result(running_mode, result)
         return result
+
+    @staticmethod
+    def _format_result(running_mode, result):
+        if running_mode == RunningMode.SIMPLE:
+            return [result]
 
     def _choose_running_mode(self, strategies):
         return RunningMode.OPTIMIZED if self._optimized_strategy_found_in_strategies(strategies) \

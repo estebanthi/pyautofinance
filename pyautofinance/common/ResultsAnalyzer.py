@@ -11,22 +11,9 @@ class ResultsAnalyzer:
         pnls = {}
 
         for symbol, result in self.results.items():
-
-            if self._is_simple_result(result):
-                pnls[symbol] = self._get_pnl_from_simple_result(result)
-
-            else:
-                pnls[symbol] = self._get_top_3_pnls_for_symbol(result)
+            pnls[symbol] = self._get_top_3_pnls_for_symbol(result)
 
         return pnls
-
-    @staticmethod
-    def _is_simple_result(result):
-        return type(result[0]) is not list
-
-    @staticmethod
-    def _get_pnl_from_simple_result(result):
-        return dict(result[0].analyzers.tradeanalyzer.get_analysis()['pnl']['net'])
 
     def _get_top_3_pnls_for_symbol(self, result):
         pnls_dict = {}
@@ -109,15 +96,9 @@ class ResultsAnalyzer:
     def print_metrics(self):
 
         for symbol, result in self.results.items():
-
-            if self._is_simple_result(result):
-                strat = result[0]
-                self._display_everything(strat, symbol)
-
-            else:
-                for res in result:
-                    for strat in res:
-                        self._display_everything(strat, symbol)
+            for res in result:
+                for strat in res:
+                    self._display_everything(strat, symbol)
 
     def _display_everything(self, strat, symbol):
         print(symbol)
