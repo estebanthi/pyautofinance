@@ -9,6 +9,7 @@ from pyautofinance.common.feeds.datafeeds_generators import DatafeedGeneratorsFa
 from pyautofinance.common.feeds.writers import CandlesWriter
 from pyautofinance.common.options import TimeFrame, WritingOptions
 from pyautofinance.common.engine.EngineCerebro import EngineCerebro
+from pyautofinance.common.engine._Result import _Result
 
 
 class RunningMode(Enum):
@@ -28,14 +29,14 @@ class Engine:
         results = self._multirun_and_write_candles(symbols, candles_destinations, engine_options)\
             if candles_destinations else self._multirun_without_writing_candles(symbols, engine_options)
 
-        return results
+        return _Result(results)
 
     def _multirun_and_write_candles(self, symbols, candles_destinations, engine_options):
         results = {}
         for symbol, candles_destination in zip(symbols, candles_destinations):
             engine_options.feed_options.market_options.symbol = symbol
             engine_options.writing_options = self._get_writing_options(engine_options, candles_destination)
-            results[symbol] = self._run(engine_options)
+            results.update(self._run(engine_options).get())
         return results
 
     @staticmethod
@@ -50,15 +51,22 @@ class Engine:
         else:
             return WritingOptions(candles_destination)
 
+    @staticmethod
+    def _convert_results_list_into_dict(results_list):
+        result = results_list[0]
+        for res in results_list:
+            result.update(res)
+        return result
+
     def _multirun_without_writing_candles(self, symbols, engine_options):
         results = {}
         for symbol in symbols:
             engine_options.feed_options.market_options.symbol = symbol
-            results[symbol] = self._run(engine_options)
+            results.update(self._run(engine_options).get())
         return results
 
     def run(self):
-        return {self.engine_options.feed_options.market_options.symbol: self._run(self.engine_options)}
+        return self._run(self.engine_options)
 
     def _run(self, engine_options):
         cerebro = EngineCerebro()
@@ -85,16 +93,17 @@ class Engine:
         self._add_broker_to_cerebro(cerebro, broker)
 
         self._add_datafeed_to_cerebro_and_resample_if_needed(cerebro, engine_options)
-        result = cerebro.run(optreturn=True, tradehistory=True, maxcpus=1)
+        engine_result = cerebro.run(optreturn=True, tradehistory=True, maxcpus=1)
         self.cerebro = cerebro  # We need to update it for plotting
 
-        result = self._format_result(running_mode, result)
-        return result
+        formatted_result = self._format_result(engine_options, running_mode, engine_result)
+        return _Result(formatted_result)
 
     @staticmethod
-    def _format_result(running_mode, result):
+    def _format_result(engine_options, running_mode, result):
         if running_mode == RunningMode.SIMPLE:
-            return [result]
+            return {engine_options.feed_options.market_options.symbol: [result]}
+        return {engine_options.feed_options.market_options.symbol: result}
 
     def _choose_running_mode(self, strategies):
         return RunningMode.OPTIMIZED if self._optimized_strategy_found_in_strategies(strategies) \

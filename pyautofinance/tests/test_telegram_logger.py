@@ -23,7 +23,7 @@ class TestTelegramLogger(unittest.TestCase):
         feed_options = FeedOptions(market_options, time_options)
 
         bot = TelegramBot()
-        logging_options = LoggingOptions(every_iter=False)
+        logging_options = LoggingOptions(every_iter=False, orders=False, trades=False, total_profit=False)
         logger = TelegramLogger(bot, logging_options)
         strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, [], logger=logger,
                                                         logging=True, stop_loss=2,

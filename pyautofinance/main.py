@@ -10,7 +10,7 @@ from pyautofinance.common.sizers.SizersFactory import SizersFactory
 from pyautofinance.common.feeds.FeedTitle import FeedTitle
 from pyautofinance.common.analyzers.AnalyzersFactory import AnalyzersFactory
 from pyautofinance.common.analyzers.FullMetrics import FullMetrics
-from pyautofinance.common.ResultsAnalyzer import ResultsAnalyzer
+
 
 market_options = MarketOptions(Market.CRYPTO, 'BTC-EUR')
 time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.h4, dt.datetime(2022, 1, 1))
@@ -18,7 +18,7 @@ feed_options = FeedOptions(market_options, time_options)
 
 broker_options = BrokerOptions(100_000, 0.2)
 
-strategy = StrategiesFactory().make_strategy(TestBracketStrategy, logging=False, stop_loss=2, risk_reward=3)
+strategy = StrategiesFactory().make_strategy(TestBracketStrategy, logging=False, stop_loss=2, risk_reward=3, timeframes=[TimeFrame.M1])
 sizer = SizersFactory().make_sizer(bt.sizers.PercentSizer, percents=10)
 
 tradeanalyzer = AnalyzersFactory().make_analyzer(bt.analyzers.TradeAnalyzer)
@@ -30,8 +30,6 @@ engine_options = EngineOptions(broker_options, feed_options, [strategy], sizer, 
                                writing_options=writing_options)
 
 engine = Engine(engine_options)
-results = engine.run()
+result = engine.run()
 
-results_analyzer = ResultsAnalyzer(results)
-
-results_analyzer.print_metrics()
+print(result.get_top_3_pnls_per_symbol())

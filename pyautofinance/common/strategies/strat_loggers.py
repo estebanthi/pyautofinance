@@ -57,12 +57,20 @@ class _StratLogger(ABC):
     def _log_total_profit(self, total_profit, logging_data):
         pass
 
-    @abstractmethod
     def log_long(self, logging_data):
-        pass
+        if self.logging_options.orders:
+            self._log_long(logging_data)
 
     @abstractmethod
+    def _log_long(self, logging_data):
+        pass
+
     def log_short(self, logging_data):
+        if self.logging_options.orders:
+            self._log_short(logging_data)
+
+    @abstractmethod
+    def _log_long(self, logging_data):
         pass
 
     def log_start(self, logging_data):
@@ -127,7 +135,7 @@ class DefaultStratLogger(_StratLogger):
     def _get_total_profit_display_color(total_profit):
         return 'green' if total_profit > 0 else 'red'
 
-    def log_long(self, logging_data):
+    def _log_long(self, logging_data):
         actual_price = logging_data.actual_price
         stop_price = logging_data.long_stop_price
         take_profit_price = logging_data.long_take_profit_price
@@ -137,7 +145,7 @@ class DefaultStratLogger(_StratLogger):
 
         self.log(long_str + common_str, logging_data)
 
-    def log_short(self, logging_data):
+    def _log_short(self, logging_data):
         actual_price = logging_data.actual_price
         stop_price = logging_data.short_stop_price
         take_profit_price = logging_data.short_take_profit_price
@@ -215,7 +223,7 @@ class TelegramLogger(_StratLogger):
     def _log_total_profit(self, total_profit, logging_data):
         self.log("TOTAL PROFIT : %.2f" % total_profit, logging_data)
 
-    def log_long(self, logging_data):
+    def _log_long(self, logging_data):
         actual_price = logging_data.actual_price
         stop_price = logging_data.long_stop_price
         take_profit_price = logging_data.long_take_profit_price
@@ -225,7 +233,7 @@ class TelegramLogger(_StratLogger):
 
         self.log(long_str + common_str, logging_data)
 
-    def log_short(self, logging_data):
+    def _log_short(self, logging_data):
         actual_price = logging_data.actual_price
         stop_price = logging_data.short_stop_price
         take_profit_price = logging_data.short_take_profit_price

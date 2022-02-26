@@ -8,7 +8,7 @@ from ccxtbt import CCXTFeed
 from pyautofinance.common.options import BrokerOptions, EngineOptions, MarketOptions, TimeOptions, FeedOptions, TimeFrame, Market, WritingOptions
 from pyautofinance.common.strategies.StrategiesFactory import StrategiesFactory
 from pyautofinance.common.strategies.usable_strategies.TestBracketStrategy import TestBracketStrategy
-from pyautofinance.common.engine.Engine import Engine, RunningMode
+from pyautofinance.common.engine.Engine import Engine, RunningMode, _Result
 from pyautofinance.common.feeds.FeedTitle import FeedTitle
 from pyautofinance.common.sizers.SizersFactory import SizersFactory
 from pyautofinance.common.analyzers.AnalyzersFactory import AnalyzersFactory
@@ -114,7 +114,7 @@ class TestEngine(unittest.TestCase):
         time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.d1, dt.datetime(2021, 1, 1))
         feed_options = FeedOptions(market_options, time_options)
 
-        strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, timeframes=[TimeFrame.M1], longs_enabled=[True, False])]
+        strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, longs_enabled=[True, False])]
 
         sizer = SizersFactory().make_sizer(bt.sizers.AllInSizer)
         engine_options = EngineOptions(broker_options, feed_options, strategies, sizer)
@@ -122,7 +122,7 @@ class TestEngine(unittest.TestCase):
         engine = Engine(engine_options)
 
         result = engine.run()
-        self.assertEqual(type(result['BTC-EUR'][0][0]), bt.cerebro.OptReturn)
+        self.assertEqual(type(result.get()['BTC-EUR'][0][0]), bt.cerebro.OptReturn)
 
     def test_run_engine_simple(self):
         broker_options = BrokerOptions(100_000, 0.2)
@@ -140,7 +140,7 @@ class TestEngine(unittest.TestCase):
 
         result = engine.run()
 
-        self.assertEqual(type(result['BTC-EUR'][0]), TestBracketStrategy)
+        self.assertEqual(type(result.get()['BTC-EUR'][0][0]), TestBracketStrategy)
 
     def test_multirun_engine(self):
         broker_options = BrokerOptions(100_000, 0.2)
@@ -162,8 +162,7 @@ class TestEngine(unittest.TestCase):
             feed_options.market_options.symbol = symbol
             destinations.append(FeedTitle(feed_options).get_pathname())
         result = engine.multirun(symbols, destinations)
-
-        self.assertEqual(type(result['BTC-EUR'][0]), TestBracketStrategy)
+        self.assertEqual(type(result.get()['BTC-EUR'][0][0]), TestBracketStrategy)
 
     def test_analyzers(self):
         broker_options = BrokerOptions(100_000, 0.2)
@@ -183,7 +182,7 @@ class TestEngine(unittest.TestCase):
 
         result = engine.run()
 
-        self.assertEqual(type(result['BTC-EUR'][0].analyzers.tradeanalyzer), bt.analyzers.TradeAnalyzer)
+        self.assertEqual(type(result.get()['BTC-EUR'][0][0].analyzers.tradeanalyzer), bt.analyzers.TradeAnalyzer)
 
     def test_results_saving(self):
         broker_options = BrokerOptions(100_000, 0.2)
@@ -206,7 +205,25 @@ class TestEngine(unittest.TestCase):
 
         result = engine.run()
 
-        self.assertEqual(type(result['BTC-EUR'][0].analyzers.tradeanalyzer), bt.analyzers.TradeAnalyzer)
+        self.assertEqual(type(result.get()['BTC-EUR'][0][0].analyzers.tradeanalyzer), bt.analyzers.TradeAnalyzer)
+
+    def test_multiple_timeframes(self):
+        broker_options = BrokerOptions(100_000, 0.2)
+
+        market_options = MarketOptions(Market.CRYPTO, 'BTC-EUR')
+        time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.d1, dt.datetime(2021, 1, 1))
+        feed_options = FeedOptions(market_options, time_options)
+
+        strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, timeframes=[TimeFrame.M1], longs_enabled=True)]
+
+        sizer = SizersFactory().make_sizer(bt.sizers.AllInSizer)
+        engine_options = EngineOptions(broker_options, feed_options, strategies, sizer)
+
+        engine = Engine(engine_options)
+
+        result = engine.run()
+
+        self.assertEqual(type(result.get()['BTC-EUR'][0][0]), TestBracketStrategy)
 
 
 

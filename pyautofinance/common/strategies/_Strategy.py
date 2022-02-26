@@ -40,13 +40,15 @@ class _Strategy(bt.Strategy):
             actual_price: float = self.datas[0].close[0]
             cash: float = self.broker.cash
             initial_cash: float = self.initial_cash
+            total_profit: float = self.total_profit
 
             long_stop_price: float = self._get_long_stop_loss_price()
             short_stop_price: float = self._get_short_stop_loss_price()
             long_take_profit_price: float = self._get_long_take_profit_price()
             short_take_profit_price: float = self._get_short_take_profit_price()
 
-        return LoggingData()
+        logging_data = LoggingData()
+        return logging_data
 
     @abstractmethod
     def _open_short_condition(self) -> bool:

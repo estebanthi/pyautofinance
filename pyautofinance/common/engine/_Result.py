@@ -2,15 +2,18 @@ from termcolor import colored
 from tabulate import tabulate
 
 
-class ResultsAnalyzer:
+class _Result:
 
-    def __init__(self, results):
-        self.results = results
+    def __init__(self, engine_result):
+        self._result = engine_result
+
+    def get(self):
+        return self._result
 
     def get_top_3_pnls_per_symbol(self):  # TradeAnalyzer is needed
         pnls = {}
 
-        for symbol, result in self.results.items():
+        for symbol, result in self._result.items():
             pnls[symbol] = self._get_top_3_pnls_for_symbol(result)
 
         return pnls
@@ -95,7 +98,7 @@ class ResultsAnalyzer:
 
     def print_metrics(self):
 
-        for symbol, result in self.results.items():
+        for symbol, result in self._result.items():
             for res in result:
                 for strat in res:
                     self._display_everything(strat, symbol)

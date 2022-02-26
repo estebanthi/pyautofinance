@@ -20,7 +20,7 @@ class TestStrategies(unittest.TestCase):
         strategy = _BracketStrategy
 
         strategy_logging = factory.make_strategy(strategy, logging=True)
-        self.assertEqual(strategy_logging, Strategy(_BracketStrategy, {'logging': True}, StrategyType.SIMPLE))
+        self.assertEqual(strategy_logging, Strategy(_BracketStrategy, StrategyType.SIMPLE, {'logging': True}))
 
     def test_optimized_strategy(self):
         factory = StrategiesFactory()
@@ -28,7 +28,7 @@ class TestStrategies(unittest.TestCase):
 
         strategy_logging = factory.make_strategy(strategy, logging=True, period=range(10))
         self.assertEqual(strategy_logging,
-                         Strategy(_BracketStrategy, {'logging': True, 'period': range(10)}, StrategyType.OPTIMIZED))
+                         Strategy(_BracketStrategy, StrategyType.OPTIMIZED, {'logging': True, 'period': range(10)}))
 
     @patch('builtins.print')
     def test_default_strat_logger(self, mock_print):
