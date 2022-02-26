@@ -214,7 +214,7 @@ class TestEngine(unittest.TestCase):
         time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.d1, dt.datetime(2021, 1, 1))
         feed_options = FeedOptions(market_options, time_options)
 
-        strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, timeframes=[TimeFrame.M1], longs_enabled=True)]
+        strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, timeframes=[TimeFrame.M1, TimeFrame.h4], longs_enabled=True)]
 
         sizer = SizersFactory().make_sizer(bt.sizers.AllInSizer)
         engine_options = EngineOptions(broker_options, feed_options, strategies, sizer)

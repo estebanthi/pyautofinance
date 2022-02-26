@@ -171,7 +171,7 @@ class _Strategy(bt.Strategy):
             self.close()
 
     def start(self):
-        self.logger.log_start(self._get_logging_data())
+        self.logger.log_start()
 
     def stop(self):
         self.logger.log_stop(self._get_logging_data())

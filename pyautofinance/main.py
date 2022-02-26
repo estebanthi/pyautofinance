@@ -18,7 +18,7 @@ feed_options = FeedOptions(market_options, time_options)
 
 broker_options = BrokerOptions(100_000, 0.2)
 
-strategy = StrategiesFactory().make_strategy(TestBracketStrategy, logging=False, stop_loss=2, risk_reward=3, timeframes=[TimeFrame.M1])
+strategy = StrategiesFactory().make_strategy(TestBracketStrategy, logging=False, stop_loss=2, risk_reward=3)
 sizer = SizersFactory().make_sizer(bt.sizers.PercentSizer, percents=10)
 
 tradeanalyzer = AnalyzersFactory().make_analyzer(bt.analyzers.TradeAnalyzer)

@@ -73,12 +73,12 @@ class _StratLogger(ABC):
     def _log_long(self, logging_data):
         pass
 
-    def log_start(self, logging_data):
+    def log_start(self):
         if self.logging_options.start:
-            self._log_start(logging_data)
+            self._log_start()
 
     @abstractmethod
-    def _log_start(self, logging_data):
+    def _log_start(self):
         pass
 
     def log_stop(self, logging_data):
@@ -93,8 +93,11 @@ class _StratLogger(ABC):
 class DefaultStratLogger(_StratLogger):
 
     def _log(self, txt, logging_data):
-        actual_datetime = logging_data.actual_datetime
-        print(f"{actual_datetime} : {txt}")
+        if logging_data:
+            actual_datetime = logging_data.actual_datetime
+            print(f"{actual_datetime} : {txt}")
+        else:
+            print(txt)
 
     def _log_every_iter(self, logging_data):
         self.log(f"Close : {logging_data.actual_price}", logging_data)
@@ -178,8 +181,8 @@ class DefaultStratLogger(_StratLogger):
             return f"\nTake Profit : {take_profit_price}"
         return ''
 
-    def _log_start(self, logging_data):
-        self.log(f"---STARTING---\nInitial cash : {logging_data.cash}", logging_data)
+    def _log_start(self):
+        self.log(f"---STARTING---", None)
 
     def _log_stop(self, logging_data):
         self.log(f"---ENDING---\nFinal cash : {logging_data.cash}\n"
@@ -194,9 +197,12 @@ class TelegramLogger(_StratLogger):
         self._telegram_bot = telegram_bot
 
     def _log(self, txt, logging_data):
-        actual_datetime = logging_data.actual_datetime
-        self._telegram_bot.send_message(f"{actual_datetime} : {txt}")
-        time.sleep(0.1)
+        if logging_data:
+            actual_datetime = logging_data.actual_datetime
+            self._telegram_bot.send_message(f"{actual_datetime} : {txt}")
+            time.sleep(0.1)
+        else:
+            self._telegram_bot.send_message(txt)
 
     def _log_every_iter(self, logging_data):
         self.log(f"Close : {logging_data.actual_price}", logging_data)
@@ -266,8 +272,8 @@ class TelegramLogger(_StratLogger):
             return f"\nTake Profit : {take_profit_price}"
         return ''
 
-    def _log_start(self, logging_data):
-        self.log(f"---STARTING---\nInitial cash : {logging_data.cash}", logging_data)
+    def _log_start(self):
+        self.log(f"---STARTING---", None)
 
     def _log_stop(self, logging_data):
         self.log(f"---ENDING---\nFinal cash : {logging_data.cash}\nTotal profit : {logging_data.total_profit}",
