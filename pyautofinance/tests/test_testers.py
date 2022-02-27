@@ -24,7 +24,7 @@ class TestTesters(unittest.TestCase):
 
         broker_options = BrokerOptions(100_000, 0.2)
 
-        strategy = StrategiesFactory().make_strategy(TestBracketStrategy, logging=False, stop_loss=range(2,10), risk_reward=range(2,10))
+        strategy = StrategiesFactory().make_strategy(TestBracketStrategy, logging=False, stop_loss=range(2,4))
         sizer = SizersFactory().make_sizer(bt.sizers.PercentSizer, percents=10)
 
         tradeanalyzer = AnalyzersFactory().make_analyzer(bt.analyzers.TradeAnalyzer)

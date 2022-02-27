@@ -10,6 +10,12 @@ class _Result:
     def get(self):
         return self._result
 
+    def __getitem__(self, item):
+        return self._result[item]
+
+    def __delitem__(self, key):
+        del(self._result[key])
+
     def get_top_x_pnl(self, number_to_get):  # TradeAnalyzer is needed
         pnls = {}
 

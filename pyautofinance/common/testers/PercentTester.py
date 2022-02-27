@@ -15,6 +15,7 @@ class PercentTester(Tester):
 
         train_engine = Engine(train_engine_options)
         train_result = train_engine.run()
+        print(dict(train_result))
 
         best_params_per_symbol = train_result.get_best_params()
 
@@ -25,7 +26,6 @@ class PercentTester(Tester):
             test_result = test_engine.run()
             test_result_per_symbol[symbol] = test_result.get()[symbol]
         result = _Result(test_result_per_symbol)
-        result.print_metrics()
 
     def _get_dates(self, engine_options, testing_percent):
         time_options = engine_options.feed_options.time_options
