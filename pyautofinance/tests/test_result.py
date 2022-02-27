@@ -25,11 +25,13 @@ class TestResult(unittest.TestCase):
         strategy = StrategiesFactory().make_strategy(TestBracketStrategy, logging=False, stop_loss=range(3,5))
         sizer = SizersFactory().make_sizer(bt.sizers.PercentSizer, percents=10)
 
-        metrics = [TotalGrossProfit()]
+        metrics = [TotalGrossProfit]
         engine_options = EngineOptions(broker_options, feed_options, [strategy], sizer, metrics=metrics)
 
         engine = Engine(engine_options)
         result = engine.run()
+
+        print(result['BTC-EUR'])
 
         self.assertEqual(type(result['BTC-EUR'][0][0]), MetricsCollection)
 

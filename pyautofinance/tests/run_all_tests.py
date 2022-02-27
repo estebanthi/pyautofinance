@@ -11,6 +11,7 @@ from pyautofinance.tests.test_strategies import TestStrategies
 from pyautofinance.tests.test_engine import TestEngine
 from pyautofinance.tests.test_telegram_logger import TestTelegramLogger
 from pyautofinance.tests.test_testers import TestTesters
+from pyautofinance.tests.test_result import TestResult
 
 
 def run_some_tests():
@@ -26,7 +27,8 @@ def run_some_tests():
         TestBroker,
         TestStrategies,
         TestEngine,
-        TestTelegramLogger
+        TestTelegramLogger,
+        TestResult
     ]
 
     loader = unittest.TestLoader()

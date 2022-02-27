@@ -206,8 +206,9 @@ class Engine:
     @staticmethod
     def _get_bt_analyzers_from_metrics(metrics):
         analyzers = []
-        for metric in metrics:
-            analyzers.append(metric.analyzer_to_get_metric_from)
+        if metrics:
+            for metric in metrics:
+                analyzers.append(metric.analyzer_to_get_metric_from)
         return analyzers
 
     @staticmethod

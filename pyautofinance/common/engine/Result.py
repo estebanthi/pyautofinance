@@ -1,7 +1,3 @@
-from termcolor import colored
-from tabulate import tabulate
-
-from pyautofinance.common.exceptions.result import AnalyzerMissing
 from pyautofinance.common.metrics import MetricsCollection
 from pyautofinance.common.params import ParamsCollection
 
@@ -42,11 +38,11 @@ class Result:
             for strat in result:
                 for optimized_strat in strat:
                     metrics_list = []
-                    for metric in self.metrics_to_use:
-                        metric.set_value_from_strat(optimized_strat)
-                        metrics_list.append(metric)
-                    metrics_collection = MetricsCollection(metrics_list)
-                    metrics_collections.append(metrics_collection)
+                    if self.metrics_to_use:
+                        for metric in self.metrics_to_use:
+                            metrics_list.append(metric(optimized_strat))
+                        metrics_collection = MetricsCollection(metrics_list)
+                        metrics_collections.append(metrics_collection)
             metrics[symbol] = metrics_collections
         return metrics
 
