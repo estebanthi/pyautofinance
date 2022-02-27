@@ -9,7 +9,7 @@ from pyautofinance.common.options import BrokerOptions, EngineOptions, MarketOpt
 from pyautofinance.common.timeframes import d1, h4, M1
 from pyautofinance.common.strategies.StrategiesFactory import StrategiesFactory
 from pyautofinance.common.strategies.usable_strategies.TestBracketStrategy import TestBracketStrategy
-from pyautofinance.common.engine.Engine import Engine, RunningMode, _Result
+from pyautofinance.common.engine.Engine import Engine, RunningMode, Result
 from pyautofinance.common.feeds.FeedTitle import FeedTitle
 from pyautofinance.common.sizers.SizersFactory import SizersFactory
 from pyautofinance.common.analyzers.AnalyzersFactory import AnalyzersFactory

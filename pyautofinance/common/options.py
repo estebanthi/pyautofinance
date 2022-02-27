@@ -76,6 +76,7 @@ class EngineOptions:
     strategies: list
     sizer: bt.Sizer
     analyzers: list = None
+    metrics: list = None
     observers: list = None
     timers: list = None
     writing_options: WritingOptions = None

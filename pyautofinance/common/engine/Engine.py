@@ -9,7 +9,8 @@ from pyautofinance.common.feeds.datafeeds_generators import DatafeedGeneratorsFa
 from pyautofinance.common.feeds.writers import CandlesWriter
 from pyautofinance.common.options import WritingOptions
 from pyautofinance.common.engine.EngineCerebro import EngineCerebro
-from pyautofinance.common.engine._Result import _Result
+from pyautofinance.common.engine.Result import Result
+from pyautofinance.common.analyzers.AnalyzersFactory import AnalyzersFactory
 
 
 class RunningMode(Enum):
@@ -29,14 +30,15 @@ class Engine:
         results = self._multirun_and_write_candles(symbols, candles_destinations, engine_options)\
             if candles_destinations else self._multirun_without_writing_candles(symbols, engine_options)
 
-        return _Result(results)
+        return Result(results, engine_options.metrics)
 
     def _multirun_and_write_candles(self, symbols, candles_destinations, engine_options):
         results = {}
         for symbol, candles_destination in zip(symbols, candles_destinations):
             engine_options.feed_options.market_options.symbol = symbol
             engine_options.writing_options = self._get_writing_options(engine_options, candles_destination)
-            results.update(self._run(engine_options).get())
+            result = self._run(engine_options)
+            results.update(result)
         return results
 
     @staticmethod
@@ -62,11 +64,12 @@ class Engine:
         results = {}
         for symbol in symbols:
             engine_options.feed_options.market_options.symbol = symbol
-            results.update(self._run(engine_options).get())
+            result = self._run(engine_options)
+            results.update(result)
         return results
 
     def run(self):
-        return self._run(self.engine_options)
+        return Result(self._run(self.engine_options), self.engine_options.metrics)
 
     def _run(self, engine_options):
         cerebro = EngineCerebro()
@@ -75,7 +78,10 @@ class Engine:
         running_mode = self._choose_running_mode(strategies)
         self._add_strategies_to_cerebro(cerebro, strategies, running_mode)
 
-        analyzers = engine_options.analyzers
+        options_analyzers = engine_options.analyzers
+        analyzers = self._get_analyzers_from_metrics(engine_options)
+        if options_analyzers:
+            analyzers = options_analyzers + analyzers
         self._add_analyzers_to_cerebro(cerebro, analyzers)
 
         observers = engine_options.observers
@@ -97,7 +103,7 @@ class Engine:
         self.cerebro = cerebro  # We need to update it for plotting
 
         formatted_result = self._format_result(engine_options, running_mode, engine_result)
-        return _Result(formatted_result)
+        return formatted_result
 
     @staticmethod
     def _format_result(engine_options, running_mode, result):
@@ -190,6 +196,31 @@ class Engine:
     def _resample_datafeed_from_timeframes(cerebro, datafeed, timeframes):
         for timeframe in timeframes:
             cerebro.resampledata(datafeed, timeframe=timeframe.bt_timeframe, compression=timeframe.bt_compression)
+
+    def _get_analyzers_from_metrics(self, engine_options):
+        analyzers = self._get_bt_analyzers_from_metrics(engine_options.metrics)
+        analyzers = self._remove_same_elements_from_list(analyzers)
+        analyzers = self._make_analyzers_from_bt_analyzers_list(analyzers)
+        return analyzers
+
+    @staticmethod
+    def _get_bt_analyzers_from_metrics(metrics):
+        analyzers = []
+        for metric in metrics:
+            analyzers.append(metric.analyzer_to_get_metric_from)
+        return analyzers
+
+    @staticmethod
+    def _make_analyzers_from_bt_analyzers_list(analyzers):
+        factory = AnalyzersFactory()
+        copy = analyzers.copy()
+        for index, analyzer in enumerate(analyzers):
+            copy[index] = factory.make_analyzer(analyzer)
+        return copy
+
+    @staticmethod
+    def _remove_same_elements_from_list(container):
+        return list(set(container))
 
     @staticmethod
     def _add_analyzers_to_cerebro(cerebro, analyzers):

@@ -3,7 +3,7 @@ import datetime as dt
 from pyautofinance.common.testers.Tester import Tester
 from pyautofinance.common.engine.Engine import Engine
 from pyautofinance.common.strategies.StrategiesFactory import StrategiesFactory
-from pyautofinance.common.engine._Result import _Result
+from pyautofinance.common.engine.Result import Result
 
 
 class SplitTrainTestTester(Tester):
@@ -24,7 +24,7 @@ class SplitTrainTestTester(Tester):
             test_engine = Engine(test_engine_options)
             test_result = test_engine.run()
             test_result_per_symbol[symbol] = test_result.get()[symbol]
-        result = _Result(test_result_per_symbol)
+        result = Result(test_result_per_symbol)
         return result
 
     def _get_dates(self, engine_options, testing_percent):
