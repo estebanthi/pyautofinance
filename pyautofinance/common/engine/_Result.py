@@ -10,24 +10,23 @@ class _Result:
     def get(self):
         return self._result
 
-    def get_top_3_pnls_per_symbol(self):  # TradeAnalyzer is needed
+    def get_top_x_pnl(self, number_to_get):  # TradeAnalyzer is needed
         pnls = {}
 
         for symbol, result in self._result.items():
-            pnls[symbol] = self._get_top_3_pnls_for_symbol(result)
+            pnls[symbol] = self._get_top_x_pnls_for_symbol(result, number_to_get)
 
         return pnls
 
-    def _get_top_3_pnls_for_symbol(self, result):
+    def _get_top_x_pnls_for_symbol(self, result, number_to_get):
         pnls_dict = {}
         for res in result:  # For iterating in all strats
             for strat in res:
                 pnl_dict = self._get_pnl_from_strat(strat)
-
                 key = self._get_key_from_strat(strat)
                 pnls_dict[key] = pnl_dict
 
-        return sorted(pnls_dict.items(), key=lambda x: x[1]['total'], reverse=True)[:3]
+        return sorted(pnls_dict.items(), key=lambda x: x[1]['total'], reverse=True)[:number_to_get]
 
     @staticmethod
     def _get_pnl_from_strat(strat):
@@ -177,3 +176,28 @@ class _Result:
             color = "yellow"
 
         return color
+
+    def get_best_params(self):
+        best_params_per_symbol = {}
+        for symbol, result in self._result.items():
+            initial_strat = result[0][0]
+            max_pnl = initial_strat.analyzers.tradeanalyzer.get_analysis().pnl.net.total
+            best_params = self._get_params_dict_from_strat(initial_strat)
+
+            for res in result:
+                for strat in res:
+                    pnl = strat.analyzers.tradeanalyzer.get_analysis().pnl.net.total
+                    if pnl > max_pnl:
+                        max_pnl = pnl
+                        best_params = self._get_params_dict_from_strat(strat)
+            best_params_per_symbol[symbol] = best_params
+            return best_params_per_symbol
+
+    def _get_params_dict_from_strat(self, strat):
+        key = self._get_key_from_strat(strat)
+        params = {}
+        for param in key:
+            param_name = param[0]
+            param_value = param[1]
+            params[param_name] = param_value
+        return params

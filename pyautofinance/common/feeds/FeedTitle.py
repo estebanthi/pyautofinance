@@ -39,7 +39,7 @@ class FeedTitle:
         filename_elements.append(start_date_str)
         filename_elements.append(end_date_str)
 
-        filename_elements.append(time_options.timeframe.value)
+        filename_elements.append(time_options.timeframe.name)
 
     @staticmethod
     def _format_date_for_feed_filename(date):

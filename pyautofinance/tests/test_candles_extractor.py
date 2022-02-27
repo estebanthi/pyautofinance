@@ -2,7 +2,8 @@ import unittest
 import datetime as dt
 import pandas as pd
 
-from pyautofinance.common.options import FeedOptions, MarketOptions, TimeOptions, Market, TimeFrame
+from pyautofinance.common.options import FeedOptions, MarketOptions, TimeOptions, Market
+from pyautofinance.common.timeframes import d1
 
 from pyautofinance.common.config import Config
 
@@ -21,7 +22,7 @@ class TestCandlesExtractor(unittest.TestCase):
     test_candles = pd.read_csv(datasets_pathname + "/" + test_feed_filename)
 
     market_options = MarketOptions(Market.CRYPTO, "BTC-EUR")
-    time_options = TimeOptions(dt.datetime(2020, 1, 1, 0, 0, 0), end_date=dt.datetime(2020, 3, 1, 0, 0, 0), timeframe=TimeFrame.d1)
+    time_options = TimeOptions(dt.datetime(2020, 1, 1, 0, 0, 0), end_date=dt.datetime(2020, 3, 1, 0, 0, 0), timeframe=d1())
     feed_options = FeedOptions(market_options, time_options)
 
     formatter = SimpleCandlesFormatter()
@@ -59,7 +60,7 @@ class TestCandlesExtractor(unittest.TestCase):
         self.assertTrue(candles["Close"].equals(csv_candles["Close"]))"""
 
     def test_csv_not_found(self):
-        time_options = TimeOptions(dt.datetime(2019, 1, 1), TimeFrame.d1, dt.datetime(2020, 1, 1))
+        time_options = TimeOptions(dt.datetime(2019, 1, 1), d1(), dt.datetime(2020, 1, 1))
         feed_options = FeedOptions(self.market_options, time_options)
         csv_extractor = CSVCandlesExtractor()
         with self.assertRaises(NoCSVFileFoundWithThoseOptions):

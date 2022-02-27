@@ -10,7 +10,7 @@ from pyautofinance.common.feeds.formatters import SimpleCandlesFormatter
 from pyautofinance.common.feeds.filterers import SimpleCandlesFilterer
 from pyautofinance.common.feeds.FeedTitle import FeedTitle
 
-from pyautofinance.common.feeds.ccxt_utils import format_timeframe_for_ccxt, format_symbol_for_ccxt
+from pyautofinance.common.feeds.ccxt_utils import format_symbol_for_ccxt
 
 from pyautofinance.common.exceptions.feeds import NoCSVFileFoundWithThoseOptions
 
@@ -71,7 +71,7 @@ class CCXTCandlesExtractor(CandlesExtractor):
 
         first_10_000_candles = exchange.fetch_ohlcv(
             symbol=symbol,
-            timeframe=timeframe,
+            timeframe=timeframe.ccxt_name,
             since=since,
             limit=10000
         )
@@ -94,7 +94,7 @@ class CCXTCandlesExtractor(CandlesExtractor):
             # Extraction of the 10 000 next candles
             candles_to_add = exchange.fetch_ohlcv(
                 symbol=symbol,
-                timeframe=timeframe,
+                timeframe=timeframe.ccxt_name,
                 since=source_candles[-1][0],
                 limit=10000
             )
@@ -117,8 +117,7 @@ class CCXTCandlesExtractor(CandlesExtractor):
     @staticmethod
     def _get_timeframe_from_time_options(time_options):
         timeframe = time_options.timeframe
-        formatted_timeframe = format_timeframe_for_ccxt(timeframe)
-        return formatted_timeframe
+        return timeframe
 
     @staticmethod
     def _get_since_from_time_options(time_options):

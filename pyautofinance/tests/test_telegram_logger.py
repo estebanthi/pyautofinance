@@ -3,6 +3,7 @@ import unittest
 from pyautofinance.common.TelegramBot import TelegramBot
 from pyautofinance.common.strategies.strat_loggers import TelegramLogger
 from pyautofinance.common.options import *
+from pyautofinance.common.timeframes import h1
 from pyautofinance.common.strategies.StrategiesFactory import StrategiesFactory
 from pyautofinance.common.strategies.usable_strategies.TestBracketStrategy import TestBracketStrategy
 from pyautofinance.common.sizers.SizersFactory import SizersFactory
@@ -19,7 +20,7 @@ class TestTelegramLogger(unittest.TestCase):
         broker_options = BrokerOptions(100_000, 0.2)
 
         market_options = MarketOptions(Market.CRYPTO, 'BTC-EUR')
-        time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.h1, dt.datetime(2021, 6, 1))
+        time_options = TimeOptions(dt.datetime(2020, 1, 1), h1(), dt.datetime(2021, 6, 1))
         feed_options = FeedOptions(market_options, time_options)
 
         bot = TelegramBot()

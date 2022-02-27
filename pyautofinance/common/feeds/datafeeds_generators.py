@@ -5,8 +5,7 @@ from backtrader.feeds import PandasData
 from abc import ABC, abstractmethod
 from ccxtbt import CCXTStore
 
-from pyautofinance.common.options import TimeFrame, Market
-from pyautofinance.common.feeds.extractors import CCXTCandlesExtractor
+from pyautofinance.common.options import Market
 from pyautofinance.common.feeds.ccxt_utils import format_symbol_for_ccxt
 from pyautofinance.common.broker.BrokerConfig import BrokerConfig
 
@@ -39,9 +38,7 @@ class BacktestingDatafeedGenerator(DatafeedGenerator):
         time_options = feed_options.time_options
         timeframe = time_options.timeframe
 
-        bt_timeframe, compression = TimeFrame.get_bt_timeframe_and_compression_from_timeframe(timeframe)
-
-        return PandasData(dataname=candles, timeframe=bt_timeframe, compression=compression, datetime=0)
+        return PandasData(dataname=candles, timeframe=timeframe.bt_timeframe, compression=timeframe.bt_compression, datetime=0)
 
 
 class CryptoLiveDatafeedGenerator(DatafeedGenerator):
@@ -62,10 +59,9 @@ class CryptoLiveDatafeedGenerator(DatafeedGenerator):
         formatted_symbol = format_symbol_for_ccxt(symbol)
 
         timeframe = time_options.timeframe
-        bt_timeframe, bt_compression = TimeFrame.get_bt_timeframe_and_compression_from_timeframe(timeframe)
 
         start_date = time_options.start_date
 
-        return store.getdata(dataname=formatted_symbol, name=formatted_symbol, timeframe=bt_timeframe,
-                             fromdate=start_date, compression=bt_compression, ohlcv_limit=99999,
+        return store.getdata(dataname=formatted_symbol, name=formatted_symbol, timeframe=timeframe.bt_timeframe,
+                             fromdate=start_date, compression=timeframe.bt_compression, ohlcv_limit=99999,
                              sessionstart=start_date)

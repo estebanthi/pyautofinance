@@ -9,7 +9,8 @@ from pyautofinance.common.strategies.StrategiesFactory import StrategiesFactory,
 from pyautofinance.common.strategies._BracketStrategy import _BracketStrategy
 from pyautofinance.common.strategies.strat_loggers import DefaultStratLogger
 from pyautofinance.common.feeds.extractors import CSVCandlesExtractor
-from pyautofinance.common.options import FeedOptions, MarketOptions, TimeOptions, TimeFrame, Market
+from pyautofinance.common.options import FeedOptions, MarketOptions, TimeOptions, Market
+from pyautofinance.common.timeframes import d1
 from pyautofinance.common.feeds.datafeeds_generators import BacktestingDatafeedGenerator
 
 
@@ -32,7 +33,7 @@ class TestStrategies(unittest.TestCase):
 
     @patch('builtins.print')
     def test_default_strat_logger(self, mock_print):
-        time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.d1, dt.datetime(2022, 1, 1))
+        time_options = TimeOptions(dt.datetime(2020, 1, 1), d1(), dt.datetime(2022, 1, 1))
         market_options = MarketOptions(Market.CRYPTO, "BTC-EUR")
         feed_options = FeedOptions(market_options, time_options)
 

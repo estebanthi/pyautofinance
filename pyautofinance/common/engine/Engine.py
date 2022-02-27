@@ -7,7 +7,7 @@ from pyautofinance.common.strategies.StrategiesFactory import StrategyType
 from pyautofinance.common.feeds.extractors import CandlesExtractorsFactory
 from pyautofinance.common.feeds.datafeeds_generators import DatafeedGeneratorsFactory
 from pyautofinance.common.feeds.writers import CandlesWriter
-from pyautofinance.common.options import TimeFrame, WritingOptions
+from pyautofinance.common.options import WritingOptions
 from pyautofinance.common.engine.EngineCerebro import EngineCerebro
 from pyautofinance.common.engine._Result import _Result
 
@@ -184,13 +184,12 @@ class Engine:
             if strategy.timeframes:
                 for timeframe in strategy.timeframes:
                     timeframes.append(timeframe)
-        return set(timeframes)
+        return timeframes
 
     @staticmethod
     def _resample_datafeed_from_timeframes(cerebro, datafeed, timeframes):
         for timeframe in timeframes:
-            bt_timeframe, bt_compression = TimeFrame.get_bt_timeframe_and_compression_from_timeframe(timeframe)
-            cerebro.resampledata(datafeed, timeframe=bt_timeframe, compression=bt_compression)
+            cerebro.resampledata(datafeed, timeframe=timeframe.bt_timeframe, compression=timeframe.bt_compression)
 
     @staticmethod
     def _add_analyzers_to_cerebro(cerebro, analyzers):

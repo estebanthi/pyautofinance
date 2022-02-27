@@ -5,7 +5,8 @@ import backtrader as bt
 import ccxt
 from ccxtbt import CCXTFeed
 
-from pyautofinance.common.options import BrokerOptions, EngineOptions, MarketOptions, TimeOptions, FeedOptions, TimeFrame, Market, WritingOptions
+from pyautofinance.common.options import BrokerOptions, EngineOptions, MarketOptions, TimeOptions, FeedOptions, Market, WritingOptions
+from pyautofinance.common.timeframes import d1, h4, M1
 from pyautofinance.common.strategies.StrategiesFactory import StrategiesFactory
 from pyautofinance.common.strategies.usable_strategies.TestBracketStrategy import TestBracketStrategy
 from pyautofinance.common.engine.Engine import Engine, RunningMode, _Result
@@ -20,7 +21,7 @@ class TestEngine(unittest.TestCase):
         broker_options = BrokerOptions(100_000, 0.2)
 
         market_options = MarketOptions(Market.CRYPTO, 'BTC-EUR')
-        time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.d1, dt.datetime(2022, 1, 1))
+        time_options = TimeOptions(dt.datetime(2020, 1, 1), d1(), dt.datetime(2022, 1, 1))
         feed_options = FeedOptions(market_options, time_options)
 
         strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, logging=True)]
@@ -36,7 +37,7 @@ class TestEngine(unittest.TestCase):
         broker_options = BrokerOptions(100_000, 0.2)
 
         market_options = MarketOptions(Market.CRYPTO, 'BTC-EUR')
-        time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.d1, dt.datetime(2022, 1, 1))
+        time_options = TimeOptions(dt.datetime(2020, 1, 1), d1(), dt.datetime(2022, 1, 1))
         feed_options = FeedOptions(market_options, time_options)
 
         strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, logging=True, period=range(10))]
@@ -52,7 +53,7 @@ class TestEngine(unittest.TestCase):
         broker_options = BrokerOptions(100_000, 0.2)
 
         market_options = MarketOptions(Market.CRYPTO, 'BTC-EUR')
-        time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.d1, dt.datetime(2021, 1, 1))
+        time_options = TimeOptions(dt.datetime(2020, 1, 1), d1(), dt.datetime(2021, 1, 1))
         feed_options = FeedOptions(market_options, time_options)
 
         strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, logging=True, period=range(10))]
@@ -71,7 +72,7 @@ class TestEngine(unittest.TestCase):
         broker_options = BrokerOptions(currency='EUR', exchange=ccxt.binance())
 
         market_options = MarketOptions(Market.CRYPTO, 'BTC-EUR')
-        time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.d1)
+        time_options = TimeOptions(dt.datetime(2020, 1, 1), d1())
         feed_options = FeedOptions(market_options, time_options)
 
         strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, logging=True, period=range(10))]
@@ -89,7 +90,7 @@ class TestEngine(unittest.TestCase):
         broker_options = BrokerOptions(100_000, 0.2)
 
         market_options = MarketOptions(Market.CRYPTO, 'BTC-EUR')
-        time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.d1, dt.datetime(2021, 1, 1))
+        time_options = TimeOptions(dt.datetime(2020, 1, 1), d1(), dt.datetime(2021, 1, 1))
         feed_options = FeedOptions(market_options, time_options)
 
         candles_destination = FeedTitle(feed_options).get_pathname()
@@ -111,7 +112,7 @@ class TestEngine(unittest.TestCase):
         broker_options = BrokerOptions(100_000, 0.2)
 
         market_options = MarketOptions(Market.CRYPTO, 'BTC-EUR')
-        time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.d1, dt.datetime(2021, 1, 1))
+        time_options = TimeOptions(dt.datetime(2020, 1, 1), d1(), dt.datetime(2021, 1, 1))
         feed_options = FeedOptions(market_options, time_options)
 
         strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, longs_enabled=[True, False])]
@@ -128,7 +129,7 @@ class TestEngine(unittest.TestCase):
         broker_options = BrokerOptions(100_000, 0.2)
 
         market_options = MarketOptions(Market.CRYPTO, 'BTC-EUR')
-        time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.d1, dt.datetime(2021, 1, 1))
+        time_options = TimeOptions(dt.datetime(2020, 1, 1), d1(), dt.datetime(2021, 1, 1))
         feed_options = FeedOptions(market_options, time_options)
 
         strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, longs_enabled=True)]
@@ -146,7 +147,7 @@ class TestEngine(unittest.TestCase):
         broker_options = BrokerOptions(100_000, 0.2)
 
         market_options = MarketOptions(Market.CRYPTO, 'BTC-EUR')
-        time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.d1, dt.datetime(2021, 1, 1))
+        time_options = TimeOptions(dt.datetime(2020, 1, 1), d1(), dt.datetime(2021, 1, 1))
         feed_options = FeedOptions(market_options, time_options)
 
         strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, longs_enabled=True)]
@@ -168,7 +169,7 @@ class TestEngine(unittest.TestCase):
         broker_options = BrokerOptions(100_000, 0.2)
 
         market_options = MarketOptions(Market.CRYPTO, 'BTC-EUR')
-        time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.d1, dt.datetime(2021, 1, 1))
+        time_options = TimeOptions(dt.datetime(2020, 1, 1), d1(), dt.datetime(2021, 1, 1))
         feed_options = FeedOptions(market_options, time_options)
 
         strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, longs_enabled=True)]
@@ -188,7 +189,7 @@ class TestEngine(unittest.TestCase):
         broker_options = BrokerOptions(100_000, 0.2)
 
         market_options = MarketOptions(Market.CRYPTO, 'BTC-EUR')
-        time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.d1, dt.datetime(2021, 1, 1))
+        time_options = TimeOptions(dt.datetime(2020, 1, 1), d1(), dt.datetime(2021, 1, 1))
         feed_options = FeedOptions(market_options, time_options)
 
         strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, longs_enabled=True)]
@@ -211,10 +212,10 @@ class TestEngine(unittest.TestCase):
         broker_options = BrokerOptions(100_000, 0.2)
 
         market_options = MarketOptions(Market.CRYPTO, 'BTC-EUR')
-        time_options = TimeOptions(dt.datetime(2020, 1, 1), TimeFrame.d1, dt.datetime(2021, 1, 1))
+        time_options = TimeOptions(dt.datetime(2020, 1, 1), d1(), dt.datetime(2021, 1, 1))
         feed_options = FeedOptions(market_options, time_options)
 
-        strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, timeframes=[TimeFrame.M1, TimeFrame.h4], longs_enabled=True)]
+        strategies = [StrategiesFactory().make_strategy(TestBracketStrategy, timeframes=[M1(), h4()], longs_enabled=True)]
 
         sizer = SizersFactory().make_sizer(bt.sizers.AllInSizer)
         engine_options = EngineOptions(broker_options, feed_options, strategies, sizer)

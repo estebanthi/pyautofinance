@@ -10,6 +10,7 @@ from pyautofinance.tests.test_broker import TestBroker
 from pyautofinance.tests.test_strategies import TestStrategies
 from pyautofinance.tests.test_engine import TestEngine
 from pyautofinance.tests.test_telegram_logger import TestTelegramLogger
+from pyautofinance.tests.test_testers import TestTesters
 
 
 def run_some_tests():
