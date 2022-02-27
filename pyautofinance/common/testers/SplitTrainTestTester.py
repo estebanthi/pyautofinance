@@ -6,7 +6,7 @@ from pyautofinance.common.strategies.StrategiesFactory import StrategiesFactory
 from pyautofinance.common.engine._Result import _Result
 
 
-class PercentTester(Tester):
+class SplitTrainTestTester(Tester):
 
     def test(self, engine_options, testing_percent=20):
         train_start_date, train_end_date, test_start_date, test_end_date = self._get_dates(engine_options, testing_percent)
@@ -15,7 +15,6 @@ class PercentTester(Tester):
 
         train_engine = Engine(train_engine_options)
         train_result = train_engine.run()
-        print(dict(train_result))
 
         best_params_per_symbol = train_result.get_best_params()
 
@@ -26,6 +25,7 @@ class PercentTester(Tester):
             test_result = test_engine.run()
             test_result_per_symbol[symbol] = test_result.get()[symbol]
         result = _Result(test_result_per_symbol)
+        return result
 
     def _get_dates(self, engine_options, testing_percent):
         time_options = engine_options.feed_options.time_options

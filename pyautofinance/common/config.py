@@ -7,8 +7,8 @@ class _ConfigLoader:
 
     def __init__(self, path_to_config):
         try:
-            config_file = open(path_to_config, 'r')
-            self._config = safe_load(config_file)
+            with open(path_to_config, 'r') as config_file:
+                self._config = safe_load(config_file)
         except IOError as e:
             raise ConfigFileNotFound
 

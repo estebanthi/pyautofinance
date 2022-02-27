@@ -27,10 +27,8 @@ fullmetrics = AnalyzersFactory().make_analyzer(FullMetrics, _name='full_metrics'
 
 writing_options = WritingOptions(candles_destination=FeedTitle(feed_options).get_pathname())
 
-engine_options = EngineOptions(broker_options, feed_options, [strategy], sizer, analyzers=[tradeanalyzer, fullmetrics],
+engine_options = EngineOptions(broker_options, feed_options, [strategy], sizer, analyzers=[tradeanalyzer],
                                writing_options=writing_options)
 
 engine = Engine(engine_options)
 result = engine.run()
-
-print(result.get_top_3_pnls_per_symbol())

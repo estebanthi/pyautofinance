@@ -2,7 +2,7 @@ import unittest
 import backtrader as bt
 import datetime as dt
 
-from pyautofinance.common.engine.Engine import Engine
+from pyautofinance.common.engine.Engine import _Result
 from pyautofinance.common.timeframes import h4
 from pyautofinance.common.options import EngineOptions, MarketOptions, TimeOptions, FeedOptions, BrokerOptions,\
      Market
@@ -12,7 +12,7 @@ from pyautofinance.common.sizers.SizersFactory import SizersFactory
 
 from pyautofinance.common.analyzers.AnalyzersFactory import AnalyzersFactory
 from pyautofinance.common.analyzers.FullMetrics import FullMetrics
-from pyautofinance.common.testers.PercentTester import PercentTester
+from pyautofinance.common.testers.SplitTrainTestTester import SplitTrainTestTester
 
 
 class TestTesters(unittest.TestCase):
@@ -34,8 +34,9 @@ class TestTesters(unittest.TestCase):
                                        analyzers=[tradeanalyzer, fullmetrics],
                                        )
 
-        tester = PercentTester()
-        tester.test(engine_options)
+        tester = SplitTrainTestTester()
+        test_result = tester.test(engine_options)
+        self.assertEqual(type(test_result), _Result)
 
 
 if __name__ == '__main__':

@@ -1,6 +1,8 @@
 from termcolor import colored
 from tabulate import tabulate
 
+from pyautofinance.common.exceptions.result import AnalyzerMissing
+
 
 class _Result:
 
@@ -16,7 +18,10 @@ class _Result:
     def __delitem__(self, key):
         del(self._result[key])
 
-    def get_top_x_pnl(self, number_to_get):  # TradeAnalyzer is needed
+    def items(self):
+        return self._result.items()
+
+    def get_top_pnl(self, number_to_get):
         pnls = {}
 
         for symbol, result in self._result.items():
@@ -36,7 +41,10 @@ class _Result:
 
     @staticmethod
     def _get_pnl_from_strat(strat):
-        analysis = strat.analyzers.tradeanalyzer.get_analysis()
+        try:
+            analysis = strat.analyzers.tradeanalyzer.get_analysis()
+        except AttributeError:
+            raise AnalyzerMissing("Trade Analyzer")
 
         pnl_dict = {
             "total": 0,
@@ -112,7 +120,10 @@ class _Result:
         print(symbol)
         params = self._get_key_from_strat(strat)
         print(params)
-        metrics = strat.analyzers.full_metrics.get_analysis()
+        try:
+            metrics = strat.analyzers.full_metrics.get_analysis()
+        except AttributeError:
+            raise AnalyzerMissing("Full Metrics")
         self._metrics_display(metrics)
 
     def _metrics_display(self, metrics):
