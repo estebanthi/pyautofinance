@@ -3,12 +3,13 @@ import datetime as dt
 from pyautofinance.common.testers.Tester import Tester
 from pyautofinance.common.engine.Engine import Engine
 from pyautofinance.common.strategies.StrategiesFactory import StrategiesFactory
-from pyautofinance.common.engine.Result import Result
+from pyautofinance.common.result.Result import Result
+from pyautofinance.common.metrics import TotalGrossProfit
 
 
 class SplitTrainTestTester(Tester):
 
-    def test(self, engine_options, testing_percent=20):
+    def test(self, engine_options, metric_to_consider=TotalGrossProfit, testing_percent=20):
         train_start_date, train_end_date, test_start_date, test_end_date = self._get_dates(engine_options, testing_percent)
 
         train_engine_options = self._get_train_engine_options(engine_options, train_start_date, train_end_date)
@@ -16,16 +17,14 @@ class SplitTrainTestTester(Tester):
         train_engine = Engine(train_engine_options)
         train_result = train_engine.run()
 
-        best_params_per_symbol = train_result.get_best_params()
+        best_params_per_symbol = train_result.get_best_params(metric_to_consider)
 
-        test_result_per_symbol = {}
         for symbol, params in best_params_per_symbol.items():
             test_engine_options = self._get_test_engine_options(engine_options, test_start_date, test_end_date, symbol, params)
             test_engine = Engine(test_engine_options)
             test_result = test_engine.run()
-            test_result_per_symbol[symbol] = test_result.get()[symbol]
-        result = Result(test_result_per_symbol)
-        return result
+
+        return test_result
 
     def _get_dates(self, engine_options, testing_percent):
         time_options = engine_options.feed_options.time_options

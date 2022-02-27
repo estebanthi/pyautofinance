@@ -9,7 +9,7 @@ from pyautofinance.common.feeds.datafeeds_generators import DatafeedGeneratorsFa
 from pyautofinance.common.feeds.writers import CandlesWriter
 from pyautofinance.common.options import WritingOptions
 from pyautofinance.common.engine.EngineCerebro import EngineCerebro
-from pyautofinance.common.engine.Result import Result
+from pyautofinance.common.result.Result import Result
 from pyautofinance.common.analyzers.AnalyzersFactory import AnalyzersFactory
 
 

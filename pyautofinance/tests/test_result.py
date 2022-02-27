@@ -10,7 +10,7 @@ from pyautofinance.common.strategies.StrategiesFactory import StrategiesFactory
 from pyautofinance.common.strategies.usable_strategies.TestBracketStrategy import TestBracketStrategy
 from pyautofinance.common.sizers.SizersFactory import SizersFactory
 
-from pyautofinance.common.metrics import TotalGrossProfit, MetricsCollection
+from pyautofinance.common.metrics import TotalGrossProfit
 
 
 class TestResult(unittest.TestCase):
@@ -31,9 +31,7 @@ class TestResult(unittest.TestCase):
         engine = Engine(engine_options)
         result = engine.run()
 
-        print(result['BTC-EUR'])
-
-        self.assertEqual(type(result['BTC-EUR'][0][0]), MetricsCollection)
+        result.get_best_params(TotalGrossProfit)
 
 
 if __name__ == '__main__':

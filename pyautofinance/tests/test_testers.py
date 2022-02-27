@@ -14,6 +14,8 @@ from pyautofinance.common.analyzers.AnalyzersFactory import AnalyzersFactory
 from pyautofinance.common.analyzers.FullMetrics import FullMetrics
 from pyautofinance.common.testers.SplitTrainTestTester import SplitTrainTestTester
 
+from pyautofinance.common.metrics import TotalGrossProfit
+
 
 class TestTesters(unittest.TestCase):
 
@@ -31,7 +33,7 @@ class TestTesters(unittest.TestCase):
         fullmetrics = AnalyzersFactory().make_analyzer(FullMetrics, _name='full_metrics')
 
         engine_options = EngineOptions(broker_options, feed_options, [strategy], sizer,
-                                       analyzers=[tradeanalyzer, fullmetrics],
+                                       analyzers=[tradeanalyzer, fullmetrics], metrics=[TotalGrossProfit]
                                        )
 
         tester = SplitTrainTestTester()

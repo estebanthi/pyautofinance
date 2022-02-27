@@ -5,27 +5,6 @@ import backtrader as bt
 from pyautofinance.common.exceptions.analyzers import AnalyzerMissing
 
 
-class MetricsCollection:
-
-    def __init__(self, metrics_list):
-        self.metrics_list = metrics_list
-
-    def __getitem__(self, item):
-        return self.metrics_list[item]
-
-    def __iter__(self):
-        self.index = 0
-        return self
-
-    def __next__(self):
-        if self.index < len(self.metrics_list):
-            metric = self.metrics_list[self.index]
-            self.index += 1
-            return metric
-        else:
-            raise StopIteration
-
-
 @dataclass
 class Metric(ABC):
     name: str
@@ -35,6 +14,9 @@ class Metric(ABC):
     def __init__(self, strat):
         analysis = self.get_analysis_from_strat(strat)
         self.value = self.get_metric_from_analysis(analysis)
+
+    def __repr__(self):
+        return self.name + ' : ' + str(self.value)
 
     def get_analysis_from_strat(self, strat):
 
@@ -49,7 +31,6 @@ class Metric(ABC):
                     except AttributeError:
                         raise AnalyzerMissing('Trade Analyzer')
                 return analysis
-
         return AnalysisFactory.get_analysis(self.analyzer_to_get_metric_from)
 
     @abstractmethod
@@ -57,7 +38,7 @@ class Metric(ABC):
         pass
 
     @abstractmethod
-    def is_better_than_other(self, other) -> bool:
+    def __gt__(self, other):
         pass
 
 
@@ -69,5 +50,5 @@ class TotalGrossProfit(Metric):
     def get_metric_from_analysis(self, analysis):
         return analysis.pnl.gross.total
 
-    def is_better_than_other(self, other):
-        return self.value > other
+    def __gt__(self, other):
+        return self.value > other.value
