@@ -1,4 +1,4 @@
-from pyautofinance.common.collections import MetricsCollection, ParamsCollection
+from pyautofinance.common.collections import MetricsCollection, ParamsCollection, TradesCollection
 
 
 class StratResult:
@@ -9,6 +9,7 @@ class StratResult:
 
         self.metrics = self._build_metrics_collection()
         self.params = self._build_params_collection()
+        self.trades = self._build_trades_collection()
 
     def _build_metrics_collection(self):
         metrics_list = []
@@ -32,3 +33,7 @@ class StratResult:
         for param, value in params_dict.items():
             params_list.append((param, value))
         return params_list
+
+    def _build_trades_collection(self):
+        trade_list = self._strat.analyzers.tradelist.get_analysis()
+        return TradesCollection(trade_list)

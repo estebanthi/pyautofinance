@@ -11,6 +11,7 @@ from pyautofinance.common.options import WritingOptions
 from pyautofinance.common.engine.EngineCerebro import EngineCerebro
 from pyautofinance.common.result.Result import Result
 from pyautofinance.common.analyzers.AnalyzersFactory import AnalyzersFactory
+from pyautofinance.common.analyzers.TradeList import TradeList
 
 
 class RunningMode(Enum):
@@ -228,6 +229,7 @@ class Engine:
         if analyzers:
             for analyzer in analyzers:
                 cerebro.addanalyzer(analyzer.analyzer, **analyzer.parameters)
+        cerebro.addanalyzer(TradeList, _name='tradelist')
 
     @staticmethod
     def _add_observers_to_cerebro(cerebro, observers):
