@@ -30,6 +30,8 @@ class TestResult(unittest.TestCase):
 
         engine = Engine(engine_options)
         result = engine.run()
+        for trade in result['BTC-EUR'][0].trades:
+            print(trade)
 
 
 if __name__ == '__main__':

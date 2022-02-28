@@ -1,16 +1,15 @@
 import backtrader as bt
+from pyautofinance.common.trades import Trade
+from pyautofinance.common.trades import TradeSide
 
 
 class TradeList(bt.Analyzer):
 
     def get_analysis(self):
-
         return self.trades
 
     def __init__(self):
-
         self.trades = []
-        self.cumprofit = 0.0
 
     def notify_trade(self, trade):
 
@@ -18,8 +17,8 @@ class TradeList(bt.Analyzer):
 
             brokervalue = self.strategy.broker.getvalue()
 
-            dir = 'short'
-            if trade.history[0].event.size > 0: dir = 'long'
+            side = TradeSide.SHORT
+            if trade.history[0].event.size > 0: side = TradeSide.LONG
 
             pricein = trade.history[len(trade.history) - 1].status.price
             priceout = trade.history[len(trade.history) - 1].event.price
@@ -37,7 +36,6 @@ class TradeList(bt.Analyzer):
                 pbar = pnl / barlen
             else:
                 pbar = 0
-            self.cumprofit += pnl
 
             size = value = 0.0
             for record in trade.history:
@@ -49,17 +47,21 @@ class TradeList(bt.Analyzer):
             lowest_in_trade = min(trade.data.low.get(ago=0, size=barlen + 1))
             hp = 100 * (highest_in_trade - pricein) / pricein
             lp = 100 * (lowest_in_trade - pricein) / pricein
-            if dir == 'long':
+            if side == TradeSide.LONG:
                 mfe = hp
                 mae = lp
-            if dir == 'short':
+            if side == TradeSide.SHORT:
                 mfe = -lp
                 mae = -hp
 
-            self.trades.append({'ref': trade.ref, 'ticker': trade.data._name, 'dir': dir,
-                                'datein': datein, 'pricein': pricein, 'dateout': dateout, 'priceout': priceout,
-                                'chng%': round(pcntchange, 2), 'pnl': pnl, 'pnl%': round(pnlpcnt, 2),
-                                'size': size, 'value': value, 'cumpnl': self.cumprofit,
-                                'nbars': barlen, 'pnl/bar': round(pbar, 2),
-                                'mfe%': round(mfe, 2), 'mae%': round(mae, 2)})
+            ref = trade.ref
+            symbol = trade.data._name
+            change_percent = round(pcntchange, 2)
+            pnl_percent = round(pnlpcnt, 2)
+            pnl_per_bar = round(pbar, 2)
+            mfe_percent = round(mfe, 2)
+            mae_percent = round(mae, 2)
+            trade = Trade(ref, symbol, side, datein, pricein, dateout, priceout, change_percent, pnl, pnl_percent,
+                          size, value, barlen, pnl_per_bar, mfe_percent, mae_percent)
+            self.trades.append(trade)
 

@@ -4,5 +4,9 @@ from abc import ABC, abstractmethod
 class Tester(ABC):
 
     @abstractmethod
-    def test(self, testing_options):
+    def test(self, engine_options):
+        pass
+
+    @abstractmethod
+    def multitest(self, engine_options, symbols):
         pass
