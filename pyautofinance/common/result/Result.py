@@ -8,6 +8,7 @@ class Result:
         self.engine_result = engine_result
         self.metrics_to_use = metrics_to_use
         self.collections = self._build_strats_collections()
+        self.symbols = self._build_symbols()
 
     def __getitem__(self, item):
         return self.collections[item]
@@ -26,6 +27,25 @@ class Result:
         else:
             raise StopIteration
 
+    def __contains__(self, item):
+        return item in self.collections
+
+    def __setitem__(self, key, value):
+        self.collections[key] = value
+
+    def __add__(self, other):
+        engine_result1 = self.engine_result
+        engine_result2 = other.engine_result
+        metrics_to_use = self.metrics_to_use
+
+        engine_result3 = engine_result1.copy()
+        engine_result3.update(engine_result2)
+
+        return Result(engine_result3, metrics_to_use)
+
+    def __iadd__(self, other):
+        return self + other
+
     def _build_strats_collections(self):
         collections = {}
         for symbol, result in self.engine_result.items():
@@ -36,6 +56,9 @@ class Result:
                     strats_list.append(strat_result)
             collections[symbol] = StratsCollection(strats_list)
         return collections
+
+    def _build_symbols(self):
+        return [symbol for symbol in self.engine_result.keys()]
 
     def get_best_params(self, metric):
         best_params_per_symbol = {}

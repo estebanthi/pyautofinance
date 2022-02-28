@@ -17,14 +17,26 @@ class SplitTrainTestTester(Tester):
         train_engine = Engine(train_engine_options)
         train_result = train_engine.run()
 
-        best_params_per_symbol = train_result.get_best_params(metric_to_consider)
-
-        for symbol, params in best_params_per_symbol.items():
-            test_engine_options = self._get_test_engine_options(engine_options, test_start_date, test_end_date, symbol, params)
-            test_engine = Engine(test_engine_options)
-            test_result = test_engine.run()
-
+        symbol = engine_options.feed_options.market_options.symbol
+        best_params = train_result.get_best_params(metric_to_consider)[symbol]
+        test_engine_options = self._get_test_engine_options(engine_options, test_start_date, test_end_date, symbol,
+                                                            best_params)
+        test_engine = Engine(test_engine_options)
+        test_result = test_engine.run()
         return test_result
+
+    def multitest(self, engine_options, symbols, metric_to_consider=TotalGrossProfit, percents=20):
+        results = []
+        for symbol in symbols:
+            engine_options.feed_options.market_options.symbol = symbol
+            test_result = self.test(engine_options, metric_to_consider, percents)
+            results.append(test_result)
+
+        multitest_result = results[0]
+        for result in results:
+            multitest_result += result
+
+        return multitest_result
 
     def _get_dates(self, engine_options, testing_percent):
         time_options = engine_options.feed_options.time_options

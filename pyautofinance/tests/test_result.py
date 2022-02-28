@@ -29,10 +29,12 @@ class TestResult(unittest.TestCase):
         engine_options = EngineOptions(broker_options, feed_options, [strategy], sizer, metrics=metrics)
 
         engine = Engine(engine_options)
-        result = engine.run()
+        result1 = engine.run()
 
-        result.get_best_params(TotalGrossProfit)
-
+        engine_options.feed_options.market_options.symbol = 'ETH-EUR'
+        engine2 = Engine(engine_options)
+        result2 = engine2.run()
+        result1 += result2
 
 if __name__ == '__main__':
     unittest.main()

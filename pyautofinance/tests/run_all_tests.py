@@ -28,7 +28,8 @@ def run_some_tests():
         TestStrategies,
         TestEngine,
         TestTelegramLogger,
-        TestResult
+        TestResult,
+        TestTesters
     ]
 
     loader = unittest.TestLoader()

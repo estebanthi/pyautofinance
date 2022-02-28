@@ -6,6 +6,7 @@ class MetricsCollection:
     def __getitem__(self, item):
         for metric in self.metrics_list:
             if metric.name == item:
+                return metric
 
     def __iter__(self):
         self.index = 0

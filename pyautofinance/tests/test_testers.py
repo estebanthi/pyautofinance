@@ -37,7 +37,7 @@ class TestTesters(unittest.TestCase):
                                        )
 
         tester = SplitTrainTestTester()
-        test_result = tester.test(engine_options)
+        test_result = tester.multitest(engine_options, ['BTC-EUR', 'ETH-EUR'])
         self.assertEqual(type(test_result), Result)
 
 
