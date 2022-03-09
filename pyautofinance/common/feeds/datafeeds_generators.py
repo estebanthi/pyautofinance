@@ -7,7 +7,7 @@ from ccxtbt import CCXTStore
 
 from pyautofinance.common.options import Market
 from pyautofinance.common.feeds.ccxt_utils import format_symbol_for_ccxt
-from pyautofinance.common.broker.BrokerConfig import BrokerConfig
+from pyautofinance.common.broker.brokers import CCXTLiveBroker
 
 
 class DatafeedGeneratorsFactory:
@@ -44,14 +44,6 @@ class BacktestingDatafeedGenerator(DatafeedGenerator):
 class CryptoLiveDatafeedGenerator(DatafeedGenerator):
 
     def generate_datafeed(self, feed_options, broker_options):
-        exchange = broker_options.exchange
-
-        broker_config = BrokerConfig(broker_options)
-
-        currency = broker_options.currency
-        store = CCXTStore(exchange=exchange.id, currency=currency, config=broker_config.get_live_config(), retries=5,
-                          debug=False)
-
         market_options = feed_options.market_options
         time_options = feed_options.time_options
 
@@ -62,6 +54,8 @@ class CryptoLiveDatafeedGenerator(DatafeedGenerator):
 
         start_date = time_options.start_date
 
+        broker = CCXTLiveBroker(broker_options)
+        store = broker.get_store()
         return store.getdata(dataname=formatted_symbol, name=formatted_symbol, timeframe=timeframe.bt_timeframe,
                              fromdate=start_date, compression=timeframe.bt_compression, ohlcv_limit=99999,
                              sessionstart=start_date)

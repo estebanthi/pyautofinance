@@ -1,6 +1,6 @@
 import datetime as dt
 
-from pyautofinance.common.feeds.extractors import CandlesExtractorsFactory
+from pyautofinance.common.feeds.extractors.extractors import CandlesExtractorsFactory
 from pyautofinance.common.feeds.writers import CSVCandlesWriter
 from pyautofinance.common.feeds.FeedTitle import FeedTitle
 from pyautofinance.common.options import TimeOptions, MarketOptions, FeedOptions, Market

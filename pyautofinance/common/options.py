@@ -6,8 +6,8 @@ from dataclasses import dataclass
 from enum import Enum
 
 from pyautofinance.common.exceptions.feeds import EndDateBeforeStartDate
-from pyautofinance.common.feeds.formatters import CandlesFormatter
-from pyautofinance.common.feeds.filterers import CandlesFilterer
+from pyautofinance.common.feeds.formatters.formatters import CandlesFormatter
+from pyautofinance.common.feeds.filterers.filterers import CandlesFilterer
 from pyautofinance.common.timeframes import TimeFrame
 
 

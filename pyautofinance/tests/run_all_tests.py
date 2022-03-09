@@ -1,17 +1,6 @@
 import unittest
 
-from pyautofinance.tests.test_feed_title import TestFeedTitle
-from pyautofinance.tests.test_config import TestConfig
-from pyautofinance.tests.test_time_options import TestTimeOptions
-from pyautofinance.tests.test_candles_writer import TestWriting
-from pyautofinance.tests.test_datafeeds_generators import TestDatafeedsGenerators
-from pyautofinance.tests.test_candles_extractor import TestCandlesExtractor
-from pyautofinance.tests.test_broker import TestBroker
-from pyautofinance.tests.test_strategies import TestStrategies
-from pyautofinance.tests.test_engine import TestEngine
-from pyautofinance.tests.test_telegram_logger import TestTelegramLogger
-from pyautofinance.tests.test_testers import TestTesters
-from pyautofinance.tests.test_result import TestResult
+from pyautofinance.tests import *
 
 
 def run_some_tests():
@@ -19,17 +8,11 @@ def run_some_tests():
 
     test_classes_to_run = [
         TestConfig,
-        TestFeedTitle,
-        TestWriting,
-        TestCandlesExtractor,
-        TestDatafeedsGenerators,
-        TestTimeOptions,
-        TestBroker,
-        TestStrategies,
-        TestEngine,
-        TestTelegramLogger,
-        TestResult,
-        TestTesters
+        TestDatamodelsVisitors,
+        TestBackDatafeed,
+        TestBrokers,
+        TestOHLCV,
+        TestExtractors
     ]
 
     loader = unittest.TestLoader()

@@ -1,0 +1,6 @@
+from pyautofinance.tests.test_config import TestConfig
+from pyautofinance.tests.test_ohlcv import TestOHLCV
+from pyautofinance.tests.test_back_datafeed import TestBackDatafeed
+from pyautofinance.tests.test_brokers import TestBrokers
+from pyautofinance.tests.test_datamodels_visitors import TestDatamodelsVisitors
+from pyautofinance.tests.test_extractors import TestExtractors

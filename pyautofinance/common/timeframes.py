@@ -58,16 +58,22 @@ class m45(TimeFrame):
 
 
 class h1(TimeFrame):
+    name = '1h'
     def __init__(self):
         super().__init__(bt.TimeFrame.Minutes, 60, 'h1', '1h')
 
 
 class h2(TimeFrame):
+    name='2h'
     def __init__(self):
         super().__init__(bt.TimeFrame.Minutes, 120, 'h2', '2h')
 
 
 class h4(TimeFrame):
+    name = '4h'
+    bt_timeframe = bt.TimeFrame.Minutes
+    bt_compression = 240
+    ccxt_name = '4h'
     def __init__(self):
         super().__init__(bt.TimeFrame.Minutes, 240, 'h4', '4h')
 

@@ -1,33 +1,27 @@
 import unittest
 
-from pyautofinance.common.exceptions.config import ConfigFileNotFound, ConfigFieldMissing
-
 from pyautofinance.common.config import Config
+from pyautofinance.common.exceptions import ConfigFileNotFound, ConfigFieldMissing
 
 
 class TestConfig(unittest.TestCase):
 
-    existing_config_filename = "config.yml"
-    existing_field = "datasets_pathname"
-
-    non_existing_config_filename = "foo.yml"
-    non_existing_field = "foo"
-
-    def test_config_file_not_found(self):
-        with self.assertRaises(ConfigFileNotFound):
-            config = Config(self.non_existing_config_filename)
-
-    def test_config_file_found(self):
-        config = Config(self.existing_config_filename)
-
-    def test_config_field_found(self):
+    def test_initialization(self):
         config = Config()
-        config.get_field(self.existing_field)
+        self.assertTrue(isinstance(config, Config))
 
-    def test_config_field_not_found(self):
+    def test_suscription(self):
+        config = Config()
+        config['ohlcv_pathname']
+
+    def test_config_not_found(self):
+        with self.assertRaises(ConfigFileNotFound):
+            config = Config('ofkeofk')
+
+    def test_field_not_found(self):
         config = Config()
         with self.assertRaises(ConfigFieldMissing):
-            field = config.get_field(self.non_existing_field)
+            config['ofkoe']
 
 
 if __name__ == '__main__':

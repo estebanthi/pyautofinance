@@ -1,6 +1,6 @@
 from telegram.ext import Updater
 
-from pyautofinance.common.config import Config
+from pyautofinance.common.config.config import Config
 
 
 class TelegramBot:

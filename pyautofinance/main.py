@@ -15,7 +15,6 @@ from pyautofinance.common.timeframes import d1
 from pyautofinance.common.testers.SplitTrainTestTester import SplitTrainTestTester
 from pyautofinance.common.metrics import TotalGrossProfit
 
-
 market_options = MarketOptions(Market.CRYPTO, 'BTC-EUR')
 time_options = TimeOptions(dt.datetime(2020, 1, 1), d1(), dt.datetime(2022, 1, 1))
 feed_options = FeedOptions(market_options, time_options)
