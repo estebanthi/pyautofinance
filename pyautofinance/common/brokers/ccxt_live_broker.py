@@ -1,5 +1,4 @@
 import time
-import ccxt
 
 from ccxtbt import CCXTStore
 
@@ -12,10 +11,10 @@ class CCXTLiveBroker(LiveBroker):
     def __init__(self, exchange, currency):
         self._exchange = exchange
         self._currency = currency
-        store = self._get_store()
+        store = self.get_store()
         self._bt_broker = store.getbroker()
 
-    def _get_store(self):
+    def get_store(self):
         return CCXTStore(exchange=self._exchange.id, currency=self._currency,
                          config=self._get_live_config(), retries=5, debug=False)
 

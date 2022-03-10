@@ -20,7 +20,7 @@ class BackDatafeed(Datafeed):
 
         self._load_ohlcv()
         dataframe = self._ohlcv.dataframe
-        self._datafeed = bt.feeds.PandasData(dataname=dataframe, timeframe=timeframe.bt_timeframe,
+        self._bt_datafeed = bt.feeds.PandasData(dataname=dataframe, timeframe=timeframe.bt_timeframe,
                                        compression=timeframe.bt_compression, datetime=0)
 
     def _check_dates_are_correct(self):
