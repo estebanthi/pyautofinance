@@ -14,23 +14,27 @@ class Metric(ABC):
     value: any = 0
 
     def __init__(self, strat):
-        analysis = self.get_analysis_from_strat(strat)
-        self.value = self.get_metric_from_analysis(analysis)
+        self._strat = strat
+        self.value = self._get_metric_value()
 
     def __repr__(self):
         return self.name + ' : ' + str(self.value)
 
-    def get_analysis_from_strat(self, strat):
+    def _get_analysis(self):
         try:
-            analyzer = getattr(strat.analyzers, self.analyzer_name)
+            analyzer = getattr(self._strat.analyzers, self.analyzer_name)
         except AttributeError:
             raise AnalyzerMissing(self.analyzer_name)
 
         return analyzer.get_analysis()
 
     @abstractmethod
-    def get_metric_from_analysis(self, strat):
+    def _get_metric_from_analysis(self, analysis):
         pass
+
+    def _get_metric_value(self):
+        analysis = self._get_analysis()
+        return self._get_metric_from_analysis(analysis)
 
     @abstractmethod
     def __gt__(self, other):

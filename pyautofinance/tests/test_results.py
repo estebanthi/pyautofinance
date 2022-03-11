@@ -27,7 +27,7 @@ class TestEngine(unittest.TestCase):
     visitor = CSVDataModelsVisitor()
 
     broker = BackBroker(cash, commission)
-    strategy = Strategy(BracketStrategyExample, longs_enabled=[True, False])
+    strategy = Strategy(BracketStrategyExample, stop_loss=[0.5, 1], risk_reward=2)
     datafeed = BackDatafeed(symbol, start_date, timeframe, end_date, visitor, candles_extractor=CCXTCandlesExtractor())
     sizer = Sizer(bt.sizers.PercentSizer, percents=10)
     metrics = MetricsCollection([TotalGrossProfit])
@@ -39,6 +39,11 @@ class TestEngine(unittest.TestCase):
         result = engine.run()
         for strat in result:
             self.assertTrue(isinstance(strat, bt.OptReturn))
+
+    def test_get_metric(self):
+        engine = Engine(self.assembly)
+        result = engine.run()
+        print(result.get_metric('TotalGrossProfit'))
 
 
 if __name__ == '__main__':

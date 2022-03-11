@@ -39,3 +39,8 @@ class MetricsCollection(EngineComponent):
             analyzer_name = metric.analyzer_name
             analyzer = Analyzer(bt_analyzer, analyzer_name)
             analyzer.attach_to_engine(engine)
+
+    def get_strat_metrics(self, strat):
+        metrics = {}
+        for metric in self._metrics_list:
+            metrics[metric.name] = metric.get_metric_from_strat(strat)

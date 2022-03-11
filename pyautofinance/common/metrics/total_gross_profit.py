@@ -9,7 +9,7 @@ class TotalGrossProfit(Metric):
     analyzer_name = 'tradeanalyzer'
     bt_analyzer = bt.analyzers.TradeAnalyzer
 
-    def get_metric_from_analysis(self, analysis):
+    def _get_metric_from_analysis(self, analysis):
         return analysis.pnl.gross.total
 
     def __gt__(self, other):
