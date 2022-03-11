@@ -1,5 +1,8 @@
-from pyautofinance.common.engine.engine_component import EngineComponent
 from abc import abstractmethod
+
+import backtrader as bt
+
+from pyautofinance.common.engine.engine_component import EngineComponent
 
 
 class Datafeed(EngineComponent):
@@ -9,11 +12,15 @@ class Datafeed(EngineComponent):
         self._symbol = symbol
         self._start_date = start_date
         self._timeframe = timeframe
-        self._bt_datafeed = None
+
+    @abstractmethod
+    def _get_bt_datafeed(self) -> bt.DataBase:
+        pass
 
     def attach_to_engine(self, engine):
-        engine.cerebro.adddata(self._bt_datafeed)
-        self._attach_resampled_datafeed_to_engine(self._bt_datafeed, engine)
+        bt_datafeed = self._get_bt_datafeed()
+        engine.cerebro.adddata(bt_datafeed)
+        self._attach_resampled_datafeed_to_engine(bt_datafeed, engine)
 
     @staticmethod
     def _attach_resampled_datafeed_to_engine(bt_datafeed, engine):
