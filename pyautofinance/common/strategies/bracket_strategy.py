@@ -1,14 +1,9 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
-from pyautofinance.common.strategies._Strategy import _Strategy
+from pyautofinance.common.strategies.base_strategy import BaseStrategy
 
 
-class _BracketStrategy(_Strategy):
-
-    # Calling super().__init__() is used to initialize default strategy parameters
-    def __init__(self):
-        super().__init__()
-        self._init_strat()
+class BracketStrategy(BaseStrategy):
 
     @abstractmethod
     def _open_short_condition(self) -> bool:

@@ -6,7 +6,7 @@ from pyautofinance.common.engine.Engine import Engine
 from pyautofinance.common.options import EngineOptions, MarketOptions, TimeOptions, FeedOptions, BrokerOptions,\
     Market, WritingOptions
 from pyautofinance.common.strategies.StrategiesFactory import StrategiesFactory
-from pyautofinance.common.strategies.usable_strategies.TestBracketStrategy import TestBracketStrategy
+from pyautofinance.common.strategies.usable_strategies.bracket_strategy_example import TestBracketStrategy
 from pyautofinance.common.sizers.SizersFactory import SizersFactory
 from pyautofinance.common.feeds.FeedTitle import FeedTitle
 from pyautofinance.common.analyzers.AnalyzersFactory import AnalyzersFactory

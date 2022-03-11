@@ -2,11 +2,11 @@ from backtrader.indicators import MACD as MACD
 from backtrader.indicators import CrossOver as CrossOver
 from backtrader.indicators import ExponentialMovingAverage as EMA
 
-from pyautofinance.common.strategies._BracketStrategy import _BracketStrategy
+from pyautofinance.common.strategies.bracket_strategy import BracketStrategy
 
 
 # This is a test strategy, to help you understand how to build one
-class TestBracketStrategy(_BracketStrategy):
+class BracketStrategyExample(BracketStrategy):
 
     # First, you define some parameters
     params = (
@@ -18,7 +18,8 @@ class TestBracketStrategy(_BracketStrategy):
     )
 
     # If necessary, you can initialize some instance variables
-    def _init_strat(self):
+    def __init__(self):
+        super().__init__()
         self.macd = MACD(period_me1=self.p.period_me1, period_me2=self.p.period_me2, period_signal=self.p.period_signal, movav=self.p.movav)
         self.ema = EMA(period=self.p.trend_ema_period)
         self.cross = CrossOver(self.macd.macd, self.macd.signal)
