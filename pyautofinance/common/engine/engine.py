@@ -1,4 +1,5 @@
 from pyautofinance.common.engine.engine_cerebro import EngineCerebro
+from pyautofinance.common.results.engine_result import EngineResult
 
 
 class Engine:
@@ -16,7 +17,7 @@ class Engine:
         self._build()
 
         cerebro_result = self.cerebro.run(optreturn=True, tradehistory=True, maxcpus=1)
-        return Result(cerebro_result)
+        return EngineResult(cerebro_result)
 
     def plot(self, scheme={"style": 'candlestick', "barup": "green"}):
         self.cerebro.plot(**scheme)

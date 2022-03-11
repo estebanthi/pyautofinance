@@ -1,4 +1,4 @@
-from pyautofinance.common.result.StratResult import StratResult
+from pyautofinance.common.results.StratResult import StratResult
 from pyautofinance.common.collections import StratsCollection
 
 

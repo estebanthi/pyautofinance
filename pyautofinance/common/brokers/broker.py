@@ -1,6 +1,4 @@
-import backtrader as bt
-
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
 from pyautofinance.common.engine.engine_component import EngineComponent
 
