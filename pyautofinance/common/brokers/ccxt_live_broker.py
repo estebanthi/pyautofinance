@@ -3,10 +3,10 @@ import time
 from ccxtbt import CCXTStore
 
 from pyautofinance.common.config.config import Config
-from pyautofinance.common.brokers.live_broker import LiveBroker
+from pyautofinance.common.brokers.broker import Broker
 
 
-class CCXTLiveBroker(LiveBroker):
+class CCXTLiveBroker(Broker):
 
     def __init__(self, exchange, currency):
         self._exchange = exchange

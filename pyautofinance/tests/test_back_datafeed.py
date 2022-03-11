@@ -18,12 +18,13 @@ class TestBackDatafeed(unittest.TestCase):
 
     def test_initialization(self):
         datafeed = BackDatafeed(self.symbol, self.start_date, self.timeframe, self.end_date, self.visitor)
-        bt_datafeed = datafeed._datafeed
+        bt_datafeed = datafeed._bt_datafeed
         self.assertIsInstance(bt_datafeed, bt.feeds.DataBase)
 
     def test_wrong_dates(self):
         with self.assertRaises(EndDateBeforeStartDate):
             datafeed = BackDatafeed(self.symbol, self.end_date, self.timeframe, self.start_date, self.visitor)
+
 
 if __name__ == '__main__':
     unittest.main()

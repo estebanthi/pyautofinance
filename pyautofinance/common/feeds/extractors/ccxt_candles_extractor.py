@@ -7,11 +7,15 @@ from pyautofinance.common.feeds.extractors.candles_extractor import CandlesExtra
 
 class CCXTCandlesExtractor(CandlesExtractor):
 
-    def extract_candles(self):
-        exchange = self._get_exchange()
-        symbol = self._get_symbol()
-        timeframe = self._get_timeframe()
-        since = self._get_since()
+    def extract_candles(self, ohlcv):
+        symbol = ohlcv.symbol
+        start_date = ohlcv.start_date
+        end_date = ohlcv.end_date
+        timeframe = ohlcv.timeframe
+
+        exchange = self._get_exchange(symbol)
+        symbol = self._get_symbol(symbol)
+        since = self._get_since(start_date)
 
         first_10_000_candles = exchange.fetch_ohlcv(
             symbol=symbol,
@@ -20,17 +24,16 @@ class CCXTCandlesExtractor(CandlesExtractor):
             limit=10000
         )
 
-        all_candles = self._bypass_candles_limit(first_10_000_candles)
+        all_candles = self._bypass_candles_limit(first_10_000_candles, symbol, timeframe, end_date)
         candles_dataframe = self._get_ohlcv_df_from_candles(all_candles)
-        candles_dataframe = self._filter_candles_using_date(candles_dataframe)
+        candles_dataframe = self._filter_candles_using_date(candles_dataframe, start_date, end_date)
         return candles_dataframe
 
-    def _bypass_candles_limit(self, source_candles):
-        while source_candles[-1][0] < dt.datetime.timestamp(self._end_date) * 1000:  # If more than 10 000 candles
+    def _bypass_candles_limit(self, source_candles, symbol, timeframe, end_date):
+        while source_candles[-1][0] < dt.datetime.timestamp(end_date) * 1000:  # If more than 10 000 candles
 
-            exchange = self._get_exchange()
-            symbol = self._get_symbol()
-            timeframe = self._get_timeframe()
+            exchange = self._get_exchange(symbol)
+            symbol = self._get_symbol(symbol)
 
             # Extraction of the 10 000 next candles
             candles_to_add = exchange.fetch_ohlcv(
@@ -44,18 +47,17 @@ class CCXTCandlesExtractor(CandlesExtractor):
 
         return source_candles
 
-    def _get_exchange(self):
-        return ccxt.binance() if "BNB" in self._symbol else ccxt.bitfinex()
+    @staticmethod
+    def _get_exchange(symbol):
+        return ccxt.binance() if "BNB" in symbol else ccxt.bitfinex()
 
-    def _get_symbol(self):
-        formatted_symbol = self._symbol.replace("-", "/")
+    @staticmethod
+    def _get_symbol(symbol):
+        formatted_symbol = symbol.replace("-", "/")
         return formatted_symbol
 
-    def _get_timeframe(self):
-        return self._timeframe
-
-    def _get_since(self):
-        start_date = self._start_date
+    @staticmethod
+    def _get_since(start_date):
         since = int(dt.datetime.timestamp(start_date) * 1000)
         return since
 
@@ -83,11 +85,12 @@ class CCXTCandlesExtractor(CandlesExtractor):
         epoch /= 1000
         return dt.datetime.fromtimestamp(epoch)
 
-    def _filter_candles_using_date(self, candles):
-        before_start_date = candles["Date"] < self._start_date
+    @staticmethod
+    def _filter_candles_using_date(candles, start_date, end_date):
+        before_start_date = candles["Date"] < start_date
         candles.drop(candles.loc[before_start_date].index, inplace=True)
 
-        after_end_date = candles["Date"] > self._end_date
+        after_end_date = candles["Date"] > end_date
         candles.drop(candles.loc[after_end_date].index, inplace=True)
 
         return candles

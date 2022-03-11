@@ -9,6 +9,7 @@ class Broker(EngineComponent):
 
     @abstractmethod
     def __init__(self):
+        # Broker's init parameters may vary
         self._configure()
 
     @abstractmethod

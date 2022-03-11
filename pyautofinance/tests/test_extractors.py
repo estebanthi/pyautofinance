@@ -14,12 +14,9 @@ class TestExtractors(unittest.TestCase):
     timeframe = h4
     ohlcv = OHLCV(symbol, start_date, end_date, timeframe)
 
-    def test_initialization(self):
-        extractor = CCXTCandlesExtractor(self.ohlcv)
-
     def test_extraction(self):
-        extractor = CCXTCandlesExtractor(self.ohlcv)
-        candles = extractor.extract_candles()
+        extractor = CCXTCandlesExtractor()
+        candles = extractor.extract_candles(self.ohlcv)
         last_date = candles.iloc[-1, 0]
         datetime = last_date.to_pydatetime()
         self.assertEqual(datetime, dt.datetime(2021, 12, 31, 21, 0, 0))

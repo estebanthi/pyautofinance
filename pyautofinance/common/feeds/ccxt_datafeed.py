@@ -1,5 +1,3 @@
-import ccxt
-
 from pyautofinance.common.feeds.datafeed import Datafeed
 from pyautofinance.common.brokers import CCXTLiveBroker
 
