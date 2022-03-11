@@ -1,5 +1,5 @@
 from pyautofinance.common.results.params_collection import ParamsCollection
-from pyautofinance.common.results.trades_collection import TradesCollection
+from pyautofinance.common.trades.trades_collection import TradesCollection
 
 
 class StratResult:

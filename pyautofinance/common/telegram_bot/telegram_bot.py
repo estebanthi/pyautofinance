@@ -7,8 +7,8 @@ class TelegramBot:
 
     def __init__(self):
         config = Config()
-        token = config.get_field('telegram_token')
-        self.user = config.get_field('user')
+        token = config['telegram_token']
+        self.user = config['user']
         self.updater = Updater(token, use_context=True)
         self.dispatcher = self.updater.dispatcher
 
