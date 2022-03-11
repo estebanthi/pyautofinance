@@ -1,0 +1,1 @@
+from pyautofinance.common.feeds.formatters.simple_formatter import SimpleCandlesFormatter

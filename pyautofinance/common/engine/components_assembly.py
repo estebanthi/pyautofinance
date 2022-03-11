@@ -3,7 +3,7 @@
 class ComponentsAssembly:
 
     def __init__(self, broker, strategy, datafeed, sizer, metrics_collection, *args):
-        self._components = [broker, strategy, datafeed, sizer, metrics_collection, list(args)]
+        self._components = [broker, strategy, datafeed, sizer, metrics_collection, *args]
 
     def __iter__(self):
         self.index = 0
