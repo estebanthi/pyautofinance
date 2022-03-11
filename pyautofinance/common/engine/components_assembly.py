@@ -16,3 +16,6 @@ class ComponentsAssembly:
             return component
 
         raise StopIteration
+
+    def __getitem__(self, item):
+        return self._components[item]

@@ -1,9 +1,9 @@
 import backtrader as bt
 
-from pyautofinance.common.analyzers import CustomReturns
-from pyautofinance.common.analyzers import ReturnsVolatility
-from pyautofinance.common.analyzers import TradesAverageReturns
-from pyautofinance.common.analyzers import CalmarRatio
+from pyautofinance.common.analyzers.returns import CustomReturns
+from pyautofinance.common.analyzers.returns import ReturnsVolatility
+from pyautofinance.common.analyzers.returns import TradesAverageReturns
+from pyautofinance.common.analyzers.ratios import CalmarRatio
 from backtrader.analyzers import SharpeRatio_A
 from backtrader.analyzers import TradeAnalyzer
 from backtrader.analyzers import DrawDown

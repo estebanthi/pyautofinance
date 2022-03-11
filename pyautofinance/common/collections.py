@@ -1,32 +1,3 @@
-class MetricsCollection:
-
-    def __init__(self, metrics_list):
-        self.metrics_list = metrics_list
-
-    def __getitem__(self, item):
-        for metric in self.metrics_list:
-            if metric.name == item:
-                return metric
-
-    def __iter__(self):
-        self.index = 0
-        return self
-
-    def __next__(self):
-        if self.index < len(self.metrics_list):
-            metric = self.metrics_list[self.index]
-            self.index += 1
-            return metric
-        else:
-            raise StopIteration
-
-    def __repr__(self):
-        metrics_list = []
-        for metric in self.metrics_list:
-            metrics_list.append(str(metric))
-        return ' '.join(metrics_list)
-
-
 class ParamsCollection:
 
     def __init__(self, params_list):

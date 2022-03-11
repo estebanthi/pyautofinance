@@ -16,6 +16,7 @@ class BaseStrategy(bt.Strategy):
         ('stop_loss', 0),
         ('risk_reward', 0),
         ('logger', DefaultStratLogger()),
+        ('timeframes', list())
     )
 
     def __init__(self):

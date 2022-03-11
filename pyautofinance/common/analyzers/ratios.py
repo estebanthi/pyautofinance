@@ -2,7 +2,7 @@ import backtrader as bt
 
 from backtrader.analyzers import DrawDown
 
-from pyautofinance.common.analyzers import CustomReturns
+from pyautofinance.common.analyzers.returns import CustomReturns
 
 
 class CalmarRatio(bt.Analyzer):

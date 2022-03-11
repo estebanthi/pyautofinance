@@ -1,3 +1,5 @@
+import backtrader as bt
+
 from pyautofinance.common.engine.engine_cerebro import EngineCerebro
 from pyautofinance.common.results.engine_result import EngineResult
 
@@ -21,3 +23,6 @@ class Engine:
 
     def plot(self, scheme={"style": 'candlestick', "barup": "green"}):
         self.cerebro.plot(**scheme)
+
+    def get_timeframes(self):
+        return self._components_assembly[1].timeframes
