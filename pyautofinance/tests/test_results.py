@@ -12,6 +12,7 @@ from pyautofinance.common.sizers import Sizer
 from pyautofinance.common.metrics import MetricsCollection, TotalGrossProfit
 from pyautofinance.common.strategies import BracketStrategyExample, Strategy
 from pyautofinance.common.timeframes import h4
+from pyautofinance.common.results.strat_result import StratResult
 
 
 class TestEngine(unittest.TestCase):
@@ -38,12 +39,17 @@ class TestEngine(unittest.TestCase):
         engine = Engine(self.assembly)
         result = engine.run()
         for strat in result:
-            self.assertTrue(isinstance(strat, bt.OptReturn))
+            self.assertTrue(isinstance(strat, StratResult))
 
     def test_get_metric(self):
         engine = Engine(self.assembly)
         result = engine.run()
-        print(result.get_metric('TotalGrossProfit'))
+        result[0].get_metric("TotalGrossProfit")
+
+    def test_get_best_params(self):
+        engine = Engine(self.assembly)
+        result = engine.run()
+        print(result.get_best_params('TotalGrossProfit'))
 
 
 if __name__ == '__main__':

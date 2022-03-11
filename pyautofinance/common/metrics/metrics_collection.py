@@ -43,4 +43,5 @@ class MetricsCollection(EngineComponent):
     def get_strat_metrics(self, strat):
         metrics = {}
         for metric in self._metrics_list:
-            metrics[metric.name] = metric.get_metric_from_strat(strat)
+            metrics[metric.name] = metric(strat)
+        return metrics

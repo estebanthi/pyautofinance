@@ -2,6 +2,7 @@ import backtrader as bt
 
 from pyautofinance.common.engine.engine_cerebro import EngineCerebro
 from pyautofinance.common.results.engine_result import EngineResult
+from pyautofinance.common.analyzers import TradeList
 
 
 class Engine:
@@ -13,6 +14,7 @@ class Engine:
     def _build(self):
         for component in self._components_assembly:
             component.attach_to_engine(self)
+        self.cerebro.addanalyzer(TradeList, _name='tradelist')
 
     def run(self):
         self.cerebro = EngineCerebro()
