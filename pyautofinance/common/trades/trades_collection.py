@@ -15,3 +15,9 @@ class TradesCollection:
         for trade in self.trades_list:
             trades_list.append(str(trade))
         return ' '.join(trades_list)
+
+    def __len__(self):
+        return len(self.trades_list)
+
+    def __setitem__(self, key, value):
+        self.trades_list[key] = value

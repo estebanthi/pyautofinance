@@ -1,6 +1,6 @@
 import backtrader as bt
-from pyautofinance.common.trades import Trade
-from pyautofinance.common.trades import TradeSide
+from pyautofinance.common.trades.trade import Trade
+from pyautofinance.common.trades.trade import TradeSide
 
 
 class TradeList(bt.Analyzer):
