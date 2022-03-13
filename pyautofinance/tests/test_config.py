@@ -1,6 +1,6 @@
 import unittest
 
-from pyautofinance.common.config import Config
+from pyautofinance.common.config.config import Config
 from pyautofinance.common.exceptions import ConfigFileNotFound, ConfigFieldMissing
 
 

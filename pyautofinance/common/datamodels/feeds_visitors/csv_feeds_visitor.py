@@ -1,11 +1,11 @@
 import os
 import pandas as pd
 
-from pyautofinance.common.datamodels.datamodels_visitor import DataModelsVisitor
+from pyautofinance.common.datamodels.feeds_visitors.feeds_visitor import FeedsVisitor
 from pyautofinance.common.config.config import Config
 
 
-class CSVDataModelsVisitor(DataModelsVisitor):
+class CSVFeedsVisitors(FeedsVisitor):
 
     def check_ohlcv(self, ohlcv):
         ohlcv_title = str(ohlcv)
@@ -21,7 +21,7 @@ class CSVDataModelsVisitor(DataModelsVisitor):
         config = Config()
         ohlcv_pathname = config['ohlcv_pathname']
         ohlcv.dataframe = pd.read_csv(f"{ohlcv_pathname}/{ohlcv_title}.csv")
-        return ohlcv.dataframe
+        return ohlcv
 
     def save_ohlcv(self, ohlcv):
         ohlcv_title = str(ohlcv)

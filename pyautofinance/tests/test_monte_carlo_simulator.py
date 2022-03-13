@@ -6,7 +6,7 @@ import backtrader as bt
 from pyautofinance.common.engine import Engine, ComponentsAssembly
 from pyautofinance.common.feeds import BackDatafeed
 from pyautofinance.common.feeds.extractors import CCXTCandlesExtractor
-from pyautofinance.common.datamodels import CSVDataModelsVisitor
+from pyautofinance.common.datamodels import CSVFeedsVisitors
 from pyautofinance.common.brokers import BackBroker
 from pyautofinance.common.sizers import Sizer
 from pyautofinance.common.metrics import MetricsCollection, TotalGrossProfit
@@ -25,7 +25,7 @@ class TestMonteCarloSimulator(unittest.TestCase):
     cash = 100000
     commission = 0.02
 
-    visitor = CSVDataModelsVisitor()
+    visitor = CSVFeedsVisitors()
 
     broker = BackBroker(cash, commission)
     strategy = Strategy(BracketStrategyExample, stop_loss=1, risk_reward=2)

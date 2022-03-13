@@ -12,8 +12,8 @@ class OHLCV(DataModel):
         visitor.save_ohlcv(self)
 
     def accept_visitor_load(self, visitor):
-        self.dataframe = visitor.load_ohlcv(self)
-        return self.dataframe
+        ohlcv = visitor.load_ohlcv(self)
+        return ohlcv
 
     def __init__(self, symbol, start_date, end_date, timeframe, dataframe=pd.DataFrame()):
         self.symbol = symbol

@@ -1,14 +1,17 @@
 from abc import abstractmethod
+import datetime as dt
 
 import backtrader as bt
 
 from pyautofinance.common.engine.engine_component import EngineComponent
+from pyautofinance.common.timeframes.timeframe import TimeFrame
+from pyautofinance.common.engine.engine import Engine
 
 
 class Datafeed(EngineComponent):
 
     @abstractmethod
-    def __init__(self, symbol, start_date, timeframe):
+    def __init__(self, symbol: str, start_date: dt.datetime, timeframe: TimeFrame):
         self._symbol = symbol
         self._start_date = start_date
         self._timeframe = timeframe
