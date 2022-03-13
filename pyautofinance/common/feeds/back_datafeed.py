@@ -1,7 +1,7 @@
 import backtrader as bt
 
 from pyautofinance.common.feeds.datafeed import Datafeed
-from pyautofinance.common.exceptions import EndDateBeforeStartDate
+from pyautofinance.common.exceptions import EndDateBeforeStartDate, NoExtractor
 from pyautofinance.common.datamodels.ohlcv import OHLCV
 from pyautofinance.common.feeds.formatters import DefaultCandlesFormatter
 from pyautofinance.common.feeds.filterers import DefaultCandlesFilterer
@@ -9,12 +9,12 @@ from pyautofinance.common.feeds.filterers import DefaultCandlesFilterer
 
 class BackDatafeed(Datafeed):
 
-    def __init__(self, symbol, start_date, timeframe, end_date, datamodels_visitor,
+    def __init__(self, symbol, start_date, timeframe, end_date, dataflux,
                  candles_formatter=DefaultCandlesFormatter(), candles_filterer=DefaultCandlesFilterer(),
                  candles_extractor=None):
         super().__init__(symbol, start_date, timeframe)
         self._end_date = end_date
-        self._datamodels_visitor = datamodels_visitor
+        self._dataflux = dataflux
         self._ohlcv = OHLCV(symbol, start_date, end_date, timeframe)
         self._filterer = candles_filterer
         self._formatter = candles_formatter
@@ -36,9 +36,11 @@ class BackDatafeed(Datafeed):
                                    compression=self._timeframe.bt_compression, datetime=0)
 
     def _load_ohlcv(self):
-        if not self._ohlcv.accept_visitor_check(self._datamodels_visitor):
+        if not self._dataflux.check(self._ohlcv):
+            if not self._candles_extractor:
+                raise NoExtractor
             candles = self._candles_extractor.extract_candles(self._ohlcv)
             self._ohlcv.dataframe = candles
-            self._ohlcv.accept_visitor_save(self._datamodels_visitor)
+            self._dataflux.write(self._ohlcv)
         else:
-            self._ohlcv.accept_visitor_load(self._datamodels_visitor)
+            self._dataflux.load(self._ohlcv)

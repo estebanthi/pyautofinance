@@ -1,16 +1,5 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 
 
-class DataModel(ABC):
-
-    @abstractmethod
-    def accept_visitor_check(self, visitor):
-        pass
-
-    @abstractmethod
-    def accept_visitor_save(self, visitor):
-        pass
-
-    @abstractmethod
-    def accept_visitor_load(self, visitor):
-        pass
+class Datamodel(ABC):
+    pass

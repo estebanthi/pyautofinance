@@ -1,19 +1,9 @@
 import pandas as pd
 
-from pyautofinance.common.datamodels.datamodel import DataModel
+from pyautofinance.common.datamodels.datamodel import Datamodel
 
 
-class OHLCV(DataModel):
-
-    def accept_visitor_check(self, visitor):
-        return visitor.check_ohlcv(self)
-
-    def accept_visitor_save(self, visitor):
-        visitor.save_ohlcv(self)
-
-    def accept_visitor_load(self, visitor):
-        ohlcv = visitor.load_ohlcv(self)
-        return ohlcv
+class OHLCV(Datamodel):
 
     def __init__(self, symbol, start_date, end_date, timeframe, dataframe=pd.DataFrame()):
         self.symbol = symbol

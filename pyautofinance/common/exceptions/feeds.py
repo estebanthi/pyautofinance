@@ -6,3 +6,8 @@ class EndDateBeforeStartDate(BaseException):
 class NoCSVFileFoundWithThoseOptions(BaseException):
     def __init__(self):
         super().__init__("No CSV file with those options has been found")
+
+
+class NoExtractor(BaseException):
+    def __init__(self):
+        super().__init__("An extractor is missing")

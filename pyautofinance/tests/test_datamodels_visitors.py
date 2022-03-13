@@ -3,7 +3,7 @@ import unittest
 
 from pyautofinance.common.timeframes import h4, h1, h2
 from pyautofinance.common.datamodels.ohlcv import OHLCV
-from pyautofinance.common.datamodels.feeds_visitors import CSVFeedsVisitors
+from pyautofinance.common.dataflux import DiskDataflux
 
 
 class TestDatamodelsVisitors(unittest.TestCase):
@@ -16,25 +16,25 @@ class TestDatamodelsVisitors(unittest.TestCase):
     timeframe3 = h2
 
     def test_check_ohlcv_false(self):
-        visitor = CSVFeedsVisitors()
+        dataflux = DiskDataflux()
         ohlcv = OHLCV(self.symbol, self.start_date, self.end_date, self.timeframe3)
-        self.assertEqual(visitor.check_ohlcv(ohlcv), False)
+        self.assertEqual(dataflux.check(ohlcv), False)
 
     def test_check_ohlcv_true(self):
-        visitor = CSVFeedsVisitors()
+        dataflux = DiskDataflux()
         ohlcv = OHLCV(self.symbol, self.start_date, self.end_date, self.timeframe)
-        self.assertEqual(visitor.check_ohlcv(ohlcv), True)
+        self.assertEqual(dataflux.check(ohlcv), True)
 
     def test_load_ohlcv(self):
-        visitor = CSVFeedsVisitors()
+        dataflux = DiskDataflux()
         ohlcv = OHLCV(self.symbol, self.start_date, self.end_date, self.timeframe)
-        visitor.load_ohlcv(ohlcv)
+        dataflux.load(ohlcv)
         self.assertTrue(len(ohlcv.dataframe) > 0)
 
     def test_save_ohlcv(self):
-        visitor = CSVFeedsVisitors()
+        dataflux = DiskDataflux()
         ohlcv = OHLCV(self.symbol, self.start_date, self.end_date, self.timeframe2)
-        visitor.save_ohlcv(ohlcv)
+        dataflux.write(ohlcv)
 
 
 if __name__ == '__main__':
