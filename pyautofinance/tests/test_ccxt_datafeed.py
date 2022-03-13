@@ -7,7 +7,7 @@ from pyautofinance.common.timeframes import h4
 from pyautofinance.common.feeds import CCXTDatafeed
 
 
-class TestBackDatafeed(unittest.TestCase):
+class TestCCXTDatafeed(unittest.TestCase):
 
     symbol = 'BTC-EUR'
     start_date = dt.datetime(2020, 1, 1)

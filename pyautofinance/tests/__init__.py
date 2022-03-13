@@ -4,3 +4,7 @@ from pyautofinance.tests.test_back_datafeed import TestBackDatafeed
 from pyautofinance.tests.test_brokers import TestBrokers
 from pyautofinance.tests.test_datamodels_visitors import TestDatamodelsVisitors
 from pyautofinance.tests.test_extractors import TestExtractors
+from pyautofinance.tests.test_ccxt_datafeed import TestCCXTDatafeed
+from pyautofinance.tests.test_engine import TestEngine
+from pyautofinance.tests.test_monte_carlo_simulator import TestMonteCarloSimulator
+from pyautofinance.tests.test_results import TestResults
