@@ -1,7 +1,8 @@
 from pyautofinance.common.results.strat_result import StratResult
+from pyautofinance.common.datamodels.datamodel import Datamodel
 
 
-class EngineResult:
+class EngineResult(Datamodel):
 
     def __init__(self, engine_result, metrics_collection):
         self._engine_result = engine_result

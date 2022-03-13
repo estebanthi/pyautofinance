@@ -1,3 +1,7 @@
+import random
+import string
+import pickle
+
 from pyautofinance.common.dataflux.writers.writer import Writer
 from pyautofinance.common.config.config import Config
 
@@ -10,3 +14,10 @@ class DiskWriter(Writer):
         ohlcv_pathname = config['ohlcv_pathname']
         dataframe = ohlcv.dataframe
         dataframe.to_csv(f"{ohlcv_pathname}/{ohlcv_title}.csv", index=False)
+
+    def write_engine_result(self, engine_result) -> None:
+        filename = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+        config = Config()
+        engine_results_pathname = config['engine_results_pathname']
+        with open(engine_results_pathname+'/'+filename, 'wb') as file:
+            pickle.dump(engine_result, file)

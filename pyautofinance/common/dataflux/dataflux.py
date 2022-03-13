@@ -1,9 +1,10 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
 from pyautofinance.common.datamodels.datamodel import Datamodel
+from pyautofinance.common.engine.engine_component import EngineComponent
 
 
-class Dataflux(ABC):
+class Dataflux(EngineComponent):
     
     @abstractmethod
     def __init__(self, writer, loader, checker):
@@ -19,4 +20,7 @@ class Dataflux(ABC):
         
     def check(self, datamodel: Datamodel):
         return self._checker.check(datamodel)
+
+    def attach_to_engine(self, engine):
+        engine.add_dataflux(self)
     

@@ -27,12 +27,12 @@ class TestEngine(unittest.TestCase):
     dataflux = DiskDataflux()
 
     broker = BackBroker(cash, commission)
-    strategy = Strategy(BracketStrategyExample)
+    strategy = Strategy(BracketStrategyExample, stop_loss=0.5, risk_reward=2)
     datafeed = BackDatafeed(symbol, start_date, timeframe, end_date, dataflux, candles_extractor=CCXTCandlesExtractor())
     sizer = Sizer(bt.sizers.PercentSizer, percents=10)
     metrics = MetricsCollection([TotalGrossProfit])
 
-    assembly = ComponentsAssembly(broker, strategy, datafeed, sizer, metrics)
+    assembly = ComponentsAssembly(broker, strategy, datafeed, sizer, metrics, dataflux)
 
     def test_initialization(self):
         engine = Engine(self.assembly)
