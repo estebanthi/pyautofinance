@@ -1,6 +1,6 @@
 class ParamsCollection:
 
-    def __init__(self, params_list):
+    def __init__(self, *params_list):
         self.params_list = params_list
 
     def __getitem__(self, item):

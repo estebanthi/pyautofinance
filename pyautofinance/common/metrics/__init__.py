@@ -1,2 +1,2 @@
-from pyautofinance.common.metrics.total_gross_profit import TotalGrossProfit
+from pyautofinance.common.metrics.profits import TotalGrossProfit, TotalNetProfit
 from pyautofinance.common.metrics.metrics_collection import MetricsCollection

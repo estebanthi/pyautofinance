@@ -1,16 +1,14 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-import backtrader as bt
-
+from pyautofinance.common.analyzers.analyzer import Analyzer
 from pyautofinance.common.exceptions.analyzers import AnalyzerMissing
 
 
 @dataclass
 class Metric(ABC):
     name: str
-    analyzer_name: str
-    bt_analyzer: bt.Analyzer
+    analyzer: Analyzer
     value: any = 0
 
     def __init__(self, strat):
@@ -22,9 +20,9 @@ class Metric(ABC):
 
     def _get_analysis(self):
         try:
-            analyzer = getattr(self._strat.analyzers, self.analyzer_name)
+            analyzer = getattr(self._strat.analyzers, self.analyzer.name)
         except AttributeError:
-            raise AnalyzerMissing(self.analyzer_name)
+            raise AnalyzerMissing(self.analyzer.name)
 
         return analyzer.get_analysis()
 

@@ -14,7 +14,7 @@ class StratResult:
 
     def _build_params_collection(self):
         params_list = self._get_params_from_strat(self._strat)
-        return ParamsCollection(params_list)
+        return ParamsCollection(*params_list)
 
     def _get_params_from_strat(self, strat):
         params_dict = dict(strat.params._getkwargs())
@@ -29,7 +29,7 @@ class StratResult:
         return params_list
 
     def _build_trades_collection(self):
-        trade_list = self._strat.analyzers.tradelist.get_analysis()
+        trade_list = self._strat.analyzers.trade_list.get_analysis()
         return TradesCollection(trade_list)
 
     def _build_metrics(self):

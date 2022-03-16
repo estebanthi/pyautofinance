@@ -1,9 +1,21 @@
-import backtrader as bt
 import math
 import statistics
 
+import backtrader as bt
 
-class CustomReturns(bt.TimeFrameAnalyzerBase):
+from pyautofinance.common.analyzers.analyzer import Analyzer
+
+
+class CustomReturns(Analyzer):
+
+    def __init__(self):
+        super().__init__('custom_returns')
+
+    def get_bt_analyzer(self):
+        return CustomReturnsAnalyzer
+
+
+class CustomReturnsAnalyzer(bt.Analyzer):
     minutes_in_a_day = 1440
 
     timeframes_mapper = {
@@ -32,7 +44,6 @@ class CustomReturns(bt.TimeFrameAnalyzerBase):
         self._log_returns = math.log(abs(self._annual_returns) / 100) * 100
 
     def get_analysis(self):
-
         return {
             "total_returns": self._total_returns,
             "annual_returns": self._annual_returns,
@@ -43,7 +54,16 @@ class CustomReturns(bt.TimeFrameAnalyzerBase):
         self._bar_count += 1  # Counter incrementing for each iteration in the backtest
 
 
-class ReturnsVolatility(bt.Analyzer):
+class ReturnsVolatility(Analyzer):
+
+    def __init__(self):
+        super().__init__('returns_volatility')
+
+    def get_bt_analyzer(self):
+        return ReturnsVolatilityAnalyzer
+
+
+class ReturnsVolatilityAnalyzer(bt.Analyzer):
 
     def __init__(self):
         self.returns = []
@@ -61,7 +81,16 @@ class ReturnsVolatility(bt.Analyzer):
         return {"volatility": math.sqrt(statistics.variance(self.returns))}
 
 
-class TradesAverageReturns(bt.Analyzer):
+class TradesAverageReturns(Analyzer):
+
+    def __init__(self):
+        super().__init__('trades_average_returns')
+
+    def get_bt_analyzer(self):
+        return TradesAverageReturnsAnalyzer
+
+
+class TradesAverageReturnsAnalyzer(bt.Analyzer):
 
     def __init__(self):
         self.returns = []

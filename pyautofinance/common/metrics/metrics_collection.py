@@ -1,10 +1,10 @@
-from pyautofinance.common.analyzers.analyzer import Analyzer
+from pyautofinance.common.metrics.metric import Metric
 from pyautofinance.common.engine.engine_component import EngineComponent
 
 
 class MetricsCollection(EngineComponent):
 
-    def __init__(self, metrics_list):
+    def __init__(self, *metrics_list):
         self._metrics_list = metrics_list
 
     def __getitem__(self, item):
@@ -34,11 +34,24 @@ class MetricsCollection(EngineComponent):
         return self._metrics_list
 
     def attach_to_engine(self, engine):
-        for metric in self._metrics_list:
-            bt_analyzer = metric.bt_analyzer
-            analyzer_name = metric.analyzer_name
-            analyzer = Analyzer(bt_analyzer, analyzer_name)
+        analyzers = self._get_analyzers()
+        for analyzer in analyzers:
             analyzer.attach_to_engine(engine)
+
+    def _get_analyzers(self):
+        analyzers = []
+        for metric in self._metrics_list:
+            analyzers.append(metric.analyzer)
+        nodups = self._remove_duplicates_analyzers(analyzers)
+        return nodups
+
+    @staticmethod
+    def _remove_duplicates_analyzers(analyzers):
+        nodups = []
+        for analyzer in analyzers:
+            if analyzer not in nodups:
+                nodups.append(analyzer)
+        return nodups
 
     def get_strat_metrics(self, strat):
         metrics = {}

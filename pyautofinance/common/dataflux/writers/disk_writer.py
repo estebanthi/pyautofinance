@@ -1,6 +1,6 @@
 import random
 import string
-import pickle
+import dill
 
 from pyautofinance.common.dataflux.writers.writer import Writer
 from pyautofinance.common.config.config import Config
@@ -20,4 +20,4 @@ class DiskWriter(Writer):
         config = Config()
         engine_results_pathname = config['engine_results_pathname']
         with open(engine_results_pathname+'/'+filename, 'wb') as file:
-            pickle.dump(engine_result, file)
+            dill.dump(engine_result, file)

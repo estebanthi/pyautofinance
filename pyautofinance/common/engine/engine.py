@@ -12,7 +12,7 @@ class Engine:
     def _build(self):
         for component in self._components_assembly:
             component.attach_to_engine(self)
-        self.cerebro.addanalyzer(TradeList, _name='tradelist')
+        TradeList().attach_to_engine(self)
 
     def run(self):
         self.cerebro = EngineCerebro()

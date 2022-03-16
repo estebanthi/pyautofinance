@@ -1,9 +1,20 @@
 import backtrader as bt
+
+from pyautofinance.common.analyzers.analyzer import Analyzer
 from pyautofinance.common.trades.trade import Trade
 from pyautofinance.common.trades.trade import TradeSide
 
 
-class TradeList(bt.Analyzer):
+class TradeList(Analyzer):
+
+    def __init__(self):
+        super().__init__('trade_list')
+
+    def get_bt_analyzer(self):
+        return TradeListAnalyzer
+
+
+class TradeListAnalyzer(bt.Analyzer):
 
     def get_analysis(self):
         return self.trades
@@ -64,4 +75,3 @@ class TradeList(bt.Analyzer):
             trade = Trade(ref, symbol, side, datein, pricein, dateout, priceout, change_percent, pnl, pnl_percent,
                           size, value, barlen, pnl_per_bar, mfe_percent, mae_percent)
             self.trades.append(trade)
-

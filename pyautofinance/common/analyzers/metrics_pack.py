@@ -1,5 +1,6 @@
 import backtrader as bt
 
+from pyautofinance.common.analyzers.analyzer import Analyzer
 from pyautofinance.common.analyzers.returns import CustomReturns
 from pyautofinance.common.analyzers.returns import ReturnsVolatility
 from pyautofinance.common.analyzers.returns import TradesAverageReturns
@@ -9,7 +10,16 @@ from backtrader.analyzers import TradeAnalyzer
 from backtrader.analyzers import DrawDown
 
 
-class MetricsPack(bt.Analyzer):
+class MetricsPack(Analyzer):
+
+    def __init__(self):
+        super().__init__('metricks_pack')
+
+    def get_bt_analyzer(self):
+        return MetricsPackAnalyzer
+
+
+class MetricsPackAnalyzer(bt.Analyzer):
 
     def __init__(self):
         self.custom_returns = CustomReturns()
