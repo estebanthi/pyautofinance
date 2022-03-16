@@ -8,9 +8,9 @@ class CCXTDatafeed(Datafeed):
         super().__init__(symbol, start_date, timeframe)
         self._exchange = exchange
         self._currency = currency
-        self._bt_datafeed = self._get_datafeed()
+        self._bt_datafeed = self._get_bt_datafeed()
 
-    def _get_datafeed(self):
+    def _get_bt_datafeed(self):
         broker = CCXTLiveBroker(self._exchange, self._currency)
         store = broker.get_store()
         formatted_symbol = self._format_symbol()

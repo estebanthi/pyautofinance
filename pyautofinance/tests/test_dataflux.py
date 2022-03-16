@@ -6,7 +6,7 @@ from pyautofinance.common.datamodels.ohlcv import OHLCV
 from pyautofinance.common.dataflux import DiskDataflux
 
 
-class TestDatamodelsVisitors(unittest.TestCase):
+class TestDataflux(unittest.TestCase):
 
     symbol = 'BTC-EUR'
     start_date = dt.datetime(2020, 1, 1)

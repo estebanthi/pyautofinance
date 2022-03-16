@@ -8,11 +8,15 @@ def run_some_tests():
 
     test_classes_to_run = [
         TestConfig,
-        TestDatamodelsVisitors,
+        TestDataflux,
         TestBackDatafeed,
         TestBrokers,
         TestOHLCV,
-        TestExtractors
+        TestExtractors,
+        TestCCXTDatafeed,
+        TestResults,
+        TestEngine,
+        TestMonteCarloSimulator,
     ]
 
     loader = unittest.TestLoader()
