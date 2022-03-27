@@ -11,15 +11,15 @@ from pyautofinance.common.brokers import BackBroker
 from pyautofinance.common.sizers import Sizer
 from pyautofinance.common.metrics import MetricsCollection, TotalGrossProfit
 from pyautofinance.common.strategies import BracketStrategyExample, Strategy
-from pyautofinance.common.timeframes import h4
+from pyautofinance.common.timeframes import m1
 
 
 class TestEngine(unittest.TestCase):
 
     start_date = dt.datetime(2020, 1, 1)
-    end_date = dt.datetime(2021, 1, 1)
+    end_date = dt.datetime(2022, 3, 15)
     symbol = 'BTC-EUR'
-    timeframe = h4
+    timeframe = m1
 
     cash = 100000
     commission = 0.02

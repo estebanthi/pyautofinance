@@ -1,4 +1,6 @@
 import datetime as dt
+import time
+
 import pandas as pd
 import ccxt
 
@@ -17,6 +19,9 @@ class CCXTCandlesExtractor(CandlesExtractor):
         symbol = self._get_symbol(symbol)
         since = self._get_since(start_date)
 
+        print(f'Starting extraction... Total values to extract : '
+              f'{self._get_total_values_to_extract(start_date, end_date, timeframe)}')
+
         first_10_000_candles = exchange.fetch_ohlcv(
             symbol=symbol,
             timeframe=timeframe.ccxt_name,
@@ -24,13 +29,16 @@ class CCXTCandlesExtractor(CandlesExtractor):
             limit=10000
         )
 
-        all_candles = self._bypass_candles_limit(first_10_000_candles, symbol, timeframe, end_date)
+        all_candles = self._bypass_candles_limit(first_10_000_candles, symbol, timeframe, start_date, end_date)
         candles_dataframe = self._get_ohlcv_df_from_candles(all_candles)
         candles_dataframe = self._filter_candles_using_date(candles_dataframe, start_date, end_date)
         return candles_dataframe
 
-    def _bypass_candles_limit(self, source_candles, symbol, timeframe, end_date):
+    def _bypass_candles_limit(self, source_candles, symbol, timeframe, start_date, end_date):
+        iteration = 1
         while source_candles[-1][0] < dt.datetime.timestamp(end_date) * 1000:  # If more than 10 000 candles
+
+            total_seconds = (end_date - start_date).total_seconds()
 
             exchange = self._get_exchange(symbol)
             symbol = self._get_symbol(symbol)
@@ -43,9 +51,22 @@ class CCXTCandlesExtractor(CandlesExtractor):
                 limit=10000
             )
 
+            self._log_remaining_values_to_extract(start_date, end_date, timeframe, iteration)
+            iteration += 1
+            time.sleep(5)
+
             self._merge_candles(source_candles, candles_to_add)
 
         return source_candles
+
+    @staticmethod
+    def _get_total_values_to_extract(start_date, end_date, timeframe):
+        return int((end_date - start_date).total_seconds() / timeframe.total_seconds())
+
+    @classmethod
+    def _log_remaining_values_to_extract(cls, start_date, end_date, timeframe, iteration):
+        total_values_to_extract = cls._get_total_values_to_extract(start_date, end_date, timeframe)
+        print(f"{iteration * 10000}/{total_values_to_extract} values extracted... {round(iteration * 10000 / total_values_to_extract * 100)}%")
 
     @staticmethod
     def _get_exchange(symbol):

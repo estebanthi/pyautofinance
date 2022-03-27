@@ -1,41 +1,72 @@
-import backtrader as bt
-import datetime as dt
+import pandas as pd
 import numpy as np
+import pandas_ta as ta
+import datetime as dt
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report
 
-from pyautofinance.common.engine.Engine import Engine
-from pyautofinance.common.options import EngineOptions, MarketOptions, TimeOptions, FeedOptions, BrokerOptions,\
-    Market, WritingOptions
-from pyautofinance.common.strategies.StrategiesFactory import StrategiesFactory
-from pyautofinance.common.strategies.usable_strategies.bracket_strategy_example import TestBracketStrategy
-from pyautofinance.common.sizers.SizersFactory import SizersFactory
-from pyautofinance.common.feeds.FeedTitle import FeedTitle
-from pyautofinance.common.analyzers.AnalyzersFactory import AnalyzersFactory
-from pyautofinance.common.analyzers.FullMetrics import FullMetrics
-from pyautofinance.common.timeframes import d1
-from pyautofinance.common.testers.SplitTrainTestTester import SplitTrainTestTester
-from pyautofinance.common.metrics import TotalGrossProfit
 
-market_options = MarketOptions(Market.CRYPTO, 'BTC-EUR')
-time_options = TimeOptions(dt.datetime(2020, 1, 1), d1(), dt.datetime(2022, 1, 1))
-feed_options = FeedOptions(market_options, time_options)
+def test():
+    n = 5
 
-broker_options = BrokerOptions(100_000, 0.2)
+    df = pd.read_csv('data/BTC-EUR 2019-01-01 00-00-00 2022-03-15 00-00-00 1h.csv')
 
-strategy = StrategiesFactory().make_strategy(TestBracketStrategy, logging=False, stop_loss=np.linspace(1, 10, 3),
-                                             risk_reward=np.linspace(1, 10, 3), period_me1=range(6, 18, 3),
-                                             period_me2=range(22, 35, 3), period_signal=9)
-sizer = SizersFactory().make_sizer(bt.sizers.PercentSizer, percents=10)
+    df['min'] = df['min'].fillna(0)
+    df['max'] = df['max'].fillna(0)
 
-tradeanalyzer = AnalyzersFactory().make_analyzer(bt.analyzers.TradeAnalyzer)
-fullmetrics = AnalyzersFactory().make_analyzer(FullMetrics, _name='full_metrics')
+    has_met_min = 0
+    signals = []
+    profits = []
+    open_price = 0
+    close_price = 0
+    for index, row in df.iterrows():
+        signal = 0
+        profit = 0
+        if has_met_min and row['max'] != 0:
+            has_met_min = 0
+            close_price = row['Close']
+            profit = close_price - open_price
+            profit *= 0.96
+        if not has_met_min and row['min'] != 0:
+            has_met_min = 1
+            open_price = row['Close']
+        if has_met_min:
+            signal = 1
+        signals.append(signal)
+        profits.append(profit)
 
-writing_options = WritingOptions(candles_destination=FeedTitle(feed_options).get_pathname())
+    df['Signal'] = signals
 
-engine_options = EngineOptions(broker_options, feed_options, [strategy], sizer, analyzers=[tradeanalyzer],
-                               writing_options=writing_options, metrics=[TotalGrossProfit])
+    df.set_index('Date', inplace=True)
+    df.index = pd.to_datetime(df.index)
+    df = df[~df.index.duplicated(keep='first')]
+    df.ta.strategy('All')
 
-tester = SplitTrainTestTester()
-test_result = tester.test(engine_options, TotalGrossProfit, 20)
+    na_values = []
+    for col in df:
+        na_values.append((col, df[col].isna().sum()))
 
-print(test_result['BTC-EUR'][0].metrics['TotalGrossProfit'])
-print(test_result['BTC-EUR'][0].params)
+    na_values.sort(key=lambda x: x[1], reverse=True)
+
+    cols_to_drop = []
+    for col in na_values:
+        if col[1] > 100:
+            cols_to_drop.append(col[0])
+
+    df.drop(columns=cols_to_drop, inplace=True)
+    df.dropna(inplace=True)
+
+    X = df.drop(columns=['Signal'])
+    Y = df['Signal']
+
+    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size = 0.2, shuffle=False)
+
+    clf = RandomForestClassifier()
+    clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
+
+    print(classification_report(y_test, y_pred))
+
+if __name__ == '__main__':
+    test()

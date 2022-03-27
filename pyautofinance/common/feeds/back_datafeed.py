@@ -44,3 +44,9 @@ class BackDatafeed(Datafeed):
             self._dataflux.write(self._ohlcv)
         else:
             self._dataflux.load(self._ohlcv)
+
+    def get_ohlcv(self):
+        return self._ohlcv
+
+    def extract(self):
+        self._load_ohlcv()
