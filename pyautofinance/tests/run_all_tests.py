@@ -7,16 +7,17 @@ def run_some_tests():
     # Run only the tests in the specified classes
 
     test_classes_to_run = [
-        TestConfig,
-        TestDataflux,
         TestBackDatafeed,
         TestBrokers,
-        TestOHLCV,
-        TestExtractors,
         TestCCXTDatafeed,
-        TestResults,
+        TestConfig,
+        TestDataflux,
         TestEngine,
+        TestExtractors,
         TestMonteCarloSimulator,
+        TestOHLCV,
+        TestResults,
+        TestTesters
     ]
 
     loader = unittest.TestLoader()

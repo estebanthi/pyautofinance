@@ -35,5 +35,5 @@ class StratResult:
     def _build_metrics(self):
         return self._metrics_collection.get_strat_metrics(self._strat)
 
-    def get_metric(self, metric):
-        return self.metrics[metric]
+    def __getitem__(self, item):
+        return self.metrics[item]

@@ -1,1 +1,2 @@
 from pyautofinance.common.testers.monte_carlo_simulator import MonteCarloSimulator
+from pyautofinance.common.testers.monte_carlo_tester import MonteCarloTester

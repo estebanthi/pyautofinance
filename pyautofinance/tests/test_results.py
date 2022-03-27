@@ -44,13 +44,13 @@ class TestResults(unittest.TestCase):
     def test_get_metric(self):
         engine = Engine(self.assembly)
         result = engine.run()
-        result[0].get_metric("TotalGrossProfit")
+        result[0]["TotalGrossProfit"]
+        result[0].metrics
 
     def test_get_best_params(self):
         engine = Engine(self.assembly)
         result = engine.run()
-        print(result.get_best_params('TotalGrossProfit'))
-        print(result[0].metrics)
+        result.get_best_params('TotalGrossProfit')
 
 
 if __name__ == '__main__':

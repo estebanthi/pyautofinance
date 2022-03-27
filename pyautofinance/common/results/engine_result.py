@@ -36,7 +36,7 @@ class EngineResult(Datamodel):
 
     def sort_by_metric(self, metric):
         sorted_results = sorted(self._strats_results,
-                                key=lambda strat_result: strat_result.get_metric(metric), reverse=True)
+                                key=lambda strat_result: strat_result[metric], reverse=True)
         return sorted_results
 
     def get_best_params(self, metric):

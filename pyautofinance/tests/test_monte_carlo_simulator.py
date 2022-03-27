@@ -39,8 +39,8 @@ class TestMonteCarloSimulator(unittest.TestCase):
         engine = Engine(self.assembly)
         result = engine.run()
         trades = result[0].trades
-        simulator = MonteCarloSimulator(trades)
-        simulator_result = simulator.simulate_n_times(80000, 100000, 10000)
+        simulator = MonteCarloSimulator(80000, 100000, 10000)
+        simulator_result = simulator.simulate(trades)
         self.assertIsInstance(simulator_result, dict)
 
 
