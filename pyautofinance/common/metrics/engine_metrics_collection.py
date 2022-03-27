@@ -1,8 +1,7 @@
-from pyautofinance.common.metrics.metric import Metric
 from pyautofinance.common.engine.engine_component import EngineComponent
 
 
-class MetricsCollection(EngineComponent):
+class EngineMetricsCollection(EngineComponent):
 
     def __init__(self, *metrics_list):
         self._metrics_list = metrics_list

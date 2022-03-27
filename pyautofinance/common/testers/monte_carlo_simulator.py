@@ -1,6 +1,7 @@
 import random
 import pandas as pd
-import numpy as np
+
+from pyautofinance.common.metrics import RiskOfRuin, MaxDrawdownFromEquity, AverageMaxDrawdown, AverageReturns, AverageProfit, AverageReturnsDrawdown
 
 
 class MonteCarloSimulator:
@@ -12,13 +13,13 @@ class MonteCarloSimulator:
         results = self._get_results(number_of_simulations, starting_equity, ending_equity)
         results_dataframe = self._build_results_dataframe(results)
 
-        risk_of_ruine = self._calculate_risk_of_ruine(results_dataframe)
-        average_max_drawdown = results_dataframe['max_drawdown'].mean()
-        average_profit = results_dataframe['profit'].mean()
-        average_returns = results_dataframe['returns'].mean()
-        average_returns_drawdown = average_returns / average_max_drawdown
+        risk_of_ruin = RiskOfRuin(results_dataframe).value
+        average_max_drawdown = AverageMaxDrawdown(results_dataframe).value
+        average_profit = AverageProfit(results_dataframe).value
+        average_returns = AverageReturns(results_dataframe).value
+        average_returns_drawdown = AverageReturnsDrawdown(results_dataframe).value
         return {
-            'risk_of_ruine': risk_of_ruine,
+            'risk_of_ruin': risk_of_ruin,
             'average_max_drawdown': average_max_drawdown,
             'average_profit': average_profit,
             'average_returns': average_returns,
@@ -57,26 +58,10 @@ class MonteCarloSimulator:
         final_equity = equities[-1]
 
         ruined = final_equity < ending_equity
-        max_drawdown = self._calculate_max_drawdown(equities)
+        max_drawdown = MaxDrawdownFromEquity(equities).value
         profit = final_equity - starting_equity
         returns = final_equity / starting_equity
         return_drawdown = returns / max_drawdown
 
         return ruined, max_drawdown, profit, returns, return_drawdown
-
-    @staticmethod
-    def _calculate_max_drawdown(equities):
-        drawdown_low_index = np.argmax(np.maximum.accumulate(equities) - equities)  # end of the period
-        drawdown_peak_index = np.argmax(equities[:drawdown_low_index])
-
-        low = equities[drawdown_low_index]
-        peak = equities[drawdown_peak_index]
-
-        drawdown = (peak - low) / peak
-        return drawdown
-
-    @staticmethod
-    def _calculate_risk_of_ruine(results_dataframe):
-        ruined = results_dataframe['ruined'][results_dataframe['ruined'] == True]
-        return len(ruined) / len(results_dataframe)
 

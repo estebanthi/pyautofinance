@@ -1,8 +1,8 @@
-from pyautofinance.common.metrics.metric import Metric
+from pyautofinance.common.metrics.engine_metric import EngineMetric
 from pyautofinance.common.analyzers import TradeAnalyzer
 
 
-class TotalGrossProfit(Metric):
+class TotalGrossProfit(EngineMetric):
 
     name = 'TotalGrossProfit'
     analyzer = TradeAnalyzer()
@@ -14,7 +14,7 @@ class TotalGrossProfit(Metric):
         return self.value > other.value
 
 
-class TotalNetProfit(Metric):
+class TotalNetProfit(EngineMetric):
 
     name = 'TotalNetProfit'
     analyzer = TradeAnalyzer()

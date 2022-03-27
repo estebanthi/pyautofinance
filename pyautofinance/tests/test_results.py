@@ -9,7 +9,7 @@ from pyautofinance.common.feeds.extractors import CCXTCandlesExtractor
 from pyautofinance.common.dataflux import DiskDataflux
 from pyautofinance.common.brokers import BackBroker
 from pyautofinance.common.sizers import Sizer
-from pyautofinance.common.metrics import MetricsCollection, TotalGrossProfit, TotalNetProfit
+from pyautofinance.common.metrics import EngineMetricsCollection, TotalGrossProfit, TotalNetProfit
 from pyautofinance.common.strategies import BracketStrategyExample, Strategy
 from pyautofinance.common.timeframes import h4
 from pyautofinance.common.results.strat_result import StratResult
@@ -31,7 +31,7 @@ class TestResults(unittest.TestCase):
     strategy = Strategy(BracketStrategyExample, stop_loss=[0.5, 1], risk_reward=2)
     datafeed = BackDatafeed(symbol, start_date, timeframe, end_date, dataflux, candles_extractor=CCXTCandlesExtractor())
     sizer = Sizer(bt.sizers.PercentSizer, percents=10)
-    metrics = MetricsCollection(TotalGrossProfit, TotalNetProfit)
+    metrics =EngineMetricsCollection(TotalGrossProfit, TotalNetProfit)
 
     assembly = ComponentsAssembly(broker, strategy, datafeed, sizer, metrics)
 
