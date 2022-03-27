@@ -14,6 +14,8 @@ from pyautofinance.common.strategies import BracketStrategyExample, Strategy
 from pyautofinance.common.timeframes import h4
 from pyautofinance.common.testers import MonteCarloSimulator
 
+from collections import OrderedDict
+
 
 class TestMonteCarloSimulator(unittest.TestCase):
 
@@ -30,17 +32,18 @@ class TestMonteCarloSimulator(unittest.TestCase):
     broker = BackBroker(cash, commission)
     strategy = Strategy(BracketStrategyExample, stop_loss=2, risk_reward=3)
     datafeed = BackDatafeed(symbol, start_date, timeframe, end_date, dataflux, candles_extractor=CCXTCandlesExtractor())
-    sizer = Sizer(bt.sizers.PercentSizer, percents=10)
+    sizer = Sizer(bt.sizers.PercentSizer, percents=90)
     metrics = MetricsCollection(TotalGrossProfit)
 
     assembly = ComponentsAssembly(broker, strategy, datafeed, sizer, metrics)
 
-    def test_init(self):
+    def test(self):
         engine = Engine(self.assembly)
         result = engine.run()
         trades = result[0].trades
         simulator = MonteCarloSimulator(trades)
-        simulator.simulate_n_times(10000, 100000, 70000)
+        simulator_result = simulator.simulate_n_times(80000, 100000, 10000)
+        self.assertIsInstance(simulator_result, dict)
 
 
 if __name__ == '__main__':

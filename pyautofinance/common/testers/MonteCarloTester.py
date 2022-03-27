@@ -1,6 +1,6 @@
 from itertools import permutations
 
-from pyautofinance.common.testers.Tester import Tester
+from pyautofinance.common.testers.tester import Tester
 
 
 class MonteCarloTester(Tester):

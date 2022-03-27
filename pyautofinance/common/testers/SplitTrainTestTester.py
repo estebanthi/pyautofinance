@@ -1,6 +1,6 @@
 import datetime as dt
 
-from pyautofinance.common.testers.Tester import Tester
+from pyautofinance.common.testers.tester import Tester
 from pyautofinance.common.engine.Engine import Engine
 from pyautofinance.common.strategies.StrategiesFactory import StrategiesFactory
 from pyautofinance.common.metrics import TotalGrossProfit
