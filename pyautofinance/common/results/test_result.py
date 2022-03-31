@@ -3,7 +3,7 @@ from pyautofinance.common.metrics.metrics_collection import MetricsCollection
 
 class TestResult:
 
-    def __init__(self, valid=False, *metrics):
+    def __init__(self, *metrics, valid=False):
         self.valid = valid
         self.metrics = MetricsCollection(*metrics)
 
