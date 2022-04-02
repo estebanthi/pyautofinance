@@ -12,9 +12,9 @@ class Datafeed(EngineComponent):
 
     @abstractmethod
     def __init__(self, symbol: str, start_date: dt.datetime, timeframe: TimeFrame):
-        self._symbol = symbol
-        self._start_date = start_date
-        self._timeframe = timeframe
+        self.symbol = symbol
+        self.start_date = start_date
+        self.timeframe = timeframe
 
     @abstractmethod
     def _get_bt_datafeed(self) -> bt.DataBase:

@@ -15,3 +15,8 @@ class ParamsCollection:
         for param in self.params_list:
             params_list.append(str(param))
         return ' '.join(params_list)
+
+    def __dict__(self):
+        params = {}
+        for k, v in self.params_list:
+            params[k] = v

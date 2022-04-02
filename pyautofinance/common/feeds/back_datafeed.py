@@ -13,40 +13,41 @@ class BackDatafeed(Datafeed):
                  candles_formatter=DefaultCandlesFormatter(), candles_filterer=DefaultCandlesFilterer(),
                  candles_extractor=None):
         super().__init__(symbol, start_date, timeframe)
-        self._end_date = end_date
-        self._dataflux = dataflux
-        self._ohlcv = OHLCV(symbol, start_date, end_date, timeframe)
-        self._filterer = candles_filterer
-        self._formatter = candles_formatter
-        self._candles_extractor = candles_extractor
+        self.end_date = end_date
+        self.dataflux = dataflux
+        self.timeframe = timeframe
+        self.ohlcv = OHLCV(self.symbol, self.start_date, self.end_date, self.timeframe)
+        self.filterer = candles_filterer
+        self.formatter = candles_formatter
+        self.candles_extractor = candles_extractor
         self._check_dates_are_correct()
 
     def _check_dates_are_correct(self):
-        if self._end_date:
-            if self._end_date < self._start_date:
+        if self.end_date:
+            if self.end_date < self.start_date:
                 raise EndDateBeforeStartDate
 
     def _get_bt_datafeed(self) -> bt.DataBase:
         self._load_ohlcv()
-        dataframe = self._ohlcv.dataframe
-        formatted_dataframe = self._formatter.format_candles(dataframe)
-        filtered_dataframe = self._filterer.filter_candles(formatted_dataframe)
-
-        return bt.feeds.PandasData(dataname=filtered_dataframe, timeframe=self._timeframe.bt_timeframe,
-                                   compression=self._timeframe.bt_compression, datetime=0)
+        dataframe = self.ohlcv.dataframe
+        formatted_dataframe = self.formatter.format_candles(dataframe)
+        filtered_dataframe = self.filterer.filter_candles(formatted_dataframe)
+        return bt.feeds.PandasData(dataname=filtered_dataframe, timeframe=self.timeframe.bt_timeframe,
+                                   compression=self.timeframe.bt_compression, datetime=0)
 
     def _load_ohlcv(self):
-        if not self._dataflux.check(self._ohlcv):
-            if not self._candles_extractor:
+        self.ohlcv = OHLCV(self.symbol, self.start_date, self.end_date, self.timeframe)
+        if not self.dataflux.check(self.ohlcv):
+            if not self.candles_extractor:
                 raise NoExtractor
-            candles = self._candles_extractor.extract_candles(self._ohlcv)
-            self._ohlcv.dataframe = candles
-            self._dataflux.write(self._ohlcv)
+            candles = self.candles_extractor.extract_candles(self.ohlcv)
+            self.ohlcv.dataframe = candles
+            self.dataflux.write(self.ohlcv)
         else:
-            self._dataflux.load(self._ohlcv)
+            self.dataflux.load(self.ohlcv)
 
     def get_ohlcv(self):
-        return self._ohlcv
+        return self.ohlcv
 
     def extract(self):
         self._load_ohlcv()

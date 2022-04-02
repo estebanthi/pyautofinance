@@ -19,3 +19,6 @@ class ComponentsAssembly:
 
     def __getitem__(self, item):
         return self._components[item]
+
+    def __setitem__(self, key, value):
+        self._components[key] = value

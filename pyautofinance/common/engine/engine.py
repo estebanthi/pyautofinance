@@ -6,11 +6,11 @@ from pyautofinance.common.analyzers import TradeList
 class Engine:
 
     def __init__(self, components_assembly):
-        self._components_assembly = components_assembly
+        self.components_assembly = components_assembly
         self.cerebro = EngineCerebro()
 
     def _build(self):
-        for component in self._components_assembly:
+        for component in self.components_assembly:
             component.attach_to_engine(self)
         TradeList().attach_to_engine(self)
 
@@ -22,13 +22,13 @@ class Engine:
 
     def _get_result(self):
         cerebro_result = self.cerebro.run(optreturn=True, tradehistory=True, maxcpus=1)
-        return EngineResult(cerebro_result, self._components_assembly[4], self._components_assembly[2])
+        return EngineResult(cerebro_result, self.components_assembly[4], self.components_assembly[2])
 
     def plot(self, scheme={"style": 'candlestick', "barup": "green"}):
         self.cerebro.plot(**scheme)
 
     def get_timeframes(self):
-        return self._components_assembly[1].timeframes
+        return self.components_assembly[1].timeframes
 
     def add_dataflux(self, dataflux):
         self._get_result = self.write_result(self._get_result, dataflux)

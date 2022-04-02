@@ -10,3 +10,9 @@ class Strategy(EngineComponent):
 
     def attach_to_engine(self, engine):
         engine.cerebro.optstrategy(self._bt_strat, **self._parameters)
+
+    def set_parameters(self, parameters):
+        self._parameters = parameters
+
+    def get_parameters(self):
+        return self._parameters
