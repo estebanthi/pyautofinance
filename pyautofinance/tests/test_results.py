@@ -31,7 +31,7 @@ class TestResults(unittest.TestCase):
     strategy = Strategy(BracketStrategyExample, stop_loss=[0.5, 1], risk_reward=2)
     datafeed = BackDatafeed(symbol, start_date, timeframe, end_date, dataflux, candles_extractor=CCXTCandlesExtractor())
     sizer = Sizer(bt.sizers.PercentSizer, percents=10)
-    metrics =EngineMetricsCollection(TotalGrossProfit, TotalNetProfit)
+    metrics = EngineMetricsCollection(TotalGrossProfit, TotalNetProfit)
 
     assembly = ComponentsAssembly(broker, strategy, datafeed, sizer, metrics)
 

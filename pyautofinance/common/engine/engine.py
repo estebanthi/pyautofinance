@@ -22,7 +22,7 @@ class Engine:
 
     def _get_result(self):
         cerebro_result = self.cerebro.run(optreturn=True, tradehistory=True, maxcpus=1)
-        return EngineResult(cerebro_result, self._components_assembly[4])
+        return EngineResult(cerebro_result, self._components_assembly[4], self._components_assembly[2])
 
     def plot(self, scheme={"style": 'candlestick', "barup": "green"}):
         self.cerebro.plot(**scheme)

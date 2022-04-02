@@ -1,46 +1,57 @@
 import unittest
 import datetime as dt
 
-import pandas_ta as ta
+import backtrader as bt
 import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
 
+from pyautofinance.common.engine import Engine, ComponentsAssembly
 from pyautofinance.common.feeds import BackDatafeed
 from pyautofinance.common.feeds.extractors import CCXTCandlesExtractor
 from pyautofinance.common.dataflux import DiskDataflux
-from pyautofinance.common.timeframes import h1
-from sklearn.ensemble import RandomForestClassifier
+from pyautofinance.common.brokers import BackBroker
+from pyautofinance.common.sizers import Sizer
+from pyautofinance.common.metrics import EngineMetricsCollection, TotalGrossProfit, TotalNetProfit
+from pyautofinance.common.strategies import BracketStrategyExample, Strategy
+from pyautofinance.common.timeframes import h4
 from pyautofinance.common.learn import TaLibPredicter
-from pyautofinance.common.learn import FullTester
+from pyautofinance.common.testers import ClassificationTester
 
 
 class TestLearn(unittest.TestCase):
-
     start_date = dt.datetime(2020, 1, 1)
-    end_date = dt.datetime(2022, 1, 1)
+    end_date = dt.datetime(2021, 1, 1)
     symbol = 'BTC-EUR'
-    timeframe = h1
+    timeframe = h4
 
     cash = 100000
     commission = 0.02
 
     dataflux = DiskDataflux()
 
+    broker = BackBroker(cash, commission)
+    strategy = Strategy(BracketStrategyExample, stop_loss=[0.5, 1], risk_reward=2)
     datafeed = BackDatafeed(symbol, start_date, timeframe, end_date, dataflux, candles_extractor=CCXTCandlesExtractor())
-    datafeed2 = BackDatafeed(symbol, dt.datetime(2022, 1, 1), timeframe, dt.datetime(2022, 3, 18), dataflux,
-                             candles_extractor=CCXTCandlesExtractor())
+    sizer = Sizer(bt.sizers.PercentSizer, percents=10)
+    metrics = EngineMetricsCollection(TotalGrossProfit, TotalNetProfit)
 
-    clf = RandomForestClassifier()
-    predicter = TaLibPredicter(clf, ta.AllStrategy)
+    assembly = ComponentsAssembly(broker, strategy, datafeed, sizer, metrics)
+    engine = Engine(assembly)
+    engine_result = engine.run()
+    origin_datafeed = engine_result.datafeed
+
+    model = RandomForestClassifier()
+    predicter = TaLibPredicter(model, )
 
     def test_fit(self):
-        self.predicter.fit(self.datafeed)
+        self.predicter.fit(self.origin_datafeed)
 
     def test_get_real_outputs(self):
-        self.assertTrue(isinstance(self.predicter.get_real_outputs(self.datafeed), pd.Series))
+        self.assertTrue(isinstance(self.predicter.get_real_outputs(self.origin_datafeed), pd.Series))
 
     def test_validator(self):
-        tester = FullTester(self.predicter)
-        tester.test(self.datafeed2)
+        tester = ClassificationTester(self.predicter)
+        print(tester.test(self.datafeed2))
 
 
 if __name__ == '__main__':
