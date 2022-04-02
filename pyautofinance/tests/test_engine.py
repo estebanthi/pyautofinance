@@ -9,7 +9,7 @@ from pyautofinance.common.feeds.extractors import CCXTCandlesExtractor
 from pyautofinance.common.dataflux import DiskDataflux
 from pyautofinance.common.brokers import BackBroker
 from pyautofinance.common.sizers import Sizer
-from pyautofinance.common.metrics import EngineMetricsCollection, TotalGrossProfit
+from pyautofinance.common.metrics.engine_metrics import EngineMetricsCollection, TotalGrossProfit
 from pyautofinance.common.strategies import BracketStrategyExample, Strategy
 from pyautofinance.common.timeframes import h1
 

@@ -19,9 +19,3 @@ class MonteCarloTester(Tester):
         metrics = [metric for metric in simulation_result.values()]
         test_result = TestResult(*metrics)
         return test_result
-
-    def validate(self, test_result, metric, validation_function):
-        metric = test_result[metric.name].value
-        valid = validation_function(metric)
-        test_result.valid = valid
-        return valid

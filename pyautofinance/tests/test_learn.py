@@ -4,6 +4,7 @@ import datetime as dt
 import backtrader as bt
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
+import pandas_ta as ta
 
 from pyautofinance.common.engine import Engine, ComponentsAssembly
 from pyautofinance.common.feeds import BackDatafeed
@@ -11,11 +12,13 @@ from pyautofinance.common.feeds.extractors import CCXTCandlesExtractor
 from pyautofinance.common.dataflux import DiskDataflux
 from pyautofinance.common.brokers import BackBroker
 from pyautofinance.common.sizers import Sizer
-from pyautofinance.common.metrics import EngineMetricsCollection, TotalGrossProfit, TotalNetProfit
+from pyautofinance.common.metrics.engine_metrics import EngineMetricsCollection, TotalGrossProfit, TotalNetProfit
 from pyautofinance.common.strategies import BracketStrategyExample, Strategy
 from pyautofinance.common.timeframes import h4
 from pyautofinance.common.learn import TaLibPredicter
 from pyautofinance.common.testers import ClassificationTester
+from pyautofinance.common.metrics.metric import Metric
+from pyautofinance.common.metrics.learn_metrics import F1Score
 
 
 class TestLearn(unittest.TestCase):
@@ -41,7 +44,8 @@ class TestLearn(unittest.TestCase):
     origin_datafeed = engine_result.datafeed
 
     model = RandomForestClassifier()
-    predicter = TaLibPredicter(model, )
+    strategy = ta.AllStrategy
+    predicter = TaLibPredicter(model, strategy)
 
     def test_fit(self):
         self.predicter.fit(self.origin_datafeed)
@@ -49,9 +53,10 @@ class TestLearn(unittest.TestCase):
     def test_get_real_outputs(self):
         self.assertTrue(isinstance(self.predicter.get_real_outputs(self.origin_datafeed), pd.Series))
 
-    def test_validator(self):
+    def test_test(self):
         tester = ClassificationTester(self.predicter)
-        print(tester.test(self.datafeed2))
+        test_result = tester.test(self.engine_result)
+        self.assertIsInstance(test_result['F1Score'], Metric)
 
 
 if __name__ == '__main__':

@@ -31,3 +31,6 @@ class Datafeed(EngineComponent):
         for timeframe in timeframes:
             engine.cerebro.resampledata(bt_datafeed, timeframe=timeframe.bt_timeframe,
                                         compression=timeframe.bt_compression)
+
+    def get_bt_datafeed(self):
+        return self._get_bt_datafeed()

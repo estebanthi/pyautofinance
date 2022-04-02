@@ -14,6 +14,7 @@ def run_some_tests():
         TestDataflux,
         TestEngine,
         TestExtractors,
+        TestLearn,
         TestMonteCarloSimulator,
         TestOHLCV,
         TestResults,

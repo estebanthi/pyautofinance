@@ -1,4 +1,4 @@
-from pyautofinance.common.metrics.engine_metric import EngineMetric
+from pyautofinance.common.metrics.engine_metrics.engine_metric import EngineMetric
 from pyautofinance.common.analyzers import TradeAnalyzer
 
 

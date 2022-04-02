@@ -9,3 +9,4 @@ from pyautofinance.tests.test_engine import TestEngine
 from pyautofinance.tests.test_monte_carlo_simulator import TestMonteCarloSimulator
 from pyautofinance.tests.test_results import TestResults
 from pyautofinance.tests.test_testers import TestTesters
+from pyautofinance.tests.test_learn import TestLearn

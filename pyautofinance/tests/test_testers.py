@@ -9,11 +9,11 @@ from pyautofinance.common.feeds.extractors import CCXTCandlesExtractor
 from pyautofinance.common.dataflux import DiskDataflux
 from pyautofinance.common.brokers import BackBroker
 from pyautofinance.common.sizers import Sizer
-from pyautofinance.common.metrics import EngineMetricsCollection, TotalGrossProfit
+from pyautofinance.common.metrics.engine_metrics import EngineMetricsCollection, TotalGrossProfit
 from pyautofinance.common.strategies import BracketStrategyExample, Strategy
 from pyautofinance.common.timeframes import h4
 from pyautofinance.common.testers import MonteCarloTester
-from pyautofinance.common.metrics import RiskOfRuin
+from pyautofinance.common.metrics.miscellaneous_metrics import RiskOfRuin
 
 
 class TestTesters(unittest.TestCase):
@@ -43,13 +43,25 @@ class TestTesters(unittest.TestCase):
         test_result = tester.test(result[0])
         test_result['RiskOfRuin']
 
-    def test_validation(self):
+    def test_validation_metric(self):
         engine = Engine(self.assembly)
         result = engine.run()
         tester = MonteCarloTester(1000, 100000, 50000)
         test_result = tester.test(result[0])
 
         metric = RiskOfRuin
+        validation_function = lambda risk_of_ruin: risk_of_ruin < 0.3
+
+        validation = tester.validate(test_result, metric, validation_function)
+        self.assertIsInstance(validation, bool)
+
+    def test_validation_str(self):
+        engine = Engine(self.assembly)
+        result = engine.run()
+        tester = MonteCarloTester(1000, 100000, 50000)
+        test_result = tester.test(result[0])
+
+        metric = 'RiskOfRuin'
         validation_function = lambda risk_of_ruin: risk_of_ruin < 0.3
 
         validation = tester.validate(test_result, metric, validation_function)
