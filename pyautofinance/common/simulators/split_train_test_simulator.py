@@ -1,7 +1,6 @@
 import datetime as dt
 
 from pyautofinance.common.metrics.engine_metrics import TotalGrossProfit
-from pyautofinance.common.engine.engine import Engine
 
 
 class SplitTrainTestSimulator:
@@ -10,9 +9,8 @@ class SplitTrainTestSimulator:
         self.metric_to_consider = metric_to_consider
         self.testing_percent = testing_percent
 
-    def test(self, engine):
+    def simulate(self, engine):
         train_start_date, train_end_date, test_start_date, test_end_date = self._get_dates(engine, self.testing_percent)
-        print(train_start_date, train_end_date, test_start_date, test_end_date)
 
         train_engine = self._get_train_engine(engine, train_start_date, train_end_date)
         train_result = train_engine.run()
@@ -22,7 +20,7 @@ class SplitTrainTestSimulator:
         best_params.pop('timeframes')
         test_engine = self._get_test_engine(engine, test_start_date, test_end_date, best_params)
         test_result = test_engine.run()
-        return test_result
+        return train_result, test_result
 
     def _get_dates(self, engine, testing_percent):
         back_datafeed = engine.components_assembly[2]

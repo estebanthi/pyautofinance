@@ -1,4 +1,2 @@
-from pyautofinance.common.testers.monte_carlo_simulator import MonteCarloSimulator
 from pyautofinance.common.testers.monte_carlo_tester import MonteCarloTester
 from pyautofinance.common.testers.classification_tester import ClassificationTester
-from pyautofinance.common.testers.split_train_test_simulator import SplitTrainTestSimulator

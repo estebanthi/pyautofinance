@@ -12,7 +12,7 @@ from pyautofinance.common.sizers import Sizer
 from pyautofinance.common.metrics.engine_metrics import EngineMetricsCollection, TotalGrossProfit
 from pyautofinance.common.strategies import BracketStrategyExample, Strategy
 from pyautofinance.common.timeframes import h4
-from pyautofinance.common.testers import MonteCarloSimulator
+from pyautofinance.common.simulators import MonteCarloSimulator
 
 
 class TestMonteCarloSimulator(unittest.TestCase):
