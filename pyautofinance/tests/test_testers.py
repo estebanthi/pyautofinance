@@ -29,7 +29,7 @@ class TestTesters(unittest.TestCase):
     dataflux = DiskDataflux()
 
     broker = BackBroker(cash, commission)
-    strategy = Strategy(BracketStrategyExample, stop_loss=2, risk_reward=3)
+    strategy = Strategy(BracketStrategyExample, stop_loss=2, risk_reward=2)
     datafeed = BackDatafeed(symbol, start_date, timeframe, end_date, dataflux, candles_extractor=CCXTCandlesExtractor())
     sizer = Sizer(bt.sizers.PercentSizer, percents=90)
     metrics = EngineMetricsCollection(TotalGrossProfit)
@@ -40,33 +40,26 @@ class TestTesters(unittest.TestCase):
         engine = Engine(self.assembly)
         result = engine.run()
         tester = MonteCarloTester(1000, 100000, 50000)
-        test_result = tester.test(result[0])
-        test_result['RiskOfRuin']
+        test_results_collection = tester.test(result)
+        test_results_collection[0]['RiskOfRuin']
 
     def test_validation_metric(self):
         engine = Engine(self.assembly)
         result = engine.run()
         tester = MonteCarloTester(1000, 100000, 50000)
-        test_result = tester.test(result[0])
+        test_results_collection = tester.test(result)
 
-        metric = RiskOfRuin
-        validation_function = lambda risk_of_ruin: risk_of_ruin < 0.3
+        metric_1 = RiskOfRuin
+        validation_function_1 = lambda risk_of_ruin: risk_of_ruin < 0.3
 
-        validation = tester.validate(test_result, metric, validation_function)
-        self.assertIsInstance(validation, bool)
+        metric_2 = RiskOfRuin
+        validation_function_2 = lambda risk_of_ruin: risk_of_ruin > 0.3
 
-    def test_validation_str(self):
-        engine = Engine(self.assembly)
-        result = engine.run()
-        tester = MonteCarloTester(1000, 100000, 50000)
-        test_result = tester.test(result[0])
+        metrics = [metric_1, metric_2]
+        validation_functions = [validation_function_1, validation_function_2]
 
-        metric = 'RiskOfRuin'
-        validation_function = lambda risk_of_ruin: risk_of_ruin < 0.3
-
-        validation = tester.validate(test_result, metric, validation_function)
-        self.assertIsInstance(validation, bool)
-
+        validations = test_results_collection.validate(metrics, validation_functions)
+        self.assertIsInstance(validations, dict)
 
 
 if __name__ == '__main__':

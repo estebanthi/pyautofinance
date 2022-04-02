@@ -8,8 +8,8 @@ class ClassificationTester(Tester):
     def __init__(self, predicter):
         self._predicter = predicter
 
-    def test(self, engine_result):
-        back_datafeed = engine_result.datafeed
+    def _test_for_strat(self, strat_result):
+        back_datafeed = str.datafeed
 
         y_true = self._predicter.get_real_outputs(back_datafeed)
         y_pred = self._predicter.predict(back_datafeed)

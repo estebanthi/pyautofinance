@@ -1,9 +1,7 @@
 import datetime as dt
 
 from pyautofinance.common.testers.tester import Tester
-from pyautofinance.common.engine.Engine import Engine
-from pyautofinance.common.strategies.StrategiesFactory import StrategiesFactory
-from pyautofinance.common.metrics import TotalGrossProfit
+from pyautofinance.common.metrics.engine_metrics import TotalGrossProfit
 
 
 class SplitTrainTestTester(Tester):
@@ -23,19 +21,6 @@ class SplitTrainTestTester(Tester):
         test_engine = Engine(test_engine_options)
         test_result = test_engine.run()
         return test_result
-
-    def multitest(self, engine_options, symbols, metric_to_consider=TotalGrossProfit, percents=20):
-        results = []
-        for symbol in symbols:
-            engine_options.feed_options.market_options.symbol = symbol
-            test_result = self.test(engine_options, metric_to_consider, percents)
-            results.append(test_result)
-
-        multitest_result = results[0]
-        for result in results:
-            multitest_result += result
-
-        return multitest_result
 
     def _get_dates(self, engine_options, testing_percent):
         time_options = engine_options.feed_options.time_options

@@ -5,10 +5,10 @@ from pyautofinance.common.datamodels.datamodel import Datamodel
 class EngineResult(Datamodel):
 
     def __init__(self, engine_result, metrics_collection, datafeed):
+        self.datafeed = datafeed
         self._engine_result = engine_result
         self._metrics_collection = metrics_collection
         self._strats_results = self._get_strat_results()
-        self.datafeed = datafeed
 
     def __iter__(self):
         self._index = 0
@@ -32,7 +32,7 @@ class EngineResult(Datamodel):
     def _get_strat_results(self):
         strats_results = []
         for strat in self._engine_result:
-            strats_results.append(StratResult(strat[0], self._metrics_collection))
+            strats_results.append(StratResult(strat[0], self._metrics_collection, self.datafeed))
         return strats_results
 
     def sort_by_metric(self, metric):

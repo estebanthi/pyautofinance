@@ -4,9 +4,10 @@ from pyautofinance.common.trades.trades_collection import TradesCollection
 
 class StratResult:
 
-    def __init__(self, strat, metrics_collection):
+    def __init__(self, strat, metrics_collection, datafeed):
         self._strat = strat
         self._metrics_collection = metrics_collection
+        self.datafeed = datafeed
 
         self.params = self._build_params_collection()
         self.trades = self._build_trades_collection()

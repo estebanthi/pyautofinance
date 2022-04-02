@@ -10,7 +10,7 @@ class MonteCarloTester(Tester):
         self.starting_equity = starting_equity
         self.ending_equity = ending_equity
 
-    def test(self, strat_result):
+    def _test_for_strat(self, strat_result):
         monte_carlo_simulator = MonteCarloSimulator(self.number_of_simulations, self.starting_equity,
                                                     self.ending_equity)
         trades = strat_result.trades
