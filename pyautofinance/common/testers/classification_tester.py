@@ -9,7 +9,7 @@ class ClassificationTester(Tester):
         self._predicter = predicter
 
     def _test_for_strat(self, strat_result):
-        back_datafeed = str.datafeed
+        back_datafeed = strat_result.datafeed
 
         y_true = self._predicter.get_real_outputs(back_datafeed)
         y_pred = self._predicter.predict(back_datafeed)

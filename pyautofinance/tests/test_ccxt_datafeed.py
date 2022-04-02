@@ -15,7 +15,7 @@ class TestCCXTDatafeed(unittest.TestCase):
 
     def test_initialization(self):
         datafeed = CCXTDatafeed(self.symbol, self.start_date, self.timeframe, ccxt.binance(), 'BTC')
-        bt_datafeed = datafeed._bt_datafeed
+        bt_datafeed = datafeed.bt_datafeed
         self.assertIsInstance(bt_datafeed, bt.feeds.DataBase)
 
 

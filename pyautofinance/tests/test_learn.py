@@ -55,8 +55,8 @@ class TestLearn(unittest.TestCase):
 
     def test_test(self):
         tester = ClassificationTester(self.predicter)
-        test_result = tester.test(self.engine_result)
-        self.assertIsInstance(test_result['F1Score'], Metric)
+        test_results_collection = tester.test(self.engine_result)
+        self.assertIsInstance(test_results_collection[0]['F1Score'], Metric)
 
 
 if __name__ == '__main__':
