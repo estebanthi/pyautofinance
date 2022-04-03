@@ -27,7 +27,6 @@ class EngineResult(Datamodel):
         return False
 
     def __getitem__(self, item):
-        print(self._strats_results)
         return self._strats_results[item]
 
     def _get_strat_results(self):

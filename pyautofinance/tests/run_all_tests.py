@@ -18,7 +18,9 @@ def run_some_tests():
         TestMonteCarloSimulator,
         TestOHLCV,
         TestResults,
-        TestTesters
+        TestTesters,
+        TestSplitTrainTestSimulator,
+        TestWalkForwardSimulator,
     ]
 
     loader = unittest.TestLoader()

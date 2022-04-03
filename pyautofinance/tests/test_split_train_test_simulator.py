@@ -12,10 +12,10 @@ from pyautofinance.common.sizers import Sizer
 from pyautofinance.common.metrics.engine_metrics import EngineMetricsCollection, TotalGrossProfit
 from pyautofinance.common.strategies import BracketStrategyExample, Strategy
 from pyautofinance.common.timeframes import h4
-from pyautofinance.common.testers import SplitTrainTestSimulator
+from pyautofinance.common.simulators import SplitTrainTestSimulator
 
 
-class TestTesters(unittest.TestCase):
+class TestSplitTrainTestSimulator(unittest.TestCase):
 
     start_date = dt.datetime(2020, 1, 1)
     end_date = dt.datetime(2022, 1, 1)
@@ -38,7 +38,7 @@ class TestTesters(unittest.TestCase):
     def test(self):
         engine = Engine(self.assembly)
         tester = SplitTrainTestSimulator(testing_percent=20)
-        result = tester.test(engine)
+        result = tester.simulate(engine)
         result[0]['TotalGrossProfit']
 
 
