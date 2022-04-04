@@ -29,7 +29,14 @@ class EngineMetric(Metric):
 
     def _get_metric_value(self):
         analysis = self._get_analysis()
-        return self._get_metric_from_analysis(analysis)
+        metric = 0
+
+        try:
+            metric = self._get_metric_from_analysis(analysis)
+        except KeyError as e:
+            pass
+
+        return metric
 
     @abstractmethod
     def __gt__(self, other):

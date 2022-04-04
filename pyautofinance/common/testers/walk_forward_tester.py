@@ -7,14 +7,14 @@ from pyautofinance.common.results.test_result import TestResult
 
 class WalkForwardTester(Tester):
 
-    def __init__(self, period=1, metric_to_consider=TotalGrossProfit, test_percent=20, anchored=False):
-        self.period = period
+    def __init__(self, periods=1, metric_to_consider=TotalGrossProfit, test_percent=20, anchored=False):
+        self.periods = periods
         self.metric_to_consider = metric_to_consider
         self.test_percent = test_percent
         self.anchored = anchored
 
     def test(self, engine):
-        walk_forward_simulator = WalkForwardSimulator(self.period, self.metric_to_consider, self.test_percent,
+        walk_forward_simulator = WalkForwardSimulator(self.periods, self.metric_to_consider, self.test_percent,
                                                       self.anchored)
 
         result = walk_forward_simulator.simulate(engine)
