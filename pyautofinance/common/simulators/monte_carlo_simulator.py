@@ -1,7 +1,7 @@
 import random
 import pandas as pd
 
-from pyautofinance.common.metrics.miscellaneous_metrics import RiskOfRuin, MaxDrawdownFromEquity, AverageMaxDrawdown,\
+from pyautofinance.common.metrics.monte_carlo_metrics import RiskOfRuin, MaxDrawdownFromEquity, AverageMaxDrawdown,\
     AverageReturns, AverageProfit, AverageReturnsDrawdown
 
 

@@ -2,6 +2,8 @@ import unittest
 import datetime as dt
 
 import backtrader as bt
+from sklearn.ensemble import RandomForestClassifier
+import pandas_ta as ta
 
 from pyautofinance.common.engine import Engine, ComponentsAssembly
 from pyautofinance.common.feeds import BackDatafeed
@@ -13,7 +15,10 @@ from pyautofinance.common.metrics.engine_metrics import EngineMetricsCollection,
 from pyautofinance.common.strategies import BracketStrategyExample, Strategy
 from pyautofinance.common.timeframes import h4
 from pyautofinance.common.testers import MonteCarloTester
-from pyautofinance.common.metrics.miscellaneous_metrics import RiskOfRuin
+from pyautofinance.common.testers import ClassificationTester
+from pyautofinance.common.learn import TaLibPredicter
+from pyautofinance.common.results.test_results_collection import TestResultsCollection
+from pyautofinance.common.testers import SplitTrainTestTester, WalkForwardTester
 
 
 class TestTesters(unittest.TestCase):
@@ -29,37 +34,41 @@ class TestTesters(unittest.TestCase):
     dataflux = DiskDataflux()
 
     broker = BackBroker(cash, commission)
-    strategy = Strategy(BracketStrategyExample, stop_loss=2, risk_reward=2)
+    strategy = Strategy(BracketStrategyExample, stop_loss=range(2, 4), risk_reward=2)
     datafeed = BackDatafeed(symbol, start_date, timeframe, end_date, dataflux, candles_extractor=CCXTCandlesExtractor())
     sizer = Sizer(bt.sizers.PercentSizer, percents=90)
     metrics = EngineMetricsCollection(TotalGrossProfit)
 
     assembly = ComponentsAssembly(broker, strategy, datafeed, sizer, metrics)
 
-    def test(self):
+    model = RandomForestClassifier()
+    strategy = ta.AllStrategy
+    predicter = TaLibPredicter(model, strategy)
+
+    def test_monte_carlo_tester(self):
         engine = Engine(self.assembly)
-        result = engine.run()
         tester = MonteCarloTester(1000, 100000, 50000)
-        test_results_collection = tester.test(result)
-        test_results_collection[0]['RiskOfRuin']
+        result = tester.test(engine)
+        self.assertIsInstance(result, TestResultsCollection)
 
-    def test_validation_metric(self):
+    def test_classification_tester(self):
         engine = Engine(self.assembly)
-        result = engine.run()
-        tester = MonteCarloTester(1000, 100000, 50000)
-        test_results_collection = tester.test(result)
+        self.predicter.fit(engine.components_assembly[2])
+        tester = ClassificationTester(self.predicter)
+        result = tester.test(engine)
+        self.assertIsInstance(result, TestResultsCollection)
 
-        metric_1 = RiskOfRuin
-        validation_function_1 = lambda risk_of_ruin: risk_of_ruin < 0.3
+    def test_split_train_test_tester(self):
+        engine = Engine(self.assembly)
+        tester = SplitTrainTestTester()
+        result = tester.test(engine)
+        self.assertIsInstance(result, TestResultsCollection)
 
-        metric_2 = RiskOfRuin
-        validation_function_2 = lambda risk_of_ruin: risk_of_ruin > 0.3
-
-        metrics = [metric_1, metric_2]
-        validation_functions = [validation_function_1, validation_function_2]
-
-        validations = test_results_collection.validate(metrics, validation_functions)
-        self.assertIsInstance(validations, dict)
+    def test_walk_forward_tester(self):
+        engine = Engine(self.assembly)
+        tester = WalkForwardTester()
+        result = tester.test(engine)
+        self.assertIsInstance(result, TestResultsCollection)
 
 
 if __name__ == '__main__':

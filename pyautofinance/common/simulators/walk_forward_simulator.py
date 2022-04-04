@@ -20,8 +20,8 @@ class WalkForwardSimulator:
             engine.components_assembly[2].start_date = start_date
             engine.components_assembly[2].end_date = end_date
 
-            result = split_train_test_simulator.simulate(engine)
-            results.append(result)
+            train_result, test_result = split_train_test_simulator.simulate(engine)
+            results.append((train_result, test_result))
 
         return results
 

@@ -1,8 +1,8 @@
 import pandas as pd
 
 from pyautofinance.common.metrics.metric import Metric
-from pyautofinance.common.metrics.miscellaneous_metrics.average_returns import AverageReturns
-from pyautofinance.common.metrics.miscellaneous_metrics.average_max_drawdown import AverageMaxDrawdown
+from pyautofinance.common.metrics.monte_carlo_metrics.average_returns import AverageReturns
+from pyautofinance.common.metrics.monte_carlo_metrics.average_max_drawdown import AverageMaxDrawdown
 
 
 class AverageReturnsDrawdown(Metric):

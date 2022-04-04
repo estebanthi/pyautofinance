@@ -1,6 +1,7 @@
 from pyautofinance.common.testers.tester import Tester
 from pyautofinance.common.metrics.learn_metrics import F1Score, Accuracy, Recall, Precision
 from pyautofinance.common.results.test_result import TestResult
+from pyautofinance.common.results.test_results_collection import TestResultsCollection
 
 
 class ClassificationTester(Tester):
@@ -8,8 +9,8 @@ class ClassificationTester(Tester):
     def __init__(self, predicter):
         self._predicter = predicter
 
-    def _test_for_strat(self, strat_result):
-        back_datafeed = strat_result.datafeed
+    def test(self, engine):
+        back_datafeed = engine.components_assembly[2]
 
         y_true = self._predicter.get_real_outputs(back_datafeed)
         y_pred = self._predicter.predict(back_datafeed)
@@ -19,5 +20,6 @@ class ClassificationTester(Tester):
         precision = Precision(y_true, y_pred)
         recall = Recall(y_true, y_pred)
 
-        return TestResult(f1_score, accuracy, precision, recall)
+        test_result = TestResult(f1_score, accuracy, precision, recall)
+        return TestResultsCollection(test_result)
 

@@ -16,4 +16,4 @@ class RiskOfRuin(Metric):
         return len(ruined) / len(self.monte_carlo_results_dataframe)
 
     def __gt__(self, other):
-        return self.value < other.value
+        return self.value < other.value if isinstance(other, Metric) else self.value < other

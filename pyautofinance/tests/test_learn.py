@@ -18,7 +18,6 @@ from pyautofinance.common.timeframes import h4
 from pyautofinance.common.learn import TaLibPredicter
 from pyautofinance.common.testers import ClassificationTester
 from pyautofinance.common.metrics.metric import Metric
-from pyautofinance.common.metrics.learn_metrics import F1Score
 
 
 class TestLearn(unittest.TestCase):
@@ -52,11 +51,6 @@ class TestLearn(unittest.TestCase):
 
     def test_get_real_outputs(self):
         self.assertTrue(isinstance(self.predicter.get_real_outputs(self.origin_datafeed), pd.Series))
-
-    def test_test(self):
-        tester = ClassificationTester(self.predicter)
-        test_results_collection = tester.test(self.engine_result)
-        self.assertIsInstance(test_results_collection[0]['F1Score'], Metric)
 
 
 if __name__ == '__main__':
