@@ -19,7 +19,6 @@ def run_some_tests():
         TestOHLCV,
         TestResults,
         TestTesters,
-        TestSplitTrainTestSimulator,
         TestWalkForwardSimulator,
     ]
 

@@ -62,21 +62,17 @@ class BaseStrategy(bt.Strategy):
     def _close_long_condition(self) -> bool:
         pass
 
-    @abstractmethod
     def _get_long_stop_loss_price(self) -> float:
-        return 0
+        return self.datas[0].close[0]
 
-    @abstractmethod
     def _get_long_take_profit_price(self) -> float:
-        return 0
+        return self.datas[0].close[0]
 
-    @abstractmethod
     def _get_short_stop_loss_price(self) -> float:
-        return 0
+        return self.datas[0].close[0]
 
-    @abstractmethod
     def _get_short_take_profit_price(self) -> float:
-        return 0
+        return self.datas[0].close[0]
 
     def notify_data(self, data, status, *args, **kwargs):
         status = data._getstatusname(status)

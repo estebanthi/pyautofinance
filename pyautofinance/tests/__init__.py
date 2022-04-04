@@ -10,5 +10,4 @@ from pyautofinance.tests.test_monte_carlo_simulator import TestMonteCarloSimulat
 from pyautofinance.tests.test_results import TestResults
 from pyautofinance.tests.test_testers import TestTesters
 from pyautofinance.tests.test_learn import TestLearn
-from pyautofinance.tests.test_split_train_test_simulator import TestSplitTrainTestSimulator
 from pyautofinance.tests.test_walk_forward_simulator import TestWalkForwardSimulator
