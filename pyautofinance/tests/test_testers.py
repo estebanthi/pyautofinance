@@ -18,7 +18,8 @@ from pyautofinance.common.testers import MonteCarloTester
 from pyautofinance.common.testers import ClassificationTester
 from pyautofinance.common.learn import TaLibPredicter
 from pyautofinance.common.results.test_results_collection import TestResultsCollection
-from pyautofinance.common.testers import SplitTrainTestTester, WalkForwardTester
+from pyautofinance.common.testers import SplitTrainTestTester, WalkForwardTester, MonkeyTester
+from pyautofinance.common.strategies.test_strats.monkey_strat import MonkeyStrat
 
 
 class TestTesters(unittest.TestCase):
@@ -34,7 +35,7 @@ class TestTesters(unittest.TestCase):
     dataflux = DiskDataflux()
 
     broker = BackBroker(cash, commission)
-    strategy = Strategy(BracketStrategyExample, stop_loss=range(2, 4), risk_reward=2)
+    strategy = Strategy(BracketStrategyExample, stop_loss=range(2, 10), risk_reward=range(2, 10))
     datafeed = BackDatafeed(symbol, start_date, timeframe, end_date, dataflux, candles_extractor=CCXTCandlesExtractor())
     sizer = Sizer(bt.sizers.PercentSizer, percents=90)
     metrics = EngineMetricsCollection(TotalGrossProfit)
@@ -69,6 +70,14 @@ class TestTesters(unittest.TestCase):
         tester = WalkForwardTester()
         result = tester.test(engine)
         self.assertIsInstance(result, TestResultsCollection)
+
+    def test_monkey_tester(self):
+        engine = Engine(self.assembly)
+        monkey_full = Strategy(MonkeyStrat)
+        tester = MonkeyTester(monkey_full, 2)
+
+        result = tester.test(engine)
+        print(result.validate(['ProfitDifference'], [lambda x: x > 0]))
 
 
 if __name__ == '__main__':

@@ -23,9 +23,11 @@ class TestResultsCollection:
 
     def validate(self, metrics, validation_functions):
         validations = []
-        for result in self.test_results:
+        ok_indexes = []
+        for index, result in enumerate(self.test_results):
             validations.append(result.validate(metrics, validation_functions))
+            ok_indexes.append(index)
         counter = Counter(validations)
         ok, nok = counter[True], counter[False]
         total = ok + nok
-        return {'OK': ok, 'NOK': nok, 'Total': total, 'OK Average': ok/total}
+        return {'OK': ok, 'NOK': nok, 'Total': total, 'OK Average': ok/total, 'OK Indexes': ok_indexes}

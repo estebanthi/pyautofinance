@@ -14,6 +14,7 @@ from pyautofinance.common.strategies import Strategy
 from pyautofinance.common.strategies.test_strats.monkey_strat import MonkeyStrat
 from pyautofinance.common.timeframes import h4
 from pyautofinance.common.simulators import MonkeySimulator
+from pyautofinance.common.results.engine_results_collection import EngineResultsCollection
 
 
 class TestMonkeySimulator(unittest.TestCase):
@@ -38,9 +39,9 @@ class TestMonkeySimulator(unittest.TestCase):
 
     def test_simulate(self):
         engine = Engine(self.assembly)
-        simulator = MonkeySimulator(iterations=2, monkey_full=self.monkey_full)
+        simulator = MonkeySimulator(iterations=2, monkey_strat=self.monkey_full)
         result = simulator.simulate(engine)
-        result['full'].get_average_metric('TotalGrossProfit')
+        self.assertIsInstance(result, EngineResultsCollection)
 
 
 if __name__ == '__main__':
