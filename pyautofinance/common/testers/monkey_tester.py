@@ -13,4 +13,3 @@ class MonkeyTester(Tester):
     def test(self, engine):
         simulator = MonkeySimulator(self.iterations, self.monkey_full, self.monkey_entry, self.monkey_exit)
         results = simulator.simulate(engine)
-        

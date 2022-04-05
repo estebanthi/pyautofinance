@@ -1,8 +1,9 @@
 import random
-import pandas as pd
+import numpy as np
 
-from pyautofinance.common.metrics.monte_carlo_metrics import RiskOfRuin, MaxDrawdownFromEquity, AverageMaxDrawdown,\
-    AverageReturns, AverageProfit, AverageReturnsDrawdown
+from pyautofinance.common.metrics.monte_carlo_metrics import RiskOfRuin, MaxDrawdownFromEquity, MedianMaxDrawdown
+from pyautofinance.common.metrics.monte_carlo_metrics import MedianProfit, MedianReturn, ReturnDrawdown
+from pyautofinance.common.metrics.metrics_collection import MetricsCollection
 
 
 class MonteCarloSimulator:
@@ -12,22 +13,18 @@ class MonteCarloSimulator:
         self.starting_equity = starting_equity
         self.ending_equity = ending_equity
 
-    def simulate(self, trades_collection):
-        results = self._get_results(trades_collection)
-        results_dataframe = self._build_results_dataframe(results)
+    def simulate(self, engine):
+        engine_result = engine.run()
 
-        risk_of_ruin = RiskOfRuin(results_dataframe)
-        average_max_drawdown = AverageMaxDrawdown(results_dataframe)
-        average_profit = AverageProfit(results_dataframe)
-        average_returns = AverageReturns(results_dataframe)
-        average_returns_drawdown = AverageReturnsDrawdown(results_dataframe)
-        return {
-            'risk_of_ruin': risk_of_ruin,
-            'average_max_drawdown': average_max_drawdown,
-            'average_profit': average_profit,
-            'average_returns': average_returns,
-            'average_returns_drawdown': average_returns_drawdown
-        }
+        strat_results_metrics = []
+        for strat_result in engine_result:
+            results = self._get_results(strat_result.trades)
+            metrics = self._build_metrics(results)
+            collection = MetricsCollection(*metrics)
+
+            strat_results_metrics.append(collection)
+
+        return strat_results_metrics
 
     def _get_results(self, trades_collection):
         results = []
@@ -36,16 +33,6 @@ class MonteCarloSimulator:
             simulation_result = self._simulate(trades_collection)
             results.append(simulation_result)
         return results
-
-    @staticmethod
-    def _build_results_dataframe(results):
-        return pd.DataFrame({
-            'ruined': [r[0] for r in results],
-            'max_drawdown': [r[1] for r in results],
-            'profit': [r[2] for r in results],
-            'returns': [r[3] for r in results],
-            'returns_drawdown': [r[4] for r in results]
-        })
 
     def _simulate(self, trades):
         equities = [self.starting_equity]
@@ -59,11 +46,29 @@ class MonteCarloSimulator:
 
         final_equity = equities[-1]
 
-        ruined = final_equity < self.ending_equity
+        ruined = int(final_equity < self.ending_equity)
         max_drawdown = MaxDrawdownFromEquity(equities).value
         profit = final_equity - self.starting_equity
         returns = final_equity / self.starting_equity
         return_drawdown = returns / max_drawdown
 
-        return ruined, max_drawdown, profit, returns, return_drawdown
+        return [ruined, max_drawdown, profit, returns, return_drawdown]
 
+    def _build_metrics(self, results):
+        results_array = np.array(results)
+
+        ruined = results_array[:, 0]
+        risk_of_ruin = RiskOfRuin(ruined)
+
+        max_drawdowns = results_array[:, 1]
+        median_max_drawdown = MedianMaxDrawdown(max_drawdowns)
+
+        profits = results_array[:, 2]
+        median_profit = MedianProfit(profits)
+
+        returns = results_array[:, 3]
+        median_return = MedianReturn(returns)
+
+        return_drawdown = ReturnDrawdown(median_return.value, median_max_drawdown.value)
+
+        return risk_of_ruin, median_max_drawdown, median_profit, median_return, return_drawdown

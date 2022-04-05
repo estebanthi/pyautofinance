@@ -37,11 +37,9 @@ class TestMonteCarloSimulator(unittest.TestCase):
 
     def test(self):
         engine = Engine(self.assembly)
-        result = engine.run()
-        trades = result[0].trades
-        simulator = MonteCarloSimulator(80000, 100000, 10000)
-        simulator_result = simulator.simulate(trades)
-        self.assertIsInstance(simulator_result, dict)
+        simulator = MonteCarloSimulator(10, 100000, 10000)
+        simulator_result = simulator.simulate(engine)
+        self.assertIsInstance(simulator_result, list)
 
 
 if __name__ == '__main__':
