@@ -1,3 +1,4 @@
 from pyautofinance.common.simulators.monte_carlo_simulator import MonteCarloSimulator
 from pyautofinance.common.simulators.split_train_test_simulator import SplitTrainTestSimulator
 from pyautofinance.common.simulators.walk_forward_simulator import WalkForwardSimulator
+from pyautofinance.common.simulators.monkey_simulator import MonkeySimulator
