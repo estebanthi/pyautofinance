@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from pyautofinance.common.strategies.test_strats.monkey_strat import MonkeyStrat
 
 
-class ExitMonkeyStrat(MonkeyStrat, ABC):
+class ExitMonkeyStrat(MonkeyStrat):
 
     @abstractmethod
     def _open_short_condition(self) -> bool:

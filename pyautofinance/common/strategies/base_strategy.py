@@ -127,6 +127,7 @@ class BaseStrategy(bt.Strategy):
     def _go_long(self, stop_price, take_profit_price):
         orders = self._get_long_orders_from_stop_and_take_profit(stop_price, take_profit_price)
         self.orders_ref = [order.ref for order in orders]
+        self.entry_bar = len(self)
 
     def _get_long_orders_from_stop_and_take_profit(self, stop_price, take_profit_price):
         ACTUAL_PRICE = self.datas[0].close[0]
@@ -143,6 +144,7 @@ class BaseStrategy(bt.Strategy):
     def _go_short(self, stop_price, take_profit_price):
         orders = self._get_short_orders_from_stop_and_take_profit(stop_price, take_profit_price)
         self.orders_ref = [order.ref for order in orders]
+        self.entry_bar = len(self)
 
     def _get_short_orders_from_stop_and_take_profit(self, stop_price, take_profit_price):
         ACTUAL_PRICE = self.datas[0].close[0]
