@@ -7,7 +7,7 @@ import ccxt
 from pyautofinance.common.engine import Engine, ComponentsAssembly
 from pyautofinance.common.feeds import CCXTDatafeed
 from pyautofinance.common.dataflux import DiskDataflux
-from pyautofinance.common.brokers import CCXTLiveBroker
+from pyautofinance.common.brokers import BackBroker
 from pyautofinance.common.sizers import Sizer
 from pyautofinance.common.metrics.engine_metrics import EngineMetricsCollection, TotalGrossProfit
 from pyautofinance.common.strategies import BracketStrategyExample, Strategy
@@ -28,9 +28,9 @@ class TestEngine(unittest.TestCase):
 
     dataflux = DiskDataflux()
 
-    broker = CCXTLiveBroker(exchange, currency, True)
+    broker = BackBroker(cash, commission)
     strategy = Strategy(LiveTradingTestStrategy, logging=True, stop_loss=0.5, risk_reward=2, live=True)
-    datafeed = CCXTDatafeed(symbol, start_date, timeframe, exchange, currency, True)
+    datafeed = CCXTDatafeed(symbol, start_date, timeframe, exchange, currency)
     sizer = Sizer(bt.sizers.PercentSizer, percents=10)
     metrics = EngineMetricsCollection(TotalGrossProfit)
 

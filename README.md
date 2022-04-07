@@ -48,6 +48,15 @@ from matplotlib.dates import (HOURS_PER_DAY, MIN_PER_HOUR, SEC_PER_MIN,
                               MicrosecondLocator, warnings) # Remove warnings here
 ```
 
+Go into `ccxt` package, in `binance.py`, and add at line 2723 :
+
+```python
+                request['stopPrice'] = self.price_to_precision(symbol, stopPrice)
+
+        params = {}  # Add this
+        response = getattr(self, method)(self.extend(request, params))
+```
+
 ## How to use
 
 To use the package, just go in the folder ```pyautofinance``` and create your first run script, or edit the one already existing. But first, you have to create the ```config.yml``` file.
