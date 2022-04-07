@@ -1,5 +1,6 @@
 import backtrader as bt
 import datetime as dt
+import pytz
 
 from abc import abstractmethod
 from dataclasses import dataclass
@@ -16,13 +17,15 @@ class BaseStrategy(bt.Strategy):
         ('stop_loss', 0),
         ('risk_reward', 0),
         ('logger', DefaultStratLogger()),
-        ('timeframes', list())
+        ('timeframes', list()),
+        ('live', False)
     )
 
     def __init__(self):
         self.orders_ref = list()
         self.total_profit = 0
-        self.initial_cash = self.broker.cash
+        self.initial_cash = self.broker.cash if hasattr(self.broker, 'cash') else 0
+        self.launch_time = dt.datetime.now()
 
         self.logger = self.p.logger
         if not self.p.logging:
@@ -98,6 +101,9 @@ class BaseStrategy(bt.Strategy):
     def next(self):
         self.logger.log_every_iter(self._get_logging_data())
 
+        if self.p.live and self.datas[0].datetime.datetime(0) < self.launch_time - dt.timedelta(hours=2):
+            return
+
         if not self.position:
             self._not_yet_in_market()
         else:
@@ -126,7 +132,7 @@ class BaseStrategy(bt.Strategy):
 
     def _go_long(self, stop_price, take_profit_price):
         orders = self._get_long_orders_from_stop_and_take_profit(stop_price, take_profit_price)
-        self.orders_ref = [order.ref for order in orders]
+        self.orders_ref = [order.ref for order in orders if order]
         self.entry_bar = len(self)
 
     def _get_long_orders_from_stop_and_take_profit(self, stop_price, take_profit_price):
@@ -143,7 +149,7 @@ class BaseStrategy(bt.Strategy):
 
     def _go_short(self, stop_price, take_profit_price):
         orders = self._get_short_orders_from_stop_and_take_profit(stop_price, take_profit_price)
-        self.orders_ref = [order.ref for order in orders]
+        self.orders_ref = [order.ref for order in orders if order]
         self.entry_bar = len(self)
 
     def _get_short_orders_from_stop_and_take_profit(self, stop_price, take_profit_price):
