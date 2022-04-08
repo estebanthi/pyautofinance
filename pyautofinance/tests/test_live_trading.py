@@ -13,11 +13,11 @@ from pyautofinance.common.metrics.engine_metrics import EngineMetricsCollection,
 from pyautofinance.common.strategies import BracketStrategyExample, Strategy
 from pyautofinance.common.strategies.usable_strategies.live_trading_test_strategy import LiveTradingTestStrategy
 from pyautofinance.common.timeframes import m1
+from pyautofinance.common.metrics.live_metrics import ActualProfit, LiveMetricsCollection
 
 
 class TestEngine(unittest.TestCase):
-
-    start_date = dt.datetime(2022, 4, 7, 10, 20, 1)
+    start_date = dt.datetime(2022, 4, 8, 14, 50, 0)
     symbol = 'BNB-BTC'
     timeframe = m1
     exchange = ccxt.binance()
@@ -29,10 +29,14 @@ class TestEngine(unittest.TestCase):
     dataflux = DiskDataflux()
 
     broker = BackBroker(cash, commission)
-    strategy = Strategy(LiveTradingTestStrategy, logging=True, stop_loss=0.5, risk_reward=2, live=True)
+
+    live_metrics = LiveMetricsCollection(ActualProfit)
+    strategy = Strategy(LiveTradingTestStrategy, logging=True, stop_loss=0.5, risk_reward=2, live=True,
+                        live_metrics=live_metrics)
+
     datafeed = CCXTDatafeed(symbol, start_date, timeframe, exchange, currency)
     sizer = Sizer(bt.sizers.PercentSizer, percents=10)
-    metrics = EngineMetricsCollection(TotalGrossProfit)
+    metrics = EngineMetricsCollection()
 
     assembly = ComponentsAssembly(broker, strategy, datafeed, sizer, metrics, dataflux)
 

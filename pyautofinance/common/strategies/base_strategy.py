@@ -1,11 +1,13 @@
 import backtrader as bt
 import datetime as dt
-import pytz
 
 from abc import abstractmethod
 from dataclasses import dataclass
 
 from pyautofinance.common.strategies.strat_loggers import DefaultStratLogger
+from pyautofinance.common.metrics.live_metrics.live_metrics_collection import LiveMetricsCollection
+
+from icecream import ic
 
 
 class BaseStrategy(bt.Strategy):
@@ -18,10 +20,12 @@ class BaseStrategy(bt.Strategy):
         ('risk_reward', 0),
         ('logger', DefaultStratLogger()),
         ('timeframes', list()),
-        ('live', False)
+        ('live', False),
+        ('live_metrics', LiveMetricsCollection())
     )
 
     def __init__(self):
+        ic(self.p.live_metrics)
         self.orders_ref = list()
         self.total_profit = 0
         self.initial_cash = self.broker.cash if hasattr(self.broker, 'cash') else 0
@@ -100,6 +104,7 @@ class BaseStrategy(bt.Strategy):
 
     def next(self):
         self.logger.log_every_iter(self._get_logging_data())
+        self.p.live_metrics.update(self)
 
         if self.p.live and self.datas[0].datetime.datetime(0) < self.launch_time - dt.timedelta(hours=2):
             return
