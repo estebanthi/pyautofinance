@@ -114,7 +114,7 @@ class BaseStrategy(bt.Strategy):
             self._in_market()
 
         if self.cerebro.dataflux and self.p.live:
-            self.p.live_metrics.
+            self.p.live_metrics.set_strategy_name(self.cerebro.strategy_name)
             self.cerebro.dataflux.write(self.p.live_metrics)
 
     def _is_live_and_before_actual_time(self):

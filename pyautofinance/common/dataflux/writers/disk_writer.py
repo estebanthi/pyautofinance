@@ -1,6 +1,7 @@
 import random
 import string
 import dill
+import datetime as dt
 
 from pyautofinance.common.dataflux.writers.writer import Writer
 from pyautofinance.common.config.config import Config
@@ -23,4 +24,8 @@ class DiskWriter(Writer):
             dill.dump(engine_result, file)
 
     def write_live_metrics_collection(self, live_metrics_collection):
-        print(live_metrics_collection)
+        filename = f"{live_metrics_collection.strategy_name}-{dt.datetime.now()}"
+        config = Config()
+        live_results_pathname = config['live_results_pathname']
+        with open(live_results_pathname + '/' + filename, 'wb') as file:
+            dill.dump(live_metrics_collection, file)
