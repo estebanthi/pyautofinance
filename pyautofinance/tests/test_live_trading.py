@@ -17,7 +17,8 @@ from pyautofinance.common.metrics.live_metrics import ActualProfit, LiveMetricsC
 
 
 class TestEngine(unittest.TestCase):
-    start_date = dt.datetime(2022, 4, 8, 14, 50, 0)
+
+    start_date = dt.datetime.now() - dt.timedelta(hours=2)
     symbol = 'BNB-BTC'
     timeframe = m1
     exchange = ccxt.binance()

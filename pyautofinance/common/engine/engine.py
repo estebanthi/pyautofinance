@@ -32,6 +32,7 @@ class Engine:
 
     def add_dataflux(self, dataflux):
         self._get_result = self.write_result(self._get_result, dataflux)
+        self.cerebro.dataflux = dataflux
 
     def write_result(self, get_result, dataflux):
         def wrapper():

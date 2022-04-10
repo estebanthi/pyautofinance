@@ -21,3 +21,6 @@ class DiskWriter(Writer):
         engine_results_pathname = config['engine_results_pathname']
         with open(engine_results_pathname+'/'+filename, 'wb') as file:
             dill.dump(engine_result, file)
+
+    def write_live_metrics_collection(self, live_metrics_collection):
+        print(live_metrics_collection)

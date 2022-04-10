@@ -1,5 +1,4 @@
 from pyautofinance.common.testers.tester import Tester
-from pyautofinance.common.results.test_result import TestResult
 from pyautofinance.common.results.test_results_collection import TestResultsCollection
 
 

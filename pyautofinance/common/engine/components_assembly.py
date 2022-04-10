@@ -22,3 +22,6 @@ class ComponentsAssembly:
 
     def __setitem__(self, key, value):
         self._components[key] = value
+
+    def append(self, item):
+        self._components.append(item)

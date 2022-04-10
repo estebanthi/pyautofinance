@@ -25,7 +25,6 @@ class BaseStrategy(bt.Strategy):
     )
 
     def __init__(self):
-        ic(self.p.live_metrics)
         self.orders_ref = list()
         self.total_profit = 0
         self.initial_cash = self.broker.cash if hasattr(self.broker, 'cash') else 0
@@ -106,13 +105,22 @@ class BaseStrategy(bt.Strategy):
         self.logger.log_every_iter(self._get_logging_data())
         self.p.live_metrics.update(self)
 
-        if self.p.live and self.datas[0].datetime.datetime(0) < self.launch_time - dt.timedelta(hours=2):
+        if self._is_live_and_before_actual_time():
             return
 
         if not self.position:
             self._not_yet_in_market()
         else:
             self._in_market()
+
+        if self.cerebro.dataflux and self.p.live:
+            self.p.live_metrics.
+            self.cerebro.dataflux.write(self.p.live_metrics)
+
+    def _is_live_and_before_actual_time(self):
+        if self.p.live and self.datas[0].datetime.datetime(0) < self.launch_time - dt.timedelta(hours=2):
+            return True
+        return False
 
     def _not_yet_in_market(self):
         if self._long_condition():
