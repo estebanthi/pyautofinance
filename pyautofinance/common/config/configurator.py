@@ -12,9 +12,10 @@ class Configurator:
     def create_config_file(self):
         if not os.path.isfile(f"{self.path}/config.yml"):
             initial_config_data = {
-                'ohlcv_pathname': None,
-                'engine_results_pathname': None,
-                'live_results_pathname': None,
+                'ohlcv_pathname': 'data/ohlcv',
+                'engine_results_pathname': 'data/engine_results',
+                'live_results_pathname': 'data/live_results',
+                'live_app_port': 8889
             }
 
             with open(f"{self.path}/config.yml", 'w') as file:

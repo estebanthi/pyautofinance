@@ -28,4 +28,5 @@ class DiskWriter(Writer):
         config = Config()
         live_results_pathname = config['live_results_pathname']
         with open(live_results_pathname + '/' + filename, 'wb') as file:
+            print(metrics)
             dill.dump(metrics, file)
