@@ -17,10 +17,10 @@ class BracketStrategyExample(BracketStrategy):
         ('movav', EMA),
     )
 
-    # If necessary, you can initialize some instance variables
-    def __init__(self):
-        super().__init__()
-        self.macd = MACD(period_me1=self.p.period_me1, period_me2=self.p.period_me2, period_signal=self.p.period_signal, movav=self.p.movav)
+    # Then, you initialize indicators
+    def _init_indicators(self):
+        self.macd = MACD(period_me1=self.p.period_me1, period_me2=self.p.period_me2, period_signal=self.p.period_signal,
+                         movav=self.p.movav)
         self.ema = EMA(period=self.p.trend_ema_period)
         self.cross = CrossOver(self.macd.macd, self.macd.signal)
 

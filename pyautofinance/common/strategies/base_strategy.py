@@ -29,9 +29,16 @@ class BaseStrategy(bt.Strategy):
         self.launch_time = dt.datetime.now()
         self.last_live_writing = self.launch_time
 
+        self._init_logger()
+        self._init_indicators()
+
+    def _init_logger(self):
         self.logger = self.p.logger
         if not self.p.logging:
             self.logger.disable()
+
+    def _init_indicators(self):
+        pass
 
     # Put here everything you need when you want to use loggers
     def _get_logging_data(self):
