@@ -1,4 +1,5 @@
 pyautofinance/config.yml
+pyautofinance/data
+
 pyautofinance/tests/config.yml
 pyautofinance/tests/test_data
-pyautofinance/data
