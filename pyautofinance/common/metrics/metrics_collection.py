@@ -36,3 +36,6 @@ class MetricsCollection:
 
     def values(self):
         return [metric.value for metric in self._metrics_list]
+
+    def to_dict(self):
+        return {metric.name: metric.value for metric in self._metrics_list}

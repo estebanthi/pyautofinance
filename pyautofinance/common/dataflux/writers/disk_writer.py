@@ -27,6 +27,7 @@ class DiskWriter(Writer):
         filename = f"{metrics.strategy_name}{dt.datetime.now().strftime('%Y-%m-%d %H-%M-%S')}"
         config = Config()
         live_results_pathname = config['live_results_pathname']
+
+        metrics = metrics.to_dict()
         with open(live_results_pathname + '/' + filename, 'wb') as file:
-            print(metrics)
             dill.dump(metrics, file)
