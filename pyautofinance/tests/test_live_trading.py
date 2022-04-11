@@ -18,7 +18,7 @@ from pyautofinance.common.metrics.live_metrics import ActualProfit, LiveMetricsC
 
 class TestEngine(unittest.TestCase):
 
-    start_date = dt.datetime.now() - dt.timedelta(hours=2)
+    start_date = dt.datetime.now() - dt.timedelta(hours=2, minutes=1)
     symbol = 'BNB-BTC'
     timeframe = m1
     exchange = ccxt.binance()
@@ -33,7 +33,7 @@ class TestEngine(unittest.TestCase):
 
     live_metrics = LiveMetricsCollection(ActualProfit)
     strategy = Strategy(LiveTradingTestStrategy, logging=True, stop_loss=0.5, risk_reward=2, live=True,
-                        live_metrics=live_metrics)
+                        live_metrics=live_metrics, live_writing_interval=dt.timedelta(minutes=5))
 
     datafeed = CCXTDatafeed(symbol, start_date, timeframe, exchange, currency)
     sizer = Sizer(bt.sizers.PercentSizer, percents=10)

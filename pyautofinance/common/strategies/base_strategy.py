@@ -7,11 +7,8 @@ from dataclasses import dataclass
 from pyautofinance.common.strategies.strat_loggers import DefaultStratLogger
 from pyautofinance.common.metrics.live_metrics.live_metrics_collection import LiveMetricsCollection
 
-from icecream import ic
-
 
 class BaseStrategy(bt.Strategy):
-
     params = (
         ('logging', False),
         ('longs_enabled', True),
@@ -21,7 +18,8 @@ class BaseStrategy(bt.Strategy):
         ('logger', DefaultStratLogger()),
         ('timeframes', list()),
         ('live', False),
-        ('live_metrics', LiveMetricsCollection())
+        ('live_metrics', LiveMetricsCollection()),
+        ('live_writing_interval', dt.timedelta(seconds=1))
     )
 
     def __init__(self):
@@ -29,6 +27,7 @@ class BaseStrategy(bt.Strategy):
         self.total_profit = 0
         self.initial_cash = self.broker.cash if hasattr(self.broker, 'cash') else 0
         self.launch_time = dt.datetime.now()
+        self.last_live_writing = self.launch_time
 
         self.logger = self.p.logger
         if not self.p.logging:
@@ -103,7 +102,6 @@ class BaseStrategy(bt.Strategy):
 
     def next(self):
         self.logger.log_every_iter(self._get_logging_data())
-        self.p.live_metrics.update(self)
 
         if self._is_live_and_before_actual_time():
             return
@@ -113,8 +111,16 @@ class BaseStrategy(bt.Strategy):
         else:
             self._in_market()
 
+        self.p.live_metrics.update(self)
         if self.cerebro.dataflux and self.p.live:
-            self.p.live_metrics.set_strategy_name(self.cerebro.strategy_name)
+            self._write_live_metrics()
+
+    def _write_live_metrics(self):
+        self.p.live_metrics.set_strategy_name(self.cerebro.strategy_name)
+
+        interval = dt.datetime.now() - self.last_live_writing
+        if interval >= self.p.live_writing_interval:
+            self.last_live_writing = dt.datetime.now()
             self.cerebro.dataflux.write(self.p.live_metrics)
 
     def _is_live_and_before_actual_time(self):
