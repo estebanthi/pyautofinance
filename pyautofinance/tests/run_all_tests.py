@@ -15,6 +15,8 @@ def run_some_tests():
         TestEngine,
         TestExtractors,
         TestLearn,
+        TestMonkeySimulator,
+        TestMonkeyStrat,
         TestMonteCarloSimulator,
         TestOHLCV,
         TestResults,

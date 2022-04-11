@@ -8,6 +8,7 @@ class EngineMetricsCollection(EngineComponent, MetricsCollection):
         analyzers = self._get_analyzers()
         for analyzer in analyzers:
             analyzer.attach_to_engine(engine)
+        engine.cerebro.metrics = self
 
     def _get_analyzers(self):
         analyzers = []
@@ -25,7 +26,5 @@ class EngineMetricsCollection(EngineComponent, MetricsCollection):
         return nodups
 
     def get_strat_metrics(self, strat):
-        metrics = {}
-        for metric in self._metrics_list:
-            metrics[metric.name] = metric(strat)
-        return metrics
+        metrics = [metric(strat) for metric in self._metrics_list]
+        return MetricsCollection(*metrics)

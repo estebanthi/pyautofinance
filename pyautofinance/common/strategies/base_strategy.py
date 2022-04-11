@@ -5,7 +5,6 @@ from abc import abstractmethod
 from dataclasses import dataclass
 
 from pyautofinance.common.strategies.strat_loggers import DefaultStratLogger
-from pyautofinance.common.metrics.live_metrics.live_metrics_collection import LiveMetricsCollection
 
 
 class BaseStrategy(bt.Strategy):
@@ -18,7 +17,6 @@ class BaseStrategy(bt.Strategy):
         ('logger', DefaultStratLogger()),
         ('timeframes', list()),
         ('live', False),
-        ('live_metrics', LiveMetricsCollection()),
         ('live_writing_interval', dt.timedelta(seconds=1))
     )
 
@@ -118,17 +116,18 @@ class BaseStrategy(bt.Strategy):
         else:
             self._in_market()
 
-        self.p.live_metrics.update(self)
-        if self.cerebro.dataflux and self.p.live:
-            self._write_live_metrics()
+        if hasattr(self.cerebro, 'dataflux'):
+            if self.cerebro.dataflux and self.p.live:
+                self._write_live_metrics()
 
     def _write_live_metrics(self):
-        self.p.live_metrics.set_strategy_name(self.cerebro.strategy_name)
+        metrics = self._get_metrics()
+        metrics.strategy_name = self.cerebro.strategy_name
 
         interval = dt.datetime.now() - self.last_live_writing
         if interval >= self.p.live_writing_interval:
             self.last_live_writing = dt.datetime.now()
-            self.cerebro.dataflux.write(self.p.live_metrics)
+            self.cerebro.dataflux.write(metrics)
 
     def _is_live_and_before_actual_time(self):
         if self.p.live and self.datas[0].datetime.datetime(0) < self.launch_time - dt.timedelta(hours=2):
@@ -201,3 +200,6 @@ class BaseStrategy(bt.Strategy):
 
     def stop(self):
         self.logger.log_stop(self._get_logging_data())
+
+    def _get_metrics(self):
+        return self.cerebro.metrics.get_strat_metrics(self)

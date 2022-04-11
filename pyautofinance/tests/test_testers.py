@@ -35,7 +35,7 @@ class TestTesters(unittest.TestCase):
     dataflux = DiskDataflux()
 
     broker = BackBroker(cash, commission)
-    strategy = Strategy(BracketStrategyExample, stop_loss=range(2, 10), risk_reward=range(2, 10))
+    strategy = Strategy(BracketStrategyExample, stop_loss=range(2, 4), risk_reward=range(2, 4))
     datafeed = BackDatafeed(symbol, start_date, timeframe, end_date, dataflux, candles_extractor=CCXTCandlesExtractor())
     sizer = Sizer(bt.sizers.PercentSizer, percents=90)
     metrics = EngineMetricsCollection(TotalGrossProfit)

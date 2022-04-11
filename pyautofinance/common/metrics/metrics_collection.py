@@ -1,4 +1,5 @@
 from pyautofinance.common.exceptions import MetricNotFound
+from pyautofinance.common.datamodels.datamodel import Datamodel
 
 
 class MetricsCollection:
@@ -32,3 +33,6 @@ class MetricsCollection:
 
     def __list__(self):
         return self._metrics_list
+
+    def values(self):
+        return [metric.value for metric in self._metrics_list]

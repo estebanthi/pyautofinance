@@ -23,9 +23,9 @@ class DiskWriter(Writer):
         with open(engine_results_pathname+'/'+filename, 'wb') as file:
             dill.dump(engine_result, file)
 
-    def write_live_metrics_collection(self, live_metrics_collection):
-        filename = f"{live_metrics_collection.strategy_name}{dt.datetime.now().strftime('%Y-%m-%d %H-%M-%S')}"
+    def write_metrics(self, metrics):
+        filename = f"{metrics.strategy_name}{dt.datetime.now().strftime('%Y-%m-%d %H-%M-%S')}"
         config = Config()
         live_results_pathname = config['live_results_pathname']
         with open(live_results_pathname + '/' + filename, 'wb') as file:
-            dill.dump(live_metrics_collection, file)
+            dill.dump(metrics, file)

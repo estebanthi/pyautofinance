@@ -11,3 +11,5 @@ from pyautofinance.tests.test_results import TestResults
 from pyautofinance.tests.test_testers import TestTesters
 from pyautofinance.tests.test_learn import TestLearn
 from pyautofinance.tests.test_walk_forward_simulator import TestWalkForwardSimulator
+from pyautofinance.tests.test_monkey_simulator import TestMonkeySimulator
+from pyautofinance.tests.test_monkey_strat import TestMonkeyStrat
