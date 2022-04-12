@@ -22,7 +22,7 @@ class Datafeed(EngineComponent):
 
     def attach_to_engine(self, engine):
         bt_datafeed = self._get_bt_datafeed()
-        engine.cerebro.adddata(bt_datafeed)
+        engine.cerebro.adddata(bt_datafeed, name='data')
         self._attach_resampled_datafeed_to_engine(bt_datafeed, engine)
 
     @staticmethod

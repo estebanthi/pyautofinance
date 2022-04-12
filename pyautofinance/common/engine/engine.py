@@ -2,6 +2,8 @@ from pyautofinance.common.engine.engine_cerebro import EngineCerebro
 from pyautofinance.common.results.engine_result import EngineResult
 from pyautofinance.common.analyzers import TradeList
 
+from backtrader_plotting import Bokeh
+
 
 class Engine:
 
@@ -21,7 +23,7 @@ class Engine:
         return result
 
     def _get_result(self):
-        cerebro_result = self.cerebro.run(optreturn=True, tradehistory=True, maxcpus=1)
+        cerebro_result = self.cerebro.run(optreturn=False, tradehistory=True, maxcpus=1)
         return EngineResult(cerebro_result, self.components_assembly[4], self.components_assembly[2])
 
     def plot(self, scheme={"style": 'candlestick', "barup": "green"}):

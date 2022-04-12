@@ -17,7 +17,7 @@ class TradeList(Analyzer):
 class TradeListAnalyzer(bt.Analyzer):
 
     def get_analysis(self):
-        return self.trades
+        return {'trades': self.trades}
 
     def __init__(self):
         self.trades = []
@@ -28,8 +28,7 @@ class TradeListAnalyzer(bt.Analyzer):
 
             brokervalue = self.strategy.broker.getvalue()
 
-            side = TradeSide.SHORT
-            if trade.history[0].event.size > 0: side = TradeSide.LONG
+            side = TradeSide.LONG if trade.history[0].event.size > 0 else TradeSide.SHORT
 
             pricein = trade.history[len(trade.history) - 1].status.price
             priceout = trade.history[len(trade.history) - 1].event.price
@@ -72,6 +71,9 @@ class TradeListAnalyzer(bt.Analyzer):
             pnl_per_bar = round(pbar, 2)
             mfe_percent = round(mfe, 2)
             mae_percent = round(mae, 2)
-            trade = Trade(ref, symbol, side, datein, pricein, dateout, priceout, change_percent, pnl, pnl_percent,
-                          size, value, barlen, pnl_per_bar, mfe_percent, mae_percent)
+            trade = {'ref': ref, 'symbol': symbol, 'side': side.value, 'datein': datein, 'pricein': pricein,
+                     'dateout': dateout,
+                     'priceout': priceout, 'change_percent': change_percent, 'pnl': pnl, 'pnl_percent': pnl_percent,
+                     'size': size, 'value': value, 'barlen': barlen, 'pnl_per_bar': pnl_per_bar,
+                     'mfe_percent': mfe_percent, 'mae_percent': mae_percent}
             self.trades.append(trade)
