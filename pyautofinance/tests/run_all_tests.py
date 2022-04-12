@@ -19,6 +19,7 @@ def run_some_tests():
         TestMonkeyStrat,
         TestMonteCarloSimulator,
         TestOHLCV,
+        TestPlotting,
         TestResults,
         TestTesters,
         TestWalkForwardSimulator,

@@ -1,14 +1,15 @@
+from backtrader_plotting import OptBrowser
+
 from pyautofinance.common.engine.engine_cerebro import EngineCerebro
 from pyautofinance.common.results.engine_result import EngineResult
 from pyautofinance.common.analyzers import TradeList
 
-from backtrader_plotting import Bokeh
-
 
 class Engine:
 
-    def __init__(self, components_assembly):
+    def __init__(self, components_assembly, optimized=True):
         self.components_assembly = components_assembly
+        self.optimized = optimized
         self.cerebro = EngineCerebro()
 
     def _build(self):
@@ -19,15 +20,23 @@ class Engine:
     def run(self):
         self.cerebro = EngineCerebro()
         self._build()
-        result = self._get_result()
+        cerebro_result = self.cerebro.run(optreturn=self.optimized, tradehistory=True, maxcpus=1)
+        result = self._get_result(cerebro_result)
+        self._plot(cerebro_result)
         return result
 
-    def _get_result(self):
-        cerebro_result = self.cerebro.run(optreturn=False, tradehistory=True, maxcpus=1)
+    def _get_result(self, cerebro_result):
         return EngineResult(cerebro_result, self.components_assembly[4], self.components_assembly[2])
 
-    def plot(self, scheme={"style": 'candlestick', "barup": "green"}):
-        self.cerebro.plot(**scheme)
+    def plot(self, bokeh):
+        self.cerebro.plot(bokeh)
+
+    def _plot(self, cerebro_result):
+        if hasattr(self.cerebro, 'opt_plotting'):
+            browser = OptBrowser(self.cerebro.bokeh, cerebro_result)
+            browser.start()
+        elif hasattr(self.cerebro, 'bokeh'):
+            self.plot(self.cerebro.bokeh)
 
     def get_timeframes(self):
         return self.components_assembly[1].timeframes
