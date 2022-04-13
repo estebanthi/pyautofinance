@@ -14,6 +14,7 @@ from pyautofinance.common.strategies import BracketStrategyExample, Strategy
 from pyautofinance.common.timeframes import h4
 from pyautofinance.common.results.strat_result import StratResult
 from pyautofinance.common.plotting import BackPlotter
+from pyautofinance.common.observers import Observer, AverageGainPerTrade
 
 
 class TestPlotting(unittest.TestCase):
@@ -33,11 +34,12 @@ class TestPlotting(unittest.TestCase):
     datafeed = BackDatafeed(symbol, start_date, timeframe, end_date, dataflux, candles_extractor=CCXTCandlesExtractor())
     sizer = Sizer(bt.sizers.PercentSizer, percents=10)
     metrics = EngineMetricsCollection(TotalGrossProfit, TotalNetProfit)
+    observer = Observer(AverageGainPerTrade, average_gain=200, standard_deviation=300, X=2)
 
-    assembly = ComponentsAssembly(broker, strategy, datafeed, sizer, metrics, BackPlotter())
+    assembly = ComponentsAssembly(broker, strategy, datafeed, sizer, metrics, BackPlotter(), observer)
 
     def test_simple_plotting(self):
-        engine = Engine(self.assembly)
+        engine = Engine(self.assembly, optimized=False)
         engine.run()
 
 

@@ -1,1 +1,2 @@
 from pyautofinance.common.observers.observer import Observer
+from pyautofinance.common.observers.average_gain_per_trade import AverageGainPerTrade
