@@ -14,3 +14,4 @@ from pyautofinance.tests.test_walk_forward_simulator import TestWalkForwardSimul
 from pyautofinance.tests.test_monkey_simulator import TestMonkeySimulator
 from pyautofinance.tests.test_monkey_strat import TestMonkeyStrat
 from pyautofinance.tests.test_plotting import TestPlotting
+from pyautofinance.tests.test_timers import TestTimers

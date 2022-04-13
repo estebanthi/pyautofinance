@@ -22,6 +22,7 @@ def run_some_tests():
         TestPlotting,
         TestResults,
         TestTesters,
+        TestTimers,
         TestWalkForwardSimulator,
     ]
 

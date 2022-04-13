@@ -203,3 +203,7 @@ class BaseStrategy(bt.Strategy):
 
     def _get_metrics(self):
         return self.cerebro.metrics.get_strat_metrics(self)
+
+    def notify_timer(self, timer, when, *args, **kwargs):
+        execute = kwargs['execute']
+        execute(self.cerebro, self)

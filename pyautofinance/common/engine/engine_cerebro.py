@@ -331,3 +331,7 @@ class EngineCerebro(bt.Cerebro):
             return results
 
         return runstrats
+
+    def notify_timer(self, timer, when, *args, **kwargs):
+        execute = kwargs['execute']
+        execute(self)
