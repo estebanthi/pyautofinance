@@ -10,6 +10,7 @@ from pyautofinance.common.dataflux import DiskDataflux
 from pyautofinance.common.brokers import BackBroker
 from pyautofinance.common.sizers import Sizer
 from pyautofinance.common.metrics.engine_metrics import EngineMetricsCollection, TotalGrossProfit, TotalNetProfit
+from pyautofinance.common.metrics.engine_metrics import StandardDeviation
 from pyautofinance.common.strategies import BracketStrategyExample, Strategy
 from pyautofinance.common.timeframes import h4
 from pyautofinance.common.results.strat_result import StratResult
@@ -33,7 +34,7 @@ class TestPlotting(unittest.TestCase):
     strategy = Strategy(BracketStrategyExample, stop_loss=1, risk_reward=2)
     datafeed = BackDatafeed(symbol, start_date, timeframe, end_date, dataflux, candles_extractor=CCXTCandlesExtractor())
     sizer = Sizer(bt.sizers.PercentSizer, percents=10)
-    metrics = EngineMetricsCollection(TotalGrossProfit, TotalNetProfit)
+    metrics = EngineMetricsCollection(TotalGrossProfit, TotalNetProfit, StandardDeviation)
     observer = Observer(AverageGainPerTrade, average_gain=200, standard_deviation=300, X=2)
 
     assembly = ComponentsAssembly(broker, strategy, datafeed, sizer, metrics, BackPlotter(), observer)

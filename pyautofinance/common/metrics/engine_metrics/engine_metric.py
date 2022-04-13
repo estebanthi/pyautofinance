@@ -9,17 +9,24 @@ from pyautofinance.common.metrics.metric import Metric
 
 @dataclass
 class EngineMetric(Metric):
-    analyzer: Analyzer
+    analyzers: list
 
     def __init__(self, strat):
         self._strat = strat
         self.value = self._get_metric_value()
 
     def _get_analysis(self):
+        analysis = []
+        for analyzer in self.analyzers:
+            analysis.append(self._get_analysis_for_one(analyzer))
+
+        return analysis
+
+    def _get_analysis_for_one(self, analyzer):
         try:
-            analyzer = getattr(self._strat.analyzers, self.analyzer.name)
+            analyzer = getattr(self._strat.analyzers, analyzer.name)
         except AttributeError:
-            raise AnalyzerMissing(self.analyzer.name)
+            raise AnalyzerMissing(analyzer.name)
 
         return analyzer.get_analysis()
 

@@ -13,7 +13,8 @@ class EngineMetricsCollection(EngineComponent, MetricsCollection):
     def _get_analyzers(self):
         analyzers = []
         for metric in self._metrics_list:
-            analyzers.append(metric.analyzer)
+            for analyzer in metric.analyzers:
+                analyzers.append(analyzer)
         nodups = self._remove_duplicates_analyzers(analyzers)
         return nodups
 
