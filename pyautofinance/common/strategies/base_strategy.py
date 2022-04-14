@@ -107,11 +107,12 @@ class BaseStrategy(bt.Strategy):
             self.orders_ref.remove(order.ref)
 
     def next(self):
-        self.get_ohlcv_dataframe()
         self.logger.log_every_iter(self._get_logging_data())
 
         if self._is_live_and_before_actual_time():
             return
+
+        self._update_attributes()
 
         if not self.position:
             self._not_yet_in_market()
@@ -211,14 +212,19 @@ class BaseStrategy(bt.Strategy):
         execute(self.cerebro, self)
 
     def get_ohlcv_dataframe(self):
-        columns = {'open': [], 'high': [], 'low': [], 'close': [], 'volume': []}
-        for column, value in columns.items():
-            line = getattr(self.datas[0], column)
+        columns = {'Open': [], 'High': [], 'Low': [], 'Close': [], 'Volume': []}
 
-            first_index = -len(self)
-            last_index = 1
+        first_index = -len(self)
+        last_index = 1
+        for column, value in columns.items():
+            line = getattr(self.datas[0], column.lower())
+
             value = [line[i] for i in range(first_index, last_index)]
             columns[column] = value
 
+        columns['Date'] = [self.datas[0].datetime.datetime(i) for i in range(first_index, last_index)]
         ohlcv_df = pd.DataFrame(columns)
         return ohlcv_df
+
+    def _update_attributes(self):
+        pass

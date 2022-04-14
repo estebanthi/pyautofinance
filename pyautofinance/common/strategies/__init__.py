@@ -1,2 +1,3 @@
 from pyautofinance.common.strategies.usable_strategies.bracket_strategy_example import BracketStrategyExample
 from pyautofinance.common.strategies.strategy import Strategy
+from pyautofinance.common.strategies.usable_strategies.predicting_strat import PredictingStrat
