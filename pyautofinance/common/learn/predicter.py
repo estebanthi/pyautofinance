@@ -32,11 +32,11 @@ class Predicter(ABC):
         pass
 
     @abstractmethod
-    def fit(self, back_datafeed):
+    def fit(self, data):
         pass
 
     @abstractmethod
-    def get_real_outputs(self, back_datafeed):
+    def get_real_outputs(self, data):
         # For a datafeed, returns the best decisions possible
         pass
 

@@ -17,19 +17,19 @@ class TaLibPredicter(Predicter):
         self.ta_strategy = ta_strategy
         self._dataframe = pd.DataFrame()
 
-    def predict(self, back_datafeed, local_extremas_periods=5, max_na_values_per_col=100):
-        self._prepare_dataframe(back_datafeed, local_extremas_periods, max_na_values_per_col)
+    def predict(self, data, local_extremas_periods=5, max_na_values_per_col=100):
+        self._prepare_dataframe(data, local_extremas_periods, max_na_values_per_col)
         X = self._get_x()
         y = self._model.predict(X)
         return y
 
-    def fit(self, back_datafeed, local_extremas_periods=5, max_na_values_per_col=100):
-        self._prepare_dataframe(back_datafeed, local_extremas_periods, max_na_values_per_col)
+    def fit(self, data, local_extremas_periods=5, max_na_values_per_col=100):
+        self._prepare_dataframe(data, local_extremas_periods, max_na_values_per_col)
         X, y = self._get_x(), self._get_y()
         self._model.fit(X, y)
 
-    def _prepare_dataframe(self, back_datafeed, local_extremas_periods, max_na_values_per_col):
-        self._dataframe = self._load_dataframe(back_datafeed)
+    def _prepare_dataframe(self, data, local_extremas_periods, max_na_values_per_col):
+        self._dataframe = data if isinstance(data, pd.DataFrame) else self._load_dataframe(data)
         self._calculate_local_extremas(local_extremas_periods)
         self._calculate_signals()
         self._format_index()
@@ -101,6 +101,6 @@ class TaLibPredicter(Predicter):
     def _get_y(self):
         return self._dataframe['Signal']
 
-    def get_real_outputs(self, back_datafeed, local_extremas_periods=5, max_na_values_per_col=100):
-        self._prepare_dataframe(back_datafeed, local_extremas_periods, max_na_values_per_col)
+    def get_real_outputs(self, data, local_extremas_periods=5, max_na_values_per_col=100):
+        self._prepare_dataframe(data, local_extremas_periods, max_na_values_per_col)
         return self._dataframe['Signal']

@@ -44,13 +44,20 @@ class TestLearn(unittest.TestCase):
 
     model = RandomForestClassifier()
     strategy = ta.AllStrategy
-    predicter = TaLibPredicter(filename='test_predicter')
+    predicter = TaLibPredicter(model=model, ta_strategy=strategy)
 
-    def test_fit(self):
-        self.predicter.fit(self.origin_datafeed)
-        self.predicter.save('test_predicter')
+    def test_fit_from_df(self):
+        self.origin_datafeed.extract()
+        dataframe = self.origin_datafeed.get_ohlcv().dataframe
+        self.predicter.fit(dataframe)
+
+    def test_fit_from_back_datafeed(self):
+        predicter = TaLibPredicter(model=self.model, ta_strategy=self.strategy)
+        predicter.fit(self.origin_datafeed)
 
     def test_get_real_outputs(self):
+        self.origin_datafeed.extract()
+        dataframe = self.origin_datafeed.get_ohlcv().dataframe
         self.assertTrue(isinstance(self.predicter.get_real_outputs(self.origin_datafeed), pd.Series))
 
 
