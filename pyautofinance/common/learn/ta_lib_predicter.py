@@ -17,21 +17,21 @@ class TaLibPredicter(Predicter):
         self.ta_strategy = ta_strategy
         self._dataframe = pd.DataFrame()
 
-    def predict(self, data, local_extremas_periods=5, max_na_values_per_col=100):
-        self._prepare_dataframe(data, local_extremas_periods, max_na_values_per_col)
+    def predict(self, data, local_extremas_periods=5, max_na_values_per_col=100, min_price_delta=0.005):
+        self._prepare_dataframe(data, local_extremas_periods, max_na_values_per_col, min_price_delta)
         X = self._get_x()
         y = self._model.predict(X)
         return y
 
-    def fit(self, data, local_extremas_periods=5, max_na_values_per_col=100):
-        self._prepare_dataframe(data, local_extremas_periods, max_na_values_per_col)
+    def fit(self, data, local_extremas_periods=5, max_na_values_per_col=100, min_price_delta=0.005):
+        self._prepare_dataframe(data, local_extremas_periods, max_na_values_per_col, min_price_delta)
         X, y = self._get_x(), self._get_y()
         self._model.fit(X, y)
 
-    def _prepare_dataframe(self, data, local_extremas_periods, max_na_values_per_col):
+    def _prepare_dataframe(self, data, local_extremas_periods, max_na_values_per_col, min_price_delta):
         self._dataframe = data if isinstance(data, pd.DataFrame) else self._load_dataframe(data)
         self._calculate_local_extremas(local_extremas_periods)
-        self._calculate_signals()
+        self._calculate_signals(min_price_delta)
         self._format_index()
         self._get_ta_analysis()
         self._drop_na_values(max_na_values_per_col)
@@ -50,15 +50,21 @@ class TaLibPredicter(Predicter):
         self._dataframe['min'] = self._dataframe['min'].fillna(0)
         self._dataframe['max'] = self._dataframe['max'].fillna(0)
 
-    def _calculate_signals(self):
+    def _calculate_signals(self, min_price_delta):
         has_met_min = 0
         signals = []
+
+        open_price = -1
         for index, row in self._dataframe.iterrows():
             signal = 0
-            if has_met_min and row['max'] != 0:
+            if has_met_min and row['max'] != 0 and row['Close'] - open_price > open_price * min_price_delta:
                 has_met_min = 0
+                open_price = -1
             if not has_met_min and row['min'] != 0:
                 has_met_min = 1
+            if has_met_min and open_price == -1:
+                signal = 1
+                open_price = row['Close']
             if has_met_min:
                 signal = 1
             signals.append(signal)
@@ -101,6 +107,6 @@ class TaLibPredicter(Predicter):
     def _get_y(self):
         return self._dataframe['Signal']
 
-    def get_real_outputs(self, data, local_extremas_periods=5, max_na_values_per_col=100):
-        self._prepare_dataframe(data, local_extremas_periods, max_na_values_per_col)
+    def get_real_outputs(self, data, local_extremas_periods=5, max_na_values_per_col=100, min_price_delta=0.005):
+        self._prepare_dataframe(data, local_extremas_periods, max_na_values_per_col, min_price_delta)
         return self._dataframe['Signal']
