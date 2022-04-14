@@ -44,10 +44,11 @@ class TestLearn(unittest.TestCase):
 
     model = RandomForestClassifier()
     strategy = ta.AllStrategy
-    predicter = TaLibPredicter(model, strategy)
+    predicter = TaLibPredicter(filename='test_predicter')
 
     def test_fit(self):
         self.predicter.fit(self.origin_datafeed)
+        self.predicter.save('test_predicter')
 
     def test_get_real_outputs(self):
         self.assertTrue(isinstance(self.predicter.get_real_outputs(self.origin_datafeed), pd.Series))

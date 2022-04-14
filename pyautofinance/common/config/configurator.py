@@ -15,6 +15,8 @@ class Configurator:
                 'ohlcv_pathname': 'data/ohlcv',
                 'engine_results_pathname': 'data/engine_results',
                 'live_results_pathname': 'data/live_results',
+                'predicters_pathname': 'data/predicters',
+
                 'live_app_port': 8889
             }
 

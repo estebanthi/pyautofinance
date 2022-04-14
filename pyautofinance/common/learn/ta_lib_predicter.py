@@ -7,7 +7,12 @@ from pyautofinance.common.learn.predicter import Predicter
 
 class TaLibPredicter(Predicter):
 
-    def __init__(self, model, ta_strategy):
+    def _copy(self, other):
+        self._model = other._model
+        self.ta_strategy = other.ta_strategy
+        self._dataframe = other._dataframe
+
+    def _init_predicter(self, model, ta_strategy):
         self._model = model
         self.ta_strategy = ta_strategy
         self._dataframe = pd.DataFrame()
