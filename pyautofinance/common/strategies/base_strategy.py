@@ -1,8 +1,9 @@
-import backtrader as bt
 import datetime as dt
-
 from abc import abstractmethod
 from dataclasses import dataclass
+
+import backtrader as bt
+import pandas as pd
 
 from pyautofinance.common.strategies.strat_loggers import DefaultStratLogger
 
@@ -106,6 +107,7 @@ class BaseStrategy(bt.Strategy):
             self.orders_ref.remove(order.ref)
 
     def next(self):
+        self.get_ohlcv_dataframe()
         self.logger.log_every_iter(self._get_logging_data())
 
         if self._is_live_and_before_actual_time():
@@ -207,3 +209,16 @@ class BaseStrategy(bt.Strategy):
     def notify_timer(self, timer, when, *args, **kwargs):
         execute = kwargs['execute']
         execute(self.cerebro, self)
+
+    def get_ohlcv_dataframe(self):
+        columns = {'open': [], 'high': [], 'low': [], 'close': [], 'volume': []}
+        for column, value in columns.items():
+            line = getattr(self.datas[0], column)
+
+            first_index = -len(self)
+            last_index = 1
+            value = [line[i] for i in range(first_index, last_index)]
+            columns[column] = value
+
+        ohlcv_df = pd.DataFrame(columns)
+        return ohlcv_df
