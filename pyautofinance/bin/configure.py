@@ -1,7 +1,7 @@
 from pyautofinance.common.config.configurator import Configurator
 
 
-configurators_paths = ['.', './tests']
+configurators_paths = ['.']
 
 for path in configurators_paths:
     configurator = Configurator(path)

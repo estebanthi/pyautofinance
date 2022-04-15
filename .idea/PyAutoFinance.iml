@@ -4,7 +4,7 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/venv" />
       <excludeFolder url="file://$MODULE_DIR$/pyautofinance/tests/test_data/results" />
-      <excludeFolder url="file://$MODULE_DIR$/pyautofinance/data" />
+      <excludeFolder url="file://$MODULE_DIR$/pyautofinance/bin/data" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
