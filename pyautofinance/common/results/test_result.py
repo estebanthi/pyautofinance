@@ -27,3 +27,6 @@ class TestResult:
 
         self.valid = valid
         return valid
+
+    def __repr__(self):
+        return '\n'.join([str(self.metrics), f"Valid : {self.valid}"])
