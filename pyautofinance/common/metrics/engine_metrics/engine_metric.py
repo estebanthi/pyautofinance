@@ -48,3 +48,6 @@ class EngineMetric(Metric):
     @abstractmethod
     def __gt__(self, other):
         pass
+
+    def __repr__(self):
+        return self.name + ' : ' + str(self.value)

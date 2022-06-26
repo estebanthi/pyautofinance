@@ -35,7 +35,7 @@ cd PyAutoFinance/pyautofinance
 
 # install requirements
 pip3 install -r requirements.txt
-pip3 install git+git://github.com/Dave-Vallance/bt-ccxt-store
+pip3 install git+https://github.com/Dave-Vallance/bt-ccxt-store.git
 ```
 
 Go into `backtrader` package, in folder `plot`, open file `locator.py`, and remove warnings in line 35, because it is deprecated :
