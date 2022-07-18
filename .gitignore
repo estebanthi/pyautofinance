@@ -8,3 +8,4 @@ pyautofinance/tests/config.yml
 pyautofinance/tests/test_data
 
 *.pyc
+.idea
