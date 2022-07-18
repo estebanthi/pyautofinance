@@ -16,7 +16,7 @@ class Configurator:
                 'engine_results_pathname': 'data/engine_results',
                 'live_results_pathname': 'data/live_results',
                 'predicters_pathname': 'data/predicters',
-
+                'logs_pathname': 'data/logs',
                 'live_app_port': 8889
             }
 
