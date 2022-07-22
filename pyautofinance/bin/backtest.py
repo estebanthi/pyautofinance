@@ -15,6 +15,7 @@ from pyautofinance.common.brokers import BackBroker
 from pyautofinance.common.strategies import Strategy, EMAStopLoss
 from pyautofinance.common.sizers import Sizer
 from pyautofinance.common.metrics.engine_metrics import EngineMetricsCollection, TotalNetProfit, TotalGrossProfit
+from pyautofinance.common.strategies.usable_strategies.generated_strat_1 import GeneratedStrategy1
 
 
 def run(broker, strategy, datafeed, sizer, metrics_collection):
@@ -27,15 +28,15 @@ def run(broker, strategy, datafeed, sizer, metrics_collection):
 
 if __name__ == '__main__':
 
-    cash = 2_000
+    cash = 100_000
     commission = 0.001
     broker = BackBroker(cash, commission)
 
-    strategy = Strategy(EMAStopLoss, logging=False, stop_loss=5, risk_reward=5)
+    strategy = Strategy(GeneratedStrategy1, logging=False)
 
-    symbol = 'BTC-EUR'
-    start_date = dt.datetime(2021, 3, 1)
-    end_date = dt.datetime(2022, 4, 14)
+    symbol = 'ETH-BTC'
+    start_date = dt.datetime(2020, 2, 1)
+    end_date = dt.datetime(2022, 7, 19)
     timeframe = d1
     dataflux = DiskDataflux()
     extractor = CCXTCandlesExtractor()
