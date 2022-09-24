@@ -64,6 +64,7 @@ class h4(TimeFrame):
     ccxt_name = '4h'
     bt_timeframe = bt.TimeFrame.Minutes
     bt_compression = 240
+    mt5_name = 'H4'
 
 
 class d1(TimeFrame):
