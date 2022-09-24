@@ -7,5 +7,7 @@ pyautofinance/bin/data
 pyautofinance/tests/config.yml
 pyautofinance/tests/test_data
 
+pyautofinance/common/strategies/usable_strategies/private_strategies
+
 *.pyc
 .idea
