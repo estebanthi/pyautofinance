@@ -25,8 +25,9 @@ class TestResultsCollection:
         validations = []
         ok_indexes = []
         for index, result in enumerate(self.test_results):
-            validations.append(result.validate(metrics, validation_functions))
-            ok_indexes.append(index)
+            valid = result.validate(metrics, validation_functions)
+            validations.append(valid)
+            ok_indexes.append(index) if valid else None
         counter = Counter(validations)
         ok, nok = counter[True], counter[False]
         total = ok + nok
