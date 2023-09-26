@@ -1,8 +1,8 @@
-[![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
-
 ## Basic Overview
 
 Build and test trading systems. Once you found something satisfying, go live with it automatically. Be notified on Telegram about what's happening while live trading.
+
+PyAutoFinance is an upgrade of [binance-trading-bot](https://github.com/estebanthi/binance-trading-bot) with more features and generalized to any broker or exchange providing an API.
 
 ## Visualize the results
 
